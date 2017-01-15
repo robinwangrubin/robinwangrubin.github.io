@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 15 Jan 2017 18:37:30 +0800</pubDate>
-    <lastBuildDate>Sun, 15 Jan 2017 18:37:30 +0800</lastBuildDate>
+    <pubDate>Sun, 15 Jan 2017 19:27:01 +0800</pubDate>
+    <lastBuildDate>Sun, 15 Jan 2017 19:27:01 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -1453,93 +1453,7 @@ Node left the swarm.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
     
       <item>
         <title>Docker 1.12 Swarm集群实战 第七章</title>
-        <description>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-
-  &lt;head&gt;
-	&lt;meta charset=&quot;utf-8&quot;&gt;
-	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-	&lt;title&gt;Docker 1.12 Swarm集群实战 第七章&lt;/title&gt;
-	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
-	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Swarm7.html&quot;&gt;
-	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
-	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-&lt;/head&gt;
-
-
- &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
-  &lt;body&gt;
-
-    &lt;header&gt;
-
-&lt;!-- navbar --&gt;
-  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
-    &lt;div class=&quot;navbar-header&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
-        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-      &lt;/button&gt;
-      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
-      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
-    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
-      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
-
-        
-          &lt;li&gt;
-        
-        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
-
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-        
-          
-        
-      &lt;/ul&gt;
-    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
-  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
-&lt;/nav&gt;
-
-&lt;/header&gt;
-
-    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
-      &lt;div class=&quot;row&quot;&gt;
-  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
-    &lt;div class=&quot;post-area post&quot;&gt;
-      &lt;header&gt;
-        &lt;h1&gt;Docker 1.12 Swarm集群实战 第七章&lt;/h1&gt;
-        &lt;p&gt;Dec 24 2016&lt;/p&gt;
-      &lt;/header&gt;
-      &lt;hr&gt;
-      &lt;article&gt;
-        &lt;ul id=&quot;markdown-toc&quot;&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#constraints&quot; id=&quot;markdown-toc-constraints&quot;&gt;constraints约束&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#volume&quot; id=&quot;markdown-toc-volume&quot;&gt;volume创建管理&lt;/a&gt;&lt;/li&gt;
@@ -1557,8 +1471,7 @@ Node left the swarm.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;造成我们上传的镜像都不见了. 如何解决这个问题呢?&lt;/p&gt;
 
-&lt;p&gt;在创建service的时候可以使用–constraints参数,后面跟表达式,限制service容器在每个节点的调度情况.比如你想指定service运行在某个节点上等.
-例如指定service运行在node1上:&lt;/p&gt;
+&lt;p&gt;在创建service的时候可以使用–constraints参数,后面跟表达式,限制service容器在每个节点的调度情况.比如你想指定service运行在某个节点上等. 例如指定service运行在node1上:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --name registry --publish 5000:5000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 --constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==node1'&lt;/span&gt; registry&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -1698,56 +1611,6 @@ docker volume inspect registry-vol
 
 &lt;p&gt;end&lt;/p&gt;
 
-&lt;hr /&gt;
-
-      &lt;/article&gt;
-      &lt;hr&gt;
-        &lt;script&gt;
-            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        &lt;/script&gt;
-    &lt;/div&gt;
-	    
-  &lt;/div&gt;
-  
-  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
-    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
-    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
-      &lt;div class=&quot;categories-list-header&quot;&gt;
-        Content
-      &lt;/div&gt;
-      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-&lt;/div&gt;
-
-    &lt;/div&gt;
-
-    
-    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
-      &lt;a href=&quot;javascript:;&quot;&gt;
-        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
-      &lt;/a&gt;
-    &lt;/div&gt;
-
-    &lt;footer class=&quot;&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;row&quot;&gt;
-      &lt;div class=&quot;col-md-12&quot;&gt;
-        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/footer&gt;
-
-  
-  &lt;/body&gt;
-&lt;/html&gt;
 </description>
         <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
         <link>/docker/Docker-Swarm7.html</link>
@@ -1760,93 +1623,7 @@ docker volume inspect registry-vol
     
       <item>
         <title>Docker 1.12 Swarm集群实战 第六章</title>
-        <description>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-
-  &lt;head&gt;
-	&lt;meta charset=&quot;utf-8&quot;&gt;
-	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-	&lt;title&gt;Docker 1.12 Swarm集群实战 第六章&lt;/title&gt;
-	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
-	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Monitor.html&quot;&gt;
-	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
-	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-&lt;/head&gt;
-
-
- &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
-  &lt;body&gt;
-
-    &lt;header&gt;
-
-&lt;!-- navbar --&gt;
-  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
-    &lt;div class=&quot;navbar-header&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
-        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-      &lt;/button&gt;
-      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
-      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
-    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
-      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
-
-        
-          &lt;li&gt;
-        
-        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
-
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-        
-          
-        
-      &lt;/ul&gt;
-    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
-  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
-&lt;/nav&gt;
-
-&lt;/header&gt;
-
-    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
-      &lt;div class=&quot;row&quot;&gt;
-  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
-    &lt;div class=&quot;post-area post&quot;&gt;
-      &lt;header&gt;
-        &lt;h1&gt;Docker 1.12 Swarm集群实战 第六章&lt;/h1&gt;
-        &lt;p&gt;Dec 24 2016&lt;/p&gt;
-      &lt;/header&gt;
-      &lt;hr&gt;
-      &lt;article&gt;
-        &lt;ul id=&quot;markdown-toc&quot;&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#influxdb&quot; id=&quot;markdown-toc-influxdb&quot;&gt;InfluxDB&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#cadvisor&quot; id=&quot;markdown-toc-cadvisor&quot;&gt;cAdvisor&lt;/a&gt;    &lt;ul&gt;
@@ -1858,7 +1635,6 @@ docker volume inspect registry-vol
       &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;新建性能绘图&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#end&quot; id=&quot;markdown-toc-end&quot;&gt;end&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
@@ -1889,17 +1665,17 @@ docker volume inspect registry-vol
 
 &lt;p&gt;点击右上角的“连接设置”，输入用户名root，输入密码root，save保存&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/1.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;下面我们创建一个数据库cadvisor, 用于保存swarm集群性能数据&lt;/p&gt;
 
 &lt;p&gt;在Query框中输入, CREATE DATABASE “cadvisor”按回车执行&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/b368eca9-1c0e-45d6-9532-dd28e69f7231.png&quot; alt=&quot;02&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/b368eca9-1c0e-45d6-9532-dd28e69f7231.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;SHOW DATABASES将会看到我们新建的数据库&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/141584c6-d026-485d-9e65-8adfdc4f0bbb.png&quot; alt=&quot;03&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/141584c6-d026-485d-9e65-8adfdc4f0bbb.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -1928,11 +1704,11 @@ localhost:5000/cadvisor -storage_driver&lt;span class=&quot;o&quot;&gt;=&lt;/spa
 -storage_driver_db&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cadvisor&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;–mode global 指定service运行在每个swarm节点上&lt;/p&gt;
+  &lt;p&gt;--mode global 指定service运行在每个swarm节点上&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;–mount 挂载本地docker socket用于监控docker性能&lt;/p&gt;
+  &lt;p&gt;--mount 挂载本地docker socket用于监控docker性能&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
@@ -1963,9 +1739,9 @@ avxzu8ab7mtyig4dbo18oxdss   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cad
 
 &lt;p&gt;点击右上角切换数据库至cadvisor, 输入查询SHOW MEASUREMENTS.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/826491f7-de37-4f69-969a-ea5fd5f4d026.png&quot; alt=&quot;04&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/826491f7-de37-4f69-969a-ea5fd5f4d026.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;如果想查看具体的数据值可以使用select * from &lt;mesurements name=&quot;&quot;&gt;查询&lt;/mesurements&gt;&lt;/p&gt;
+&lt;p&gt;如果想查看具体的数据值可以使用select * from 查询&lt;/p&gt;
 
 &lt;p&gt;例如：例如我们查询下 memory_usage. 可以直接输入select * from memory_usage&lt;/p&gt;
 
@@ -1982,15 +1758,15 @@ avxzu8ab7mtyig4dbo18oxdss   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cad
 
 &lt;p&gt;打开浏览器访问swarm集群的3000端口,打开grafana webUI. 输入用户名密码登录&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/85cceb0a-e6b5-40b8-9579-43ec774a5829.jpg&quot; alt=&quot;05&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/85cceb0a-e6b5-40b8-9579-43ec774a5829.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;section-1&quot;&gt;添加数据源&lt;/h3&gt;
 
 &lt;p&gt;点击左上角图标, 选择Data Sources, 然后点击Add data source, 点击Default&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/9c53b468-ae1d-4fef-bf17-edb3ca04603c.png&quot; alt=&quot;06&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/9c53b468-ae1d-4fef-bf17-edb3ca04603c.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/24de34ef-5975-452f-adc4-8dfb0d8a53b7.png&quot; alt=&quot;07&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/24de34ef-5975-452f-adc4-8dfb0d8a53b7.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;section-2&quot;&gt;新建性能绘图&lt;/h3&gt;
 
@@ -2002,7 +1778,7 @@ avxzu8ab7mtyig4dbo18oxdss   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cad
 
 &lt;p&gt;点击Home, 点击Create New, 点击右侧绿色块选Add Panel, 选Graph&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/62b772c9-fe6e-408c-b981-33be49063cf5.png&quot; alt=&quot;07&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/62b772c9-fe6e-408c-b981-33be49063cf5.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;General面板 Title填Filesystem Limit/Usage, Span填6&lt;/p&gt;
 
@@ -2011,19 +1787,17 @@ avxzu8ab7mtyig4dbo18oxdss   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cad
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;fs_limit&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;fs_usage&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;8ko8h0egr0vgydoww6poysg70 是我的node1的ID，请根据实际情况修改（docker node ls 查看nodeID）&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;Note: 8ko8h0egr0vgydoww6poysg70 是我的node1的ID，请根据实际情况修改（docker node ls 查看nodeID）&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/69604c2b-bfcd-4204-a40a-79605c38403e.png&quot; alt=&quot;08&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/69604c2b-bfcd-4204-a40a-79605c38403e.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Axes面板, Left Y-&amp;gt;Unit-&amp;gt;data-&amp;gt;bytes, Right Y-&amp;gt;Unit-&amp;gt;data-&amp;gt;bytes 保存&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/035f25b4-535c-4de6-ac3f-73aa4af20886.png&quot; alt=&quot;09&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/035f25b4-535c-4de6-ac3f-73aa4af20886.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;回到dashboard可以看到我们的监控绘图：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/7fd47ea5-c416-409f-a732-525b0e30a444.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/7fd47ea5-c416-409f-a732-525b0e30a444.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;CPU Usage&lt;/p&gt;
@@ -2070,7 +1844,7 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
 
 &lt;p&gt;最后完成我们就可以看到这个节点的性能数据了：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/5a308da1-7801-42f4-993e-f2dc1246a65e.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/5a308da1-7801-42f4-993e-f2dc1246a65e.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;其他节点监控&lt;/p&gt;
@@ -2078,59 +1852,10 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
 
 &lt;p&gt;你可以点击左上齿轮图标选Save As保存, 复制一份node1的配置. 然后编辑每个图表的查询语句替换com.docker.swarm.node.id, 就可以了.&lt;/p&gt;
 
-&lt;h2 id=&quot;end&quot;&gt;end&lt;/h2&gt;
+&lt;hr /&gt;
 
 &lt;p&gt;Grafana 的绘图功能很强大, 而且支持多重数据源, 本章只是简单介绍下几个图的绘制方法,可能并没有什么实际意义, 只是希望能给大家一个入门的了解.&lt;/p&gt;
 
-
-      &lt;/article&gt;
-      &lt;hr&gt;
-        &lt;script&gt;
-            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        &lt;/script&gt;
-    &lt;/div&gt;
-	    
-  &lt;/div&gt;
-  
-  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
-    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
-    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
-      &lt;div class=&quot;categories-list-header&quot;&gt;
-        Content
-      &lt;/div&gt;
-      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-&lt;/div&gt;
-
-    &lt;/div&gt;
-
-    
-    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
-      &lt;a href=&quot;javascript:;&quot;&gt;
-        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
-      &lt;/a&gt;
-    &lt;/div&gt;
-
-    &lt;footer class=&quot;&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;row&quot;&gt;
-      &lt;div class=&quot;col-md-12&quot;&gt;
-        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/footer&gt;
-
-  
-  &lt;/body&gt;
-&lt;/html&gt;
 </description>
         <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
         <link>/docker/Docker-Monitor.html</link>
@@ -2143,93 +1868,7 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
     
       <item>
         <title>Docker 1.12 Swarm集群实战 第五章</title>
-        <description>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-
-  &lt;head&gt;
-	&lt;meta charset=&quot;utf-8&quot;&gt;
-	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-	&lt;title&gt;Docker 1.12 Swarm集群实战 第五章&lt;/title&gt;
-	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
-	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-ELK.html&quot;&gt;
-	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
-	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-&lt;/head&gt;
-
-
- &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
-  &lt;body&gt;
-
-    &lt;header&gt;
-
-&lt;!-- navbar --&gt;
-  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
-    &lt;div class=&quot;navbar-header&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
-        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-      &lt;/button&gt;
-      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
-      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
-    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
-      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
-
-        
-          &lt;li&gt;
-        
-        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
-
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-        
-          
-        
-      &lt;/ul&gt;
-    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
-  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
-&lt;/nav&gt;
-
-&lt;/header&gt;
-
-    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
-      &lt;div class=&quot;row&quot;&gt;
-  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
-    &lt;div class=&quot;post-area post&quot;&gt;
-      &lt;header&gt;
-        &lt;h1&gt;Docker 1.12 Swarm集群实战 第五章&lt;/h1&gt;
-        &lt;p&gt;Dec 24 2016&lt;/p&gt;
-      &lt;/header&gt;
-      &lt;hr&gt;
-      &lt;article&gt;
-        &lt;ul id=&quot;markdown-toc&quot;&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#elk&quot; id=&quot;markdown-toc-elk&quot;&gt;ELK日志平台&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2255,57 +1894,9 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
 &lt;p&gt;我们会在每个swarm节点上使用syslgo协议发送日志到logstash，存储在elasticsearch中；最后使用kibana分析展示日志。&lt;/p&gt;
 
 &lt;hr /&gt;
-&lt;p&gt;e……后续完善&lt;/p&gt;
 
+&lt;p&gt;Note: 后续补充&lt;/p&gt;
 
-      &lt;/article&gt;
-      &lt;hr&gt;
-        &lt;script&gt;
-            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        &lt;/script&gt;
-    &lt;/div&gt;
-	    
-  &lt;/div&gt;
-  
-  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
-    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
-    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
-      &lt;div class=&quot;categories-list-header&quot;&gt;
-        Content
-      &lt;/div&gt;
-      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-&lt;/div&gt;
-
-    &lt;/div&gt;
-
-    
-    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
-      &lt;a href=&quot;javascript:;&quot;&gt;
-        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
-      &lt;/a&gt;
-    &lt;/div&gt;
-
-    &lt;footer class=&quot;&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;row&quot;&gt;
-      &lt;div class=&quot;col-md-12&quot;&gt;
-        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/footer&gt;
-
-  
-  &lt;/body&gt;
-&lt;/html&gt;
 </description>
         <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
         <link>/docker/Docker-ELK.html</link>
