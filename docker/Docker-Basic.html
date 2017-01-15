@@ -7,14 +7,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Docker 基础知识点介绍</title>
 	<meta name="description" content="">
+	
 	<link rel="canonical" href="/docker/Docker-Basic.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
-        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
 	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
 	<script type="text/javascript" src="/static/js/index.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 </head>
@@ -53,14 +66,14 @@
             
               <li>
             
-            <a href="/project/"><span class="glyphicon "></span> Project</a></li>
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Projects</a></li>
           
         
           
             
               <li>
             
-            <a href="/about/"><span class="glyphicon "></span> About</a></li>
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
           
         
           
@@ -74,9 +87,12 @@
 
 </header>
 
+
     <div id="main" class="container main">
       <div class="row">
+
   <div id="myArticle" class="col-sm-9">
+
     <div class="post-area post">
       <header>
         <h1>Docker 基础知识点介绍</h1>
@@ -105,7 +121,15 @@
     </ul>
   </li>
   <li><a href="#dockerfile" id="markdown-toc-dockerfile">Dockerfile</a></li>
-  <li><a href="#namespace" id="markdown-toc-namespace">Namespace资源隔离</a></li>
+  <li><a href="#namespace" id="markdown-toc-namespace">Namespace资源隔离</a>    <ul>
+      <li><a href="#pid-namespace" id="markdown-toc-pid-namespace">pid namespace</a></li>
+      <li><a href="#net-namespace" id="markdown-toc-net-namespace">net namespace</a></li>
+      <li><a href="#ipc-namespace" id="markdown-toc-ipc-namespace">ipc namespace</a></li>
+      <li><a href="#mnt-namespace" id="markdown-toc-mnt-namespace">mnt namespace</a></li>
+      <li><a href="#uts-namespace" id="markdown-toc-uts-namespace">uts namespace</a></li>
+      <li><a href="#user-namespace" id="markdown-toc-user-namespace">user namespace</a></li>
+    </ul>
+  </li>
   <li><a href="#control-groups-cgroups" id="markdown-toc-control-groups-cgroups">Control Groups (cgroups)</a></li>
   <li><a href="#docker-registry" id="markdown-toc-docker-registry">Docker-Registry</a>    <ul>
       <li><a href="#http-registry" id="markdown-toc-http-registry">HTTP-registry</a></li>
@@ -120,8 +144,6 @@
 </ul>
 
 <h2 id="install-docker-112">Install docker 1.12</h2>
-
-<hr />
 
 <blockquote>
   <p>Docker requires a 64-bit OS and version 3.10 or higher of the Linux kernel.</p>
@@ -185,6 +207,7 @@ dockerd &amp;</code></pre></figure>
 <hr />
 
 <h2 id="docker-command">Docker Command</h2>
+
 <ul>
   <li>下载镜像</li>
 </ul>
@@ -397,7 +420,7 @@ dockerd &amp;</code></pre></figure>
 
 <p>yum -y install util-linux</p>
 
-<p>docker inspect –format "\{\{.State.Pid\}\}" 867e6627a194</p>
+<p>docker inspect –format “{{.State.Pid}}” 867e6627a194</p>
 
 <p>找到容器的第一个进程的PID</p>
 
@@ -410,7 +433,7 @@ dockerd &amp;</code></pre></figure>
 </ul>
 
 <blockquote>
-  <p>docker commit -m “my nginx” container-ID test/mynginx:v1   #自定义一个镜像</p>
+  <p>docker commit -m “my nginx” container-ID test/mynginx:v1 #自定义一个镜像</p>
 </blockquote>
 
 <hr />
@@ -420,8 +443,7 @@ dockerd &amp;</code></pre></figure>
 <h3 id="host">host模式</h3>
 
 <blockquote>
-  <p>众所周知，Docker使用了Linux的Namespaces技术来进行资源隔离，如PID Namespace隔离进程，Mount Namespace隔离文件系统，Network Namespace隔离网络等。一个Network Namespace提供了一份独立的网络环境，包括网卡、路由、Iptable规则等都与其他的Network Namespace隔离。一个Docker容器一般会分配一个独立的Network Namespace。但如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。
-例如，我们在10.10.101.105/24的机器上用host模式启动一个含有web应用的Docker容器，监听tcp80端口。当我们在容器中执行任何类似ifconfig命令查看网络环境时，看到的都是宿主机上的信息。而外界访问容器中的应用，则直接使用10.10.101.105:80即可，不用任何NAT转换，就如直接跑在宿主机中一样。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
+  <p>众所周知，Docker使用了Linux的Namespaces技术来进行资源隔离，如PID Namespace隔离进程，Mount Namespace隔离文件系统，Network Namespace隔离网络等。一个Network Namespace提供了一份独立的网络环境，包括网卡、路由、Iptable规则等都与其他的Network Namespace隔离。一个Docker容器一般会分配一个独立的Network Namespace。但如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。 例如，我们在10.10.101.105/24的机器上用host模式启动一个含有web应用的Docker容器，监听tcp80端口。当我们在容器中执行任何类似ifconfig命令查看网络环境时，看到的都是宿主机上的信息。而外界访问容器中的应用，则直接使用10.10.101.105:80即可，不用任何NAT转换，就如直接跑在宿主机中一样。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
 </blockquote>
 
 <h3 id="container">container模式</h3>
@@ -458,9 +480,7 @@ dockerd &amp;</code></pre></figure>
 
 <h3 id="section">数据卷</h3>
 
-<p>-v /data挂载data目录
--v file 挂在一个文件
--v src:dst 指定一个挂载目录，开发常用，挂载物理机代码所在目录，nginx直接使用代码创建一个centos容器，挂载/data目录，挂载时可以指定权限 ro rw 等</p>
+<p>-v /data挂载data目录 -v file 挂在一个文件 -v src:dst 指定一个挂载目录，开发常用，挂载物理机代码所在目录，nginx直接使用代码创建一个centos容器，挂载/data目录，挂载时可以指定权限 ro rw 等</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run -it --name volume-test1 -v /data centos     <span class="c">#给容器挂载一个/data目录</span>
 docker inspect 023072ed38db |grep -A 5 <span class="s2">"Mounts"</span>  <span class="c">#查看容器中/data目录对应真实的物理位置</span>
@@ -514,57 +534,43 @@ CMD <span class="o">[</span><span class="s2">"nginx"</span><span class="o">]</sp
 
 <h2 id="namespace">Namespace资源隔离</h2>
 
-<p><img src="/pic/docker-Basic/759122388670221.png" alt="01" /></p>
+<p><img src="/pic/docker-Basic/759122388670221.png" alt="1" /></p>
 
-<ul>
-  <li>pid namespace</li>
-</ul>
+<h3 id="pid-namespace">pid namespace</h3>
 
 <blockquote>
   <p>不同用户的进程就是通过pid namespace隔离开的，且不同 namespace 中可以有相同pid。所有的LXC进程在docker中的父进程为docker进程，每个lxc进程具有不同的namespace。同时由于允许嵌套，因此可以很方便的实现 Docker in Docker。</p>
 </blockquote>
 
-<ul>
-  <li>net namespace</li>
-</ul>
+<h3 id="net-namespace">net namespace</h3>
 
 <blockquote>
   <p>有了 pid namespace, 每个namespace中的pid能够相互隔离，但是网络端口还是共享host的端口。网络隔离是通过net namespace实现的， 每个net namespace有独立的 network devices, IP addresses, IP routing tables, /proc/net 目录。这样每个container的网络就能隔离开来。docker默认采用veth的方式将container中的虚拟网卡同host上的一个docker bridge: docker0连接在一起。</p>
 </blockquote>
 
-<ul>
-  <li>ipc namespace</li>
-</ul>
+<h3 id="ipc-namespace">ipc namespace</h3>
 
 <blockquote>
   <p>container中进程交互还是采用linux常见的进程间交互方法(interprocess communication – IPC), 包括常见的信号量、消息队列和共享内存。然而同 VM 不同的是，container 的进程间交互实际上还是host上具有相同pid namespace中的进程间交互，因此需要在IPC资源申请时加入namespace信息 – 每个IPC资源有一个唯一的32位ID。</p>
 </blockquote>
 
-<ul>
-  <li>mnt namespace</li>
-</ul>
+<h3 id="mnt-namespace">mnt namespace</h3>
 
 <blockquote>
   <p>类似chroot，将一个进程放到一个特定的目录执行。mnt namespace允许不同namespace的进程看到的文件结构不同，这样每个 namespace 中的进程所看到的文件目录就被隔离开了。同chroot不同，每个namespace中的container在/proc/mounts的信息只包含所在namespace的mount point。</p>
 </blockquote>
 
-<ul>
-  <li>uts namespace</li>
-</ul>
+<h3 id="uts-namespace">uts namespace</h3>
 
 <blockquote>
   <p>UTS(“UNIX Time-sharing System”) namespace允许每个container拥有独立的hostname和domain name, 使其在网络上可以被视作一个独立的节点而非Host上的一个进程。</p>
 </blockquote>
 
-<ul>
-  <li>user namespace</li>
-</ul>
+<h3 id="user-namespace">user namespace</h3>
 
 <blockquote>
   <p>每个container可以有不同的 user 和 group id, 也就是说可以在container内部用container内部的用户执行程序而非Host上的用户。</p>
 </blockquote>
-
-<p>ps：我是没看懂</p>
 
 <hr />
 
@@ -592,40 +598,31 @@ CMD <span class="o">[</span><span class="s2">"nginx"</span><span class="o">]</sp
 
 <h3 id="http-registry">HTTP-registry</h3>
 
-<ul>
-  <li>下载registry镜像</li>
-</ul>
+<p>下载registry镜像</p>
 
 <blockquote>
   <p>docker pull registry:2</p>
 </blockquote>
 
-<ul>
-  <li>启动registry容器</li>
-</ul>
+<p>启动registry容器</p>
 
 <blockquote>
   <p>docker run -d -p 5000:5000 –restart=always –name registry -v /docker-registry/data:/var/lib/registry registry:2</p>
 </blockquote>
 
-<ul>
-  <li>retag镜像</li>
-</ul>
+<p>retag镜像</p>
 
 <blockquote>
   <p>docker tag nginx 192.168.1.130:5000/nginx:v2</p>
 </blockquote>
 
-<ul>
-  <li>push镜像</li>
-</ul>
+<p>push镜像</p>
 
 <blockquote>
   <p>docker push 192.168.1.130:5000/nginx:v2</p>
 </blockquote>
 
-<p><code class="highlighter-rouge">The push refers to a repository [192.168.1.130:5000/nginx]</code>
-<code class="highlighter-rouge">Get https://192.168.1.130:5000/v1/_ping: http: server gave HTTP response to HTTPS client</code></p>
+<p><code class="highlighter-rouge">The push refers to a repository [192.168.1.130:5000/nginx] Get https://192.168.1.130:5000/v1/_ping: http: server gave HTTP response to HTTPS client</code></p>
 
 <p>PS:目前registry默认需要以HTTPS方式访问；如果强制用HTTP访问，需要修改配置文件</p>
 
@@ -635,13 +632,11 @@ CMD <span class="o">[</span><span class="s2">"nginx"</span><span class="o">]</sp
   <p>mkdir /etc/systemd/system/docker.service.d</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cat &gt;/etc/systemd/system/docker.service.d/docker-config.conf&lt;&lt;EOF
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cat &gt;/etc/systemd/system/docker.service.d/docker-config.conf<span class="sh">&lt;&lt;EOF
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.130:5000
-EOF
-</code></pre>
-</div>
+</span><span class="err">EOF</span></code></pre></figure>
 
 <blockquote>
   <p>systemctl daemon-reload</p>
@@ -653,11 +648,12 @@ EOF
 
 <h3 id="https-registry">HTTPS-registry</h3>
 
-<p>待解决</p>
+<p>Note: 有待补充</p>
 
 <hr />
 
 <h2 id="docker-compose">Docker-compose</h2>
+
 <p>docker-compose是一款应用控制工具，主要是针对application的；Dockerfile可以理解为镜像的描述文件，那么docker-compose的yaml文件可以理解为应用的描述文件。</p>
 
 <p>假如：你有一个应用，需要一个lnmp环境，正常情况下你需要手动启动4个容器（linux-OS nginx mysql php），而且需要关联容器彼此之间的关系，以及需要考虑容器先后启动的顺序等；</p>
@@ -678,51 +674,49 @@ EOF
   <li>dockercoins应用</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>version: "2"
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">version: <span class="s2">"2"</span>
 services:
   rng:
     build: rng
     ports:
-    - "8001:80"
+    - <span class="s2">"8001:80"</span>
 
   hasher:
     build: hasher
     ports:
-    - "8002:80"
+    - <span class="s2">"8002:80"</span>
 
   webui:
     build: webui
     ports:
-    - "8000:80"
+    - <span class="s2">"8000:80"</span>
     volumes:
-    - "./webui/files/:/files/"
+    - <span class="s2">"./webui/files/:/files/"</span>
 
   redis:
     image: redis
 
   worker:
-    build: worker
-</code></pre>
-</div>
+    build: worker</code></pre></figure>
 
 <ul>
   <li>ELK应用</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>version: "2"
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">version: <span class="s2">"2"</span>
 
 services:
   elasticsearch:
     image: elasticsearch
-    # If you need to access ES directly, just uncomment those lines.
-    #ports:
-    #  - "9200:9200"
-    #  - "9300:9300"
+    <span class="c"># If you need to access ES directly, just uncomment those lines.</span>
+    <span class="c">#ports:</span>
+    <span class="c">#  - "9200:9200"</span>
+    <span class="c">#  - "9300:9300"</span>
 
   logstash:
     image: logstash
-    command: |
-      -e '
+    <span class="nb">command</span>: |
+      -e <span class="s1">'
       input {
         # Default port is 12201/udp
         gelf { }
@@ -737,7 +731,7 @@ services:
       filter {
         ruby {
           code =&gt; "
-            event.to_hash.keys.each { |k| event[ k.gsub('"'.'"','"'_'"') ] = event.remove(k) if k.include?'"'.'"' }
+            event.to_hash.keys.each { |k| event[ k.gsub('</span><span class="s2">"'.'"</span><span class="s1">','</span><span class="s2">"'_'"</span><span class="s1">') ] = event.remove(k) if k.include?'</span><span class="s2">"'.'"</span><span class="s1">' }
           "
         }
       }
@@ -753,18 +747,16 @@ services:
         stdout {
           codec =&gt; rubydebug
         }
-      }'
+      }'</span>
     ports:
-      - "12201:12201/udp"
+      - <span class="s2">"12201:12201/udp"</span>
 
   kibana:
     image: kibana
     ports:
-      - "5601:5601"
+      - <span class="s2">"5601:5601"</span>
     environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-</code></pre>
-</div>
+      ELASTICSEARCH_URL: http://elasticsearch:9200</code></pre></figure>
 
 <p>Compose has commands for managing the whole lifecycle of your application:</p>
 
@@ -807,34 +799,30 @@ services:
 
 <p>1.Create a directory for the project:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir composetest
-cd composetest
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir composetest
+<span class="nb">cd </span>composetest</code></pre></figure>
+
 <p>2.Create a file called <code class="highlighter-rouge">app.py</code> in your project directory and paste this in:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>from flask import Flask
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">from flask import Flask
 from redis import Redis
 
-app = Flask(__name__)
-redis = Redis(host='redis', port=6379)
+app <span class="o">=</span> Flask<span class="o">(</span>__name__<span class="o">)</span>
+redis <span class="o">=</span> Redis<span class="o">(</span><span class="nv">host</span><span class="o">=</span><span class="s1">'redis'</span>, <span class="nv">port</span><span class="o">=</span>6379<span class="o">)</span>
 
-@app.route('/')
-def hello():
-    count = redis.incr('hits')
-    return 'Hello World! I have been seen {} times.\n'.format(count)
+@app.route<span class="o">(</span><span class="s1">'/'</span><span class="o">)</span>
+def hello<span class="o">()</span>:
+    count <span class="o">=</span> redis.incr<span class="o">(</span><span class="s1">'hits'</span><span class="o">)</span>
+    <span class="k">return</span> <span class="s1">'Hello World! I have been seen {} times.\n'</span>.format<span class="o">(</span>count<span class="o">)</span>
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
-</code></pre>
-</div>
+<span class="k">if </span>__name__ <span class="o">==</span> <span class="s2">"__main__"</span>:
+    app.run<span class="o">(</span><span class="nv">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span>, <span class="nv">debug</span><span class="o">=</span>True<span class="o">)</span></code></pre></figure>
 
 <p>3.Create another file called <code class="highlighter-rouge">requirements.txt</code> in your project directory and paste this in:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>flask
-redis
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">flask
+redis</code></pre></figure>
+
 <p>These define the application’s dependencies.</p>
 
 <blockquote>
@@ -845,13 +833,11 @@ redis
 
 <p>In your project directory, create a file named <code class="highlighter-rouge">Dockerfile</code> and paste the following:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>FROM python:3.4-alpine
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">FROM python:3.4-alpine
 ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
-CMD ["python", "app.py"]
-</code></pre>
-</div>
+CMD <span class="o">[</span><span class="s2">"python"</span>, <span class="s2">"app.py"</span><span class="o">]</span></code></pre></figure>
 
 <p>This tells Docker to:</p>
 
@@ -869,18 +855,16 @@ CMD ["python", "app.py"]
 
 <p>Create a file called docker-compose.yml in your project directory and paste the following:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>version: '2'
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">version: <span class="s1">'2'</span>
 services:
   web:
     build: .
     ports:
-     - "5000:5000"
+     - <span class="s2">"5000:5000"</span>
     volumes:
      - .:/code
   redis:
-    image: "redis:alpine"
-</code></pre>
-</div>
+    image: <span class="s2">"redis:alpine"</span></code></pre></figure>
 
 <p>This Compose file defines two services, <code class="highlighter-rouge">web</code> and <code class="highlighter-rouge">redis</code>. The web service:</p>
 
@@ -898,9 +882,7 @@ services:
 
 <p>1.From your project directory, start up your application.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker-compose up
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker-compose up</code></pre></figure>
 
 <p>Compose pulls a Redis image, builds an image for your code, and start the services you defined.</p>
 
@@ -914,8 +896,7 @@ services:
 
 <p><code class="highlighter-rouge">Hello World! I have been seen 1 times.</code></p>
 
-<p>3.Refresh the page.
-The number should increment.</p>
+<p>3.Refresh the page. The number should increment.</p>
 
 <blockquote>
   <p>Step 5: Update the application</p>
@@ -925,9 +906,7 @@ The number should increment.</p>
 
 <p>1.Change the greeting in <code class="highlighter-rouge">app.py</code> and save it. For example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>return 'Hello from Docker! I have been seen {} times.\n'.format(count)
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="k">return</span> <span class="s1">'Hello from Docker! I have been seen {} times.\n'</span>.format<span class="o">(</span>count<span class="o">)</span></code></pre></figure>
 
 <p>2.Refresh the app in your browser. The greeting should be updated, and the counter should still be incrementing.</p>
 
@@ -937,29 +916,22 @@ The number should increment.</p>
 
 <p>If you want to run your services in the background, you can pass the <code class="highlighter-rouge">-d</code> flag (for “detached” mode) to <code class="highlighter-rouge">docker-compose up</code> and use <code class="highlighter-rouge">docker-compose ps</code> to see what is currently running:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker-compose up -d
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker-compose up -d</code></pre></figure>
 
 <p>The <code class="highlighter-rouge">docker-compose run</code> command allows you to run one-off commands for your services. For example, to see what environment variables are available to the web service:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker-compose run web env
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker-compose run web env</code></pre></figure>
 
 <p>See <code class="highlighter-rouge">docker-compose --help</code> to see other available commands. You can also install <code class="highlighter-rouge">command completion</code> for the bash and zsh shell, which will also show you available commands.</p>
 
 <p>If you started Compose with <code class="highlighter-rouge">docker-compose up -d</code>, you’ll probably want to stop your services once you’ve finished with them:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker-compose stop
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker-compose stop</code></pre></figure>
 
 <p>You can bring everything down, removing the containers entirely, with the <code class="highlighter-rouge">down</code> command. Pass <code class="highlighter-rouge">--volumes</code> to also remove the data volume used by the Redis container:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker-compose down --volumes
-</code></pre>
-</div>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker-compose down --volumes</code></pre></figure>
+
 <p>At this point, you have seen the basics of how Compose works.</p>
 
 <hr />
@@ -967,25 +939,28 @@ The number should increment.</p>
 <p>end</p>
 
 <hr />
-<p>关于 Dockerfile 和 docker-compose 后面会有单独的章节讲解常用的命令参数以及更过示例~</p>
+
+<p>关于 Dockerfile 和 docker-compose 后面会有单独的章节讲解常用的命令参数以及更过示例.</p>
+
 
       </article>
       <hr>
-        <script>
-            window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    </div>
-	    
+     </div>
+
   </div>
   
   <div id="content" class="col-sm-3">
     <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
     <div id="myAffix" class="shadow-bottom-center hidden-xs" >
-      <div class="categories-list-header">
+  
+     <div class="categories-list-header">
         Content
       </div>
+  
       <div class="content-text"></div>
-    </div>
+   
+   </div>
+
   </div>
   
 </div>
@@ -1004,11 +979,20 @@ The number should increment.</p>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <a href="mailto:robin.wangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robin.wangrubin@gmail.com</a>
-        <span>|</span>
-        <span>Copyright&copy; 2016 WangRuBin</span>
-        <span>|</span>
-        <span>Powered By Jekyll · Theme By Gaohaoyang</span>
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
       </div>
     </div>
   </div>
