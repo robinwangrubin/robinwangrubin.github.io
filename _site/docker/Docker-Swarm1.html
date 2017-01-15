@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Docker 1.12 Swarm集群实战 第一章</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/docker/Docker-Swarm1.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Projects</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Docker 1.12 Swarm集群实战 第一章</h1>
+        <p>Nov 16 2016</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">前言</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">本文参考</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">实验环境准备</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">系统环境准备</a>    <ul>
+      <li><a href="#ssh-key" id="markdown-toc-ssh-key">ssh-key密钥登录</a></li>
+      <li><a href="#hosts" id="markdown-toc-hosts">修改hosts文件</a></li>
+      <li><a href="#hosts-1" id="markdown-toc-hosts-1">测试hosts文件解析与密钥登陆</a></li>
+      <li><a href="#hosts-2" id="markdown-toc-hosts-2">批量修改hosts文件</a></li>
+      <li><a href="#ntp" id="markdown-toc-ntp">安装配置NTP时间服务</a></li>
+    </ul>
+  </li>
+  <li><a href="#docker-112" id="markdown-toc-docker-112">安装docker 1.12</a></li>
+  <li><a href="#docker" id="markdown-toc-docker">运行docker币应用</a>    <ul>
+      <li><a href="#docker-1" id="markdown-toc-docker-1">下载docker币</a></li>
+      <li><a href="#docker-2" id="markdown-toc-docker-2">docker币应用架构组成</a></li>
+      <li><a href="#docker-3" id="markdown-toc-docker-3">启动docker币引用</a></li>
+    </ul>
+  </li>
+  <li><a href="#scale-up" id="markdown-toc-scale-up">Scale up向上扩展应用</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">程序的瓶颈</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">如何解决瓶颈</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">清除当前环境</a></li>
+</ul>
+
+<h2 id="section">前言</h2>
+
+<p>自从dockercon 2016 发布docker1.12版本以来，经历了几个RC版本，docker1.12终于迎来了第一个稳定版；</p>
+
+<p>docker1.12展示了docker大统一平台的野心，集成了swarmkit，不需要安装额外的软件包，使用简单的命令启动创建docker swarm集群；</p>
+
+<p>集成了swarm集群的安全特性，集成了K-V存储，不需要额外部署etcd或consul；</p>
+
+<p>本系列教程采用docker币应用程序模拟生产应用程序会遇到的问题;</p>
+
+<h2 id="section-1">本文参考</h2>
+
+<ul>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-01</a></li>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-02</a></li>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-03</a></li>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-04</a></li>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-05</a></li>
+  <li><a href="https://guai.im/2016/08/01/docker-swarm-in-action-01/">docker-swarm-in-action-06</a></li>
+</ul>
+
+<hr />
+
+<h2 id="section-2">实验环境准备</h2>
+
+<p>使用VMware创建5台虚拟机搭建docker swarm集群：</p>
+
+<ul>
+  <li>系统要求：CentOS-7.2</li>
+  <li>内核要求：3.10.0-327.el7.x86_64</li>
+  <li>Docker版本：Docker version 1.12.3, build 6b644ec</li>
+</ul>
+
+<p>主机名和IP地址规划如下：</p>
+
+<p>node0 ==== 192.168.1.130</p>
+
+<p>node1 ==== 192.168.1.131</p>
+
+<p>node2 ==== 192.168.1.132</p>
+
+<p>node3 ==== 192.168.1.133</p>
+
+<p>node4 ==== 192.168.1.134</p>
+
+<hr />
+
+<h2 id="section-3">系统环境准备</h2>
+
+<ul>
+  <li>配置node0到所有节点密钥登陆（非必要）</li>
+  <li>配置hosts列表用于主机名-IP的解析（必要）</li>
+  <li>安装ntp服务用于同步时间（必要）</li>
+</ul>
+
+<h3 id="ssh-key">ssh-key密钥登录</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# ssh-keygen -t rsa -f ~/.ssh/id_rsa -N <span class="s1">''</span><span class="s2">""</span>
+<span class="o">[</span>root@node0 ~]# ssh-copy-id 192.168.1.130
+The authenticity of host <span class="s1">'node0 (192.168.1.130)'</span> can<span class="s1">'t be established.
+ECDSA key fingerprint is 54:ef:99:03:3d:0d:e5:09:73:f6:8d:f2:a6:a2:29:fc.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@node0'</span>s password: 输入192.168.1.130的root密码
+Number of key<span class="o">(</span>s<span class="o">)</span> added: 1
+Now try logging into the machine, with:   <span class="s2">"ssh 'node0'"</span>
+and check to make sure that only the key<span class="o">(</span>s<span class="o">)</span> you wanted were added.
+
+<span class="o">[</span>root@node0 ~]# ssh-copy-id 192.168.1.131
+...
+<span class="o">[</span>root@node0 ~]# ssh-copy-id 192.168.1.132
+...
+<span class="o">[</span>root@node0 ~]# ssh-copy-id 192.168.1.133
+...
+<span class="o">[</span>root@node0 ~]# ssh-copy-id 192.168.1.134</code></pre></figure>
+
+<h3 id="hosts">修改hosts文件</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.1.130   node0
+192.168.1.131   node1
+192.168.1.132   node2
+192.168.1.133   node3
+192.168.1.134   node4</code></pre></figure>
+
+<h3 id="hosts-1">测试hosts文件解析与密钥登陆</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# <span class="k">for </span>N <span class="k">in</span> <span class="k">$(</span>seq 0 4<span class="k">)</span>;<span class="k">do </span>ssh node<span class="k">${</span><span class="nv">N</span><span class="k">}</span> hostname;done
+node0
+node1
+node2
+node3
+node4</code></pre></figure>
+
+<h3 id="hosts-2">批量修改hosts文件</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# <span class="k">for </span>N <span class="k">in</span> <span class="k">$(</span>seq 0 4<span class="k">)</span>;<span class="k">do </span>scp /etc/hosts node<span class="k">${</span><span class="nv">N</span><span class="k">}</span>:/etc/hosts;done</code></pre></figure>
+
+<h3 id="ntp">安装配置NTP时间服务</h3>
+
+<p>以下命令在所有node节点都要执行</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">yum install ntp -y
+systemctl start ntpd
+systemctl <span class="nb">enable </span>ntpd
+touch /var/spool/cron/root
+<span class="nb">echo</span> <span class="s2">"*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &gt;/dev/null 2&gt;&amp;1"</span> &gt;&gt;/var/spool/cron/root</code></pre></figure>
+
+<hr />
+
+<h2 id="docker-112">安装docker 1.12</h2>
+
+<p>所有node节点都需安装docker</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">下载RPM安装包
+wget https://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-1.12.3-1.el7.centos.x86_64.rpm
+使用yum localinstall安装自动解决依赖关系
+yum localinstall -y docker-engine-1.12.3-1.el7.centos.x86_64.rpm --nogpgcheck
+启动docker并设置开机自启动
+systemctl start docker
+ystemctl <span class="nb">enable </span>docker
+验证docker版本
+docker -v
+Docker version 1.12.3, build 6b644ec
+下载docker-compose工具
+curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-<span class="sb">`</span>uname -s<span class="sb">`</span>-<span class="sb">`</span>uname -m<span class="sb">`</span> &gt; /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose -v
+docker-compose version 1.8.0, build f3628c7</code></pre></figure>
+
+<hr />
+
+<h2 id="docker">运行docker币应用</h2>
+
+<h3 id="docker-1">下载docker币</h3>
+
+<p>在node0上执行以下命令：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">安装git
+<span class="o">[</span>root@node0 ~]# yum install git -y
+克隆git 库
+<span class="o">[</span>root@node0 ~]# git clone https://github.com/jpetazzo/orchestration-workshop.git
+进入dockercoins应用目录
+<span class="o">[</span>root@node0 ~]# <span class="nb">cd </span>orchestration-workshop/dockercoins
+<span class="o">[</span>root@node0 dockercoins]# ls
+docker-compose.yml             docker-compose.yml-portmap     hasher     webui
+docker-compose.yml-ambassador  docker-compose.yml-scaled-rng  ports.yml  worker
+docker-compose.yml-logging     docker-compose.yml-v2          rng</code></pre></figure>
+
+<blockquote>
+  <p>该github库中包含了, workshop的详细文档和配置. 部署脚本, PPT等.有基础的同学可以自己看看.</p>
+</blockquote>
+
+<h3 id="docker-2">docker币应用架构组成</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# cat docker-compose.yml
+version: <span class="s2">"2"</span>
+services:
+  rng:
+    build: rng
+    ports:
+    - <span class="s2">"8001:80"</span>
+  hasher:
+    build: hasher
+    ports:
+    - <span class="s2">"8002:80"</span>
+  webui:
+    build: webui
+    ports:
+    - <span class="s2">"8000:80"</span>
+    volumes:
+    - <span class="s2">"./webui/files/:/files/"</span>
+  redis:
+    image: redis
+  worker:
+    build: worker</code></pre></figure>
+
+<p>docker币一共对应4个服务：rng，hasher，webui，worker；</p>
+
+<p>详情可进入对应目录查看Dockerfile描述文件</p>
+
+<ul>
+  <li>rng：是一个web service 生成随机的bytes数据.</li>
+  <li>hasher：是一个计算POST 数据hash值的web service.</li>
+  <li>worker：工作节点；后台调用rng 生成随机bytes数据, 然后将数据post到hasher服务计算hash值, 如果hashe值开头为0.则产生一个docker币.并将docker币保存到redis数据库中.</li>
+  <li>webui：一个web接口用来监控整个系统，去读redis数据库中的docker币数量并展示.</li>
+</ul>
+
+<h3 id="docker-3">启动docker币引用</h3>
+
+<p>在node0上自动运行docker币应用</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml up -d</code></pre></figure>
+
+<blockquote>
+  <p>由于某些特殊原因docker hub极不稳定，所以需要很长时间来下载镜像（可选择下面手动方式）</p>
+</blockquote>
+
+<p>手动pull基础镜像</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker pull python:alpine
+<span class="o">[</span>root@node0 ~]# docker pull ruby:alpine
+<span class="o">[</span>root@node0 ~]# docker pull redis
+<span class="o">[</span>root@node0 ~]# docker pull node:4-slim
+<span class="o">[</span>root@node0 ~]# docker images
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+node                 4-slim              b2bd4c48b5dc        3 days ago          205.3 MB
+redis                latest              5f515359c7f8        4 days ago          182.9 MB
+ruby                 alpine              35562b355c05        11 days ago         126.7 MB
+python               alpine              8dd7712cca84        12 days ago         88.49 MB</code></pre></figure>
+
+<p>手动Build docker币应用镜像</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml build
+...
+根据每个应用目录下的Dockerfile build应用镜像, 需要一会儿....
+build完成后, 你可以使用 docker image命令查看镜像
+
+<span class="o">[</span>root@node0 ~]# docker images
+REPOSITORY           TAG                 IMAGE ID            CREATED              SIZE
+dockercoins_webui    latest              c2d09bb0c442        About a minute ago   212.2 MB
+dockercoins_rng      latest              ff1d886f2fa3        2 minutes ago        83.53 MB
+dockercoins_hasher   latest              9d361dbaf589        2 minutes ago        310.6 MB
+dockercoins_worker   latest              bef5d2dc4bd0        8 minutes ago        80.5 MB
+...</code></pre></figure>
+
+<p>手动启动docker币应用</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml up</code></pre></figure>
+
+<p>启动后可以看见应用日志滚动</p>
+
+<p>使用Ctrl+C停止应用，使用-d参数后台启动docker币</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml up -d</code></pre></figure>
+
+<p>查看运行情况</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml ps
+        Name                      Command               State          Ports         
+------------------------------------------------------------------------------------
+dockercoins_hasher_1   ruby hasher.rb                   Up      0.0.0.0:8002-&gt;80/tcp 
+dockercoins_redis_1    docker-entrypoint.sh redis ...   Up      6379/tcp             
+dockercoins_rng_1      python rng.py                    Up      0.0.0.0:8001-&gt;80/tcp 
+dockercoins_webui_1    node webui.js                    Up      0.0.0.0:8000-&gt;80/tcp 
+dockercoins_worker_1   python worker.py                 Up                           </code></pre></figure>
+
+<p>查看应用日志</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml logs</code></pre></figure>
+
+<p>滚动输出应用日志，每个容器输出最新10行</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker-compose -f /root/orchestration-workshop/dockercoins/docker-compose.yml logs --tail 10 --follow</code></pre></figure>
+
+<p>通过浏览器访问http://192.168.1.130:8000 可以看到应用挖掘到的docker币情况</p>
+
+<p><img src="/pic/docker-swarm-1/69cc3a57-1d97-4f13-91aa-c82f4d2defb9.png" alt="1" /></p>
+
+<p>从webui可以开出我们的docker币应用每秒产生4个docker币</p>
+
+<hr />
+
+<h2 id="scale-up">Scale up向上扩展应用</h2>
+
+<p>WOW~~我们的docker币应用已经正常工作了，每秒产生4个docker币</p>
+
+<p>但是如果我们想产生更多的docker币怎么办？</p>
+
+<p>前面已经介绍docker币的应用架构，worker服务负则产生docker币，所以我们尝试scale up worker服务</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">切换到dockerconins目录下运行docker-compose命令，即可不用指定yaml文件位置
+<span class="o">[</span>root@node0 dockercoins]# docker-compose scale <span class="nv">worker</span><span class="o">=</span>2
+Creating and starting dockercoins_worker_2 ... <span class="k">done</span>
+<span class="o">[</span>root@node0 dockercoins]# docker-compose ps
+        Name                      Command               State          Ports         
+------------------------------------------------------------------------------------
+dockercoins_hasher_1   ruby hasher.rb                   Up      0.0.0.0:8002-&gt;80/tcp 
+dockercoins_redis_1    docker-entrypoint.sh redis ...   Up      6379/tcp             
+dockercoins_rng_1      python rng.py                    Up      0.0.0.0:8001-&gt;80/tcp 
+dockercoins_webui_1    node webui.js                    Up      0.0.0.0:8000-&gt;80/tcp 
+dockercoins_worker_1   python worker.py                 Up                           
+dockercoins_worker_2   python worker.py                 Up                     </code></pre></figure>
+
+<p>现在我们有2个worker工作了</p>
+
+<p>查看webui：</p>
+
+<p><img src="/pic/docker-swarm-1/09f14d56-ad13-49c0-9015-c6c92e24f378.png" alt="1" /></p>
+
+<p>从webui可以看出我们的docker币应用每秒产生约8个docker币</p>
+
+<p>WoW~这么简单，让我们来挖掘更多的docker币吧</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# docker-compose scale <span class="nv">worker</span><span class="o">=</span>10
+Creating and starting dockercoins_worker_3 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_4 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_5 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_6 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_7 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_8 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_9 ... <span class="k">done
+</span>Creating and starting dockercoins_worker_10 ... <span class="k">done</span>
+<span class="o">[</span>root@node0 dockercoins]# docker-compose ps
+        Name                       Command               State          Ports         
+-------------------------------------------------------------------------------------
+dockercoins_hasher_1    ruby hasher.rb                   Up      0.0.0.0:8002-&gt;80/tcp 
+dockercoins_redis_1     docker-entrypoint.sh redis ...   Up      6379/tcp             
+dockercoins_rng_1       python rng.py                    Up      0.0.0.0:8001-&gt;80/tcp 
+dockercoins_webui_1     node webui.js                    Up      0.0.0.0:8000-&gt;80/tcp 
+dockercoins_worker_1    python worker.py                 Up                           
+dockercoins_worker_10   python worker.py                 Up                           
+dockercoins_worker_2    python worker.py                 Up                           
+dockercoins_worker_3    python worker.py                 Up                           
+dockercoins_worker_4    python worker.py                 Up                           
+dockercoins_worker_5    python worker.py                 Up                           
+dockercoins_worker_6    python worker.py                 Up                           
+dockercoins_worker_7    python worker.py                 Up                           
+dockercoins_worker_8    python worker.py                 Up                           
+dockercoins_worker_9    python worker.py                 Up             </code></pre></figure>
+
+<p>我们现在有10个worker节点了，理论上我们应该每秒产生40个docker币</p>
+
+<p><img src="/pic/docker-swarm-1/863297e6-afe8-4318-99ae-ce3373276910.png" alt="1" /></p>
+
+<blockquote>
+  <p>注意!!!：为什么现在每秒才产生约10个docker币???</p>
+</blockquote>
+
+<hr />
+
+<h2 id="section-4">程序的瓶颈</h2>
+
+<p>目前情况：</p>
+
+<p>1个worker节点每秒产生4个docker币</p>
+
+<p>2个worker节点每秒产生8个docker币</p>
+
+<p>10个worker节点每秒产生10个docker币</p>
+
+<p>Why？</p>
+
+<p>我们所有的应用都跑在1台服务器上node0；10个worker造成服务器资源竞争；所以增加worker节点也不能改善性能；</p>
+
+<p>我们测试一下rng shaher节点的负载，因为我们有10个worker节点，只有一个rng，hasher节点，所以瓶颈可能发生在rng或hasher节点</p>
+
+<p>使用httping工具测试rng，hasher延迟</p>
+
+<blockquote>
+  <p>Note：httping可以带端口去ping</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# yum install epel-release -y
+<span class="o">[</span>root@node0 dockercoins]# yum install httping -y</code></pre></figure>
+
+<p>测试rng延迟, docker-compose ps命令可以看到rng应用映射到本地8001端口</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# httping -c 10 localhost:8001
+PING localhost:8001 <span class="o">(</span>/<span class="o">)</span>:
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>0 <span class="nb">time</span><span class="o">=</span>783.34 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>1 <span class="nb">time</span><span class="o">=</span>801.78 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>2 <span class="nb">time</span><span class="o">=</span>832.84 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>3 <span class="nb">time</span><span class="o">=</span>797.79 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>4 <span class="nb">time</span><span class="o">=</span>818.90 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>5 <span class="nb">time</span><span class="o">=</span>747.49 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>6 <span class="nb">time</span><span class="o">=</span>780.67 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>7 <span class="nb">time</span><span class="o">=</span>875.05 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>8 <span class="nb">time</span><span class="o">=</span>825.70 ms 
+connected to 127.0.0.1:8001 <span class="o">(</span>159 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>9 <span class="nb">time</span><span class="o">=</span>836.49 ms 
+--- http://localhost:8001/ ping statistics ---
+10 connects, 10 ok, 0.00% failed, <span class="nb">time </span>18119ms
+round-trip min/avg/max <span class="o">=</span> 747.5/810.0/875.0 ms</code></pre></figure>
+
+<p>测试hasher延迟, 8002端口</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# httping -c 10 localhost:8002
+PING localhost:8002 <span class="o">(</span>/<span class="o">)</span>:
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>0 <span class="nb">time</span><span class="o">=</span>  6.16 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>1 <span class="nb">time</span><span class="o">=</span>  3.42 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>2 <span class="nb">time</span><span class="o">=</span>  5.52 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>3 <span class="nb">time</span><span class="o">=</span>  2.31 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>4 <span class="nb">time</span><span class="o">=</span>  6.20 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>5 <span class="nb">time</span><span class="o">=</span>  2.55 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>6 <span class="nb">time</span><span class="o">=</span>  4.24 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>7 <span class="nb">time</span><span class="o">=</span>  2.80 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>8 <span class="nb">time</span><span class="o">=</span>  9.32 ms 
+connected to 127.0.0.1:8002 <span class="o">(</span>210 bytes<span class="o">)</span>, <span class="nv">seq</span><span class="o">=</span>9 <span class="nb">time</span><span class="o">=</span>  4.07 ms 
+--- http://localhost:8002/ ping statistics ---
+10 connects, 10 ok, 0.00% failed, <span class="nb">time </span>10069ms
+round-trip min/avg/max <span class="o">=</span> 2.3/4.7/9.3 ms</code></pre></figure>
+
+<p>从以上结果可以看出，性能瓶颈应该在rng节点</p>
+
+<h2 id="section-5">如何解决瓶颈</h2>
+
+<p>建立docker集群，worker节点分布到不同虚拟机上运行</p>
+
+<p>scale out rng节点，横向扩展多个rng节点消除瓶颈</p>
+
+<blockquote>
+  <p>由此引出docker swarm集群</p>
+</blockquote>
+
+<hr />
+
+<h2 id="section-6">清除当前环境</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 dockercoins]# docker-compose down
+Stopping dockercoins_worker_9 ... <span class="k">done
+</span>Stopping dockercoins_worker_6 ... <span class="k">done
+</span>Stopping dockercoins_worker_10 ... <span class="k">done
+</span>Stopping dockercoins_worker_4 ... <span class="k">done
+</span>Stopping dockercoins_worker_5 ... <span class="k">done
+</span>Stopping dockercoins_worker_7 ... <span class="k">done
+</span>Stopping dockercoins_worker_8 ... <span class="k">done
+</span>Stopping dockercoins_worker_3 ... <span class="k">done
+</span>Stopping dockercoins_worker_2 ... <span class="k">done
+</span>Stopping dockercoins_webui_1 ... <span class="k">done
+</span>Stopping dockercoins_hasher_1 ... <span class="k">done
+</span>Stopping dockercoins_rng_1 ... <span class="k">done
+</span>Stopping dockercoins_worker_1 ... <span class="k">done
+</span>Stopping dockercoins_redis_1 ... <span class="k">done
+</span>Removing dockercoins_worker_9 ... <span class="k">done
+</span>Removing dockercoins_worker_6 ... <span class="k">done
+</span>Removing dockercoins_worker_10 ... <span class="k">done
+</span>Removing dockercoins_worker_4 ... <span class="k">done
+</span>Removing dockercoins_worker_5 ... <span class="k">done
+</span>Removing dockercoins_worker_7 ... <span class="k">done
+</span>Removing dockercoins_worker_8 ... <span class="k">done
+</span>Removing dockercoins_worker_3 ... <span class="k">done
+</span>Removing dockercoins_worker_2 ... <span class="k">done
+</span>Removing dockercoins_webui_1 ... <span class="k">done
+</span>Removing dockercoins_hasher_1 ... <span class="k">done
+</span>Removing dockercoins_rng_1 ... <span class="k">done
+</span>Removing dockercoins_worker_1 ... <span class="k">done
+</span>Removing dockercoins_redis_1 ... <span class="k">done
+</span>Removing network dockercoins_default
+<span class="o">[</span>root@node0 dockercoins]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS </code></pre></figure>
+
+<hr />
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>

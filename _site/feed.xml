@@ -1,0 +1,3535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Robin's Personal Website</title>
+    <description></description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 15 Jan 2017 16:15:32 +0800</pubDate>
+    <lastBuildDate>Sun, 15 Jan 2017 16:15:32 +0800</lastBuildDate>
+    <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Docker Swarm Shipyard</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker Swarm Shipyard&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Swarm-Shipyard.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker Swarm Shipyard&lt;/h1&gt;
+        &lt;p&gt;Jan 4 2017&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#reference&quot; id=&quot;markdown-toc-reference&quot;&gt;Reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#introduction&quot; id=&quot;markdown-toc-introduction&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#shipyard-deployment&quot; id=&quot;markdown-toc-shipyard-deployment&quot;&gt;Shipyard Deployment&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#automated-deployment&quot; id=&quot;markdown-toc-automated-deployment&quot;&gt;Automated Deployment&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#manual-deployment&quot; id=&quot;markdown-toc-manual-deployment&quot;&gt;Manual Deployment&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#compile-shipyard&quot; id=&quot;markdown-toc-compile-shipyard&quot;&gt;Compile Shipyard&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#go&quot; id=&quot;markdown-toc-go&quot;&gt;go&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#godep&quot; id=&quot;markdown-toc-godep&quot;&gt;godep&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#nvm&quot; id=&quot;markdown-toc-nvm&quot;&gt;nvm&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#nodejs--npm&quot; id=&quot;markdown-toc-nodejs--npm&quot;&gt;nodejs &amp;amp;&amp;amp; npm&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#bower&quot; id=&quot;markdown-toc-bower&quot;&gt;bower&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#git-clone&quot; id=&quot;markdown-toc-git-clone&quot;&gt;git clone&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#modify-indexhtml&quot; id=&quot;markdown-toc-modify-indexhtml&quot;&gt;modify index.html&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://www.shipyard-project.com/docs/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://github.com/shipyard/shipyard&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Shipard是docker集群的可视化解决方案，shipyard利用内置的swarm组建管理集群，并提供图形化管理界面。可管理容器，镜像，节点，私有仓库等。还提供了用户认证和访问控制。&lt;/p&gt;
+
+&lt;p&gt;Shipyard完全100%利用的&lt;code class=&quot;highlighter-rouge&quot;&gt;Docker Remote API&lt;/code&gt;实现的，&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;shipyard-deployment&quot;&gt;Shipyard Deployment&lt;/h2&gt;
+
+&lt;h3 id=&quot;automated-deployment&quot;&gt;Automated Deployment&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;curl -sSL https://shipyard-project.com/deploy | bash -s&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;manual-deployment&quot;&gt;Manual Deployment&lt;/h3&gt;
+
+&lt;p&gt;Datastore&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-rethinkdb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    rethinkdb&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Discovery&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -p 4001:4001 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -p 7001:7001 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-discovery &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    microbox/etcd -name discovery&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Proxy&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -p 2375:2375 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --hostname&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOSTNAME&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-proxy &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -v /var/run/docker.sock:/var/run/docker.sock &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -e &lt;span class=&quot;nv&quot;&gt;PORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2375 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    shipyard/docker-proxy:latest&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Swarm Manager&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-swarm-manager &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    swarm:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    manage --host tcp://0.0.0.0:3375 etcd://&amp;lt;IP-OF-HOST&amp;gt;:4001&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Swarm Agent&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-swarm-agent &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    swarm:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    join --addr &amp;lt;ip-of-host&amp;gt;:2375 etcd://&amp;lt;ip-of-host&amp;gt;:4001&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Controller&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name shipyard-controller &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --link shipyard-rethinkdb:rethinkdb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --link shipyard-swarm-manager:swarm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -p 8080:8080 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    shipyard/shipyard:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    server &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -d tcp://swarm:3375&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;compile-shipyard&quot;&gt;Compile Shipyard&lt;/h2&gt;
+
+&lt;h3 id=&quot;go&quot;&gt;go&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz
+tar -C /usr/local/ -xf go1.7.4.linux-amd64.tar.gz
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/usr/local/go/bin
+go version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;godep&quot;&gt;godep&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GOPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/
+go get github.com/tools/godep&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;nvm&quot;&gt;nvm&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+nvm --version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;nodejs--npm&quot;&gt;nodejs &amp;amp;&amp;amp; npm&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install nodejs
+node -v
+npm -v&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;bower&quot;&gt;bower&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;npm install -g bower --registry&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://registry.npm.taobao.org
+bower -v&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;git-clone&quot;&gt;git clone&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git clone https://github.com/shipyard/shipyard.git
+mkdir -p /usr/local/go/src/github.com/shipyard/
+mv shipyard /usr/local/go/src/github.com/shipyard/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;modify-indexhtml&quot;&gt;modify index.html&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;vim shipyard/controller/static/app/login/login.html
+
+ 4 &amp;lt;h1 &lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;margin-top: 100px; margin-bottom: 50px; font-family: 'Poiret One', sans-serif; font-size: 72px; color: #ffffff;&quot;&lt;/span&gt;&amp;gt;Mimte-Docker&amp;lt;/h1&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/go/src/github.com/shipyard/shipyard
+make build
+make media&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/go/src/github.com/shipyard/shipyard/controller
+docker build -t shipyard/shipyard:v1 ./
+Sending build context to Docker daemon 38.34 MB
+Step 1 : FROM alpine:latest
+ ---&amp;gt; 0766572b4bac
+Step 2 : RUN apk add --update git ca-certificates &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;     rm -rf /var/cache/apk/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+ ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;87b47f8d5d9b
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.4/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.4/community/x86_64/APKINDEX.tar.gz
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing ca-certificates &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20160104-r4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing libssh2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.7.0-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing libcurl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7.51.0-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing expat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.1-r2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;5/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing pcre &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8.38-r1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing git &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.8.3-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Executing busybox-1.24.2-r12.trigger
+Executing ca-certificates-20160104-r4.trigger
+OK: 22 MiB &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;17 packages
+ ---&amp;gt; b4b0f356c8ac
+Removing intermediate container 87b47f8d5d9b
+Step 3 : ADD static /static
+ ---&amp;gt; 311fc8862edb
+Removing intermediate container aba0b170b13a
+Step 4 : ADD controller /bin/controller
+ ---&amp;gt; cd104f6babef
+Removing intermediate container dfbaf72eaa7d
+Step 5 : EXPOSE 8080
+ ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;da52ef41d74f
+ ---&amp;gt; dbab862fb18b
+Removing intermediate container da52ef41d74f
+Step 6 : ENTRYPOINT /bin/controller
+ ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;b2e3af6bec3d
+ ---&amp;gt; 86937d8db64a
+Removing intermediate container b2e3af6bec3d
+Successfully built 86937d8db64a&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker ps
+CONTAINER ID        IMAGE                          COMMAND                  CREATED              STATUS              PORTS                                            NAMES
+4be692396011        shipyard/shipyard:v1           &lt;span class=&quot;s2&quot;&gt;&quot;/bin/controller serv&quot;&lt;/span&gt;   4 seconds ago        Up 2 seconds        0.0.0.0:8080-&amp;gt;8080/tcp                           shipyard-controller
+a3fdabe80a3f        swarm:latest                   &lt;span class=&quot;s2&quot;&gt;&quot;/swarm join --addr 1&quot;&lt;/span&gt;   39 seconds ago       Up 38 seconds       2375/tcp                                         shipyard-swarm-agent
+f42ec4a5c3d7        swarm:latest                   &lt;span class=&quot;s2&quot;&gt;&quot;/swarm manage --host&quot;&lt;/span&gt;   42 seconds ago       Up 40 seconds       2375/tcp                                         shipyard-swarm-manager
+89743f1b4db8        shipyard/docker-proxy:latest   &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/bin/run&quot;&lt;/span&gt;     About a minute ago   Up About a minute   0.0.0.0:2375-&amp;gt;2375/tcp                           shipyard-proxy
+ee353d533403        microbox/etcd                  &lt;span class=&quot;s2&quot;&gt;&quot;/bin/etcd -name disc&quot;&lt;/span&gt;   3 minutes ago        Up 3 minutes        0.0.0.0:4001-&amp;gt;4001/tcp, 0.0.0.0:7001-&amp;gt;7001/tcp   shipyard-discovery
+66e947f0cf31        rethinkdb                      &lt;span class=&quot;s2&quot;&gt;&quot;rethinkdb --bind all&quot;&lt;/span&gt;   4 minutes ago        Up 4 minutes        8080/tcp, 28015/tcp, 29015/tcp                   shipyard-rethinkdb&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;等待程序启动&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 controller]# docker logs 4be692396011
+INFO[0000] shipyard version 3.1.0                       
+INFO[0034] checking database                            
+INFO[0357] created admin user: username: admin password: shipyard 
+INFO[0357] controller listening on :8080          &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;http://192.168.1.130:8080/&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/QQ截图20170105170016.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/123.png&quot; alt=&quot;02&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Wed, 04 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Swarm-Shipyard.html</link>
+        <guid isPermaLink="true">/docker/Docker-Swarm-Shipyard.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>LNMP环境安装Zabbix3</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#environment&quot; id=&quot;markdown-toc-environment&quot;&gt;Environment&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#downloads-packages&quot; id=&quot;markdown-toc-downloads-packages&quot;&gt;Downloads Packages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-dependent&quot; id=&quot;markdown-toc-install-dependent&quot;&gt;Install Dependent&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-nginx&quot; id=&quot;markdown-toc-install-nginx&quot;&gt;Install Nginx&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-php&quot; id=&quot;markdown-toc-install-php&quot;&gt;Install PHP&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#modify-config&quot; id=&quot;markdown-toc-modify-config&quot;&gt;Modify config&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#check-config&quot; id=&quot;markdown-toc-check-config&quot;&gt;Check config&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-mysql&quot; id=&quot;markdown-toc-install-mysql&quot;&gt;Install Mysql&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#modify-config-1&quot; id=&quot;markdown-toc-modify-config-1&quot;&gt;Modify config&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-zabbix&quot; id=&quot;markdown-toc-install-zabbix&quot;&gt;Install Zabbix&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#initialization&quot; id=&quot;markdown-toc-initialization&quot;&gt;Initialization&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#config-zabbixserver&quot; id=&quot;markdown-toc-config-zabbixserver&quot;&gt;Config zabbix_server&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#config-zabbixagentd&quot; id=&quot;markdown-toc-config-zabbixagentd&quot;&gt;Config zabbix_agentd&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#config-nginx&quot; id=&quot;markdown-toc-config-nginx&quot;&gt;config Nginx&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#start-service&quot; id=&quot;markdown-toc-start-service&quot;&gt;Start service&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#pic&quot; id=&quot;markdown-toc-pic&quot;&gt;Pic&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;environment&quot;&gt;Environment&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CentOS Linux release 7.2.1511 (Core)&lt;/li&gt;
+  &lt;li&gt;nginx:1.9.15&lt;/li&gt;
+  &lt;li&gt;Mysql:5.5.49&lt;/li&gt;
+  &lt;li&gt;PHP:5.5.35&lt;/li&gt;
+  &lt;li&gt;zabbix:3.2.3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;downloads-packages&quot;&gt;Downloads Packages&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir /application/tools
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+wget http://cn2.php.net/get/php-5.5.35.tar.gz/from/this/mirror &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; mv mirror php-5.5.35.tar.gz
+wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.49.tar.gz
+wget http://jaist.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.2.3/zabbix-3.2.3.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-dependent&quot;&gt;Install Dependent&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-nginx&quot;&gt;Install Nginx&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;useradd nginx -s /sbin/nologin -M
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
+tar xf nginx-1.9.15.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;nginx-1.9.15
+./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/nginx-1.9.15 --user&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --group&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --with-http_ssl_module --with-http_stub_status_module
+make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+ln -s /application/nginx-1.9.15/ /application/nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-php&quot;&gt;Install PHP&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
+tar xf php-5.5.35.tar.gz 
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;php-5.5.35
+./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/php-5.5.35 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-config-file-path&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/php-5.5.35/etc &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-bz2 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-curl &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-ftp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-sockets &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--disable-ipv6 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-gd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-jpeg-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-png-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-freetype-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-gd-native-ttf &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-iconv-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-mbstring &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-calendar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-gettext &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-libxml-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-zlib &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-pdo-mysql&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-mysqli&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-mysql&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-dom &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-xml &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-fpm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--with-libdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lib64 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--enable-bcmath
+make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+ln -s /application/php-5.5.35/ /application/php&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;modify-config&quot;&gt;Modify config&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/php-5.5.35
+cp php.ini-production /application/php/etc/php.ini
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/php/etc/
+cp php-fpm.conf.default php-fpm.conf
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#max_execution_time =.*#max_execution_time = 300#g'&lt;/span&gt; php.ini
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#memory_limit = .*#memory_limit = 128M#g'&lt;/span&gt; php.ini
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#post_max_size = .*#post_max_size = 16M#g'&lt;/span&gt; php.ini            
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#upload_max_filesize = .*#upload_max_filesize = 2M#g'&lt;/span&gt; php.ini             
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#max_input_time = .*#max_input_time = 300#g'&lt;/span&gt; php.ini 
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#date.timezone = .*#date.timezone = PRC#g'&lt;/span&gt; php.ini    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;check-config&quot;&gt;Check config&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;max_execution_time = &quot;&lt;/span&gt; php.ini
+grep &lt;span class=&quot;s2&quot;&gt;&quot;memory_limit = &quot;&lt;/span&gt; php.ini 
+grep &lt;span class=&quot;s2&quot;&gt;&quot;post_max_size =&quot;&lt;/span&gt; php.ini
+grep &lt;span class=&quot;s2&quot;&gt;&quot;upload_max_filesize =&quot;&lt;/span&gt; php.ini 
+grep &lt;span class=&quot;s2&quot;&gt;&quot;max_input_time =&quot;&lt;/span&gt; php.ini 
+grep &lt;span class=&quot;s2&quot;&gt;&quot;date.timezone =&quot;&lt;/span&gt; php.ini&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-mysql&quot;&gt;Install Mysql&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
+tar xf mysql-5.5.49.tar.gz 
+useradd mysql -s /sbin/nologin -M
+mkdir /data/mysql -p
+chown -R mysql.mysql /data/mysql/
+yum install -y cmake gcc&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ncurses-devel
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;mysql-5.5.49
+cmake -DCMAKE_INSTALL_PREFIX&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/mysql5.5.49 -DDEFAULT_CHARSET&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;utf8 -DENABLED_LOCAL_INFILE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DMYSQL_DATADIR&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/data/mysql -DWITH_EXTRA_CHARSETS&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;all -DWITH_READLINE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DWITH_INNOBASE_STORAGE_ENGINE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DMYSQL_TCP_PORT&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3306 -DDEFAULT_COLLATION&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;utf8_general_ci
+make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+ln -s /application/mysql5.5.49/ /application/mysql
+&lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;p /application/mysql/bin/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /usr/bin/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;modify-config-1&quot;&gt;Modify config&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /data/mysql
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/mysql/support-files/
+rm -f /etc/my.cnf
+cp my-medium.cnf /data/mysql/my.cnf
+cp mysql.server /etc/init.d/mysqld
+chmod 755 /etc/init.d/mysqld &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-zabbix&quot;&gt;Install Zabbix&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home/mtime/tools/
+tar xf zabbix-3.2.3.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;zabbix-3.2.3
+yum install -y net-snmp-devel mysql-devel
+useradd zabbix -s /sbin/nologin -M
+./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/zabbix-3.0.3/ --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2
+make install
+ln -s /application/zabbix-3.0.3/ /application/zabbix&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;initialization&quot;&gt;Initialization&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mysql -e &lt;span class=&quot;s2&quot;&gt;&quot;create database zabbix default charset utf8;&quot;&lt;/span&gt;
+mysql -e &lt;span class=&quot;s2&quot;&gt;&quot;grant all on zabbix.* to zabbix@localhost identified by 'zabbix';&quot;&lt;/span&gt;
+mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/schema.sql
+mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/images.sql
+mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/data.sql&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;config-zabbixserver&quot;&gt;Config zabbix_server&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt; /application/zabbix/etc/zabbix_server.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+ListenPort=10051
+LogFile=/tmp/zabbix_server.log
+PidFile=/tmp/zabbix_server.pid
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=zabbix
+DBSocket=/tmp/mysql.sock
+DBPort=3306
+Timeout=4
+LogSlowQueries=3000
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;config-zabbixagentd&quot;&gt;Config zabbix_agentd&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt; /application/zabbix/etc/zabbix_agentd.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+PidFile=/tmp/zabbix_agentd.pid
+LogFile=/tmp/zabbix_agentd.log
+LogFileSize=0
+EnableRemoteCommands=1
+Server=127.0.0.1,192.168.3.134
+ServerActive=127.0.0.1,192.168.3.134:10051
+Hostname=192.168.3.134
+BufferSend=10
+Timeout=30
+AllowRoot=1
+UnsafeUserParameters=1
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;config-nginx&quot;&gt;config Nginx&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/nginx
+mkdir html/zabbix
+cat &amp;gt;conf/nginx.conf&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+user  nginx;
+worker_processes  1;
+
+#error_log  logs/error.log warning;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+                      '$status $body_bytes_sent &quot;$http_referer&quot; '
+                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+    include extra/*.conf;
+
+}
+EOF
+&lt;/span&gt;mkdir conf/extra
+cat &amp;gt;conf/extra/zabbix.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+server {
+listen 80;
+server_name localhost;
+access_log /var/log/zabbix/nginx_zabbix.log main;
+root html/zabbix;
+
+location / {
+           index index.html index.php index.html;
+        }
+
+location ~ .*\.(php|php5)?$
+            {
+             fastcgi_pass  127.0.0.1:9000;
+             fastcgi_index index.php;
+             include fastcgi.conf;
+           }
+}
+EOF
+&lt;/span&gt;mkdir -p /var/log/zabbix
+&lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;p -a /application/tools/zabbix-3.2.3/frontends/php/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /application/nginx/html/zabbix/
+/application/nginx/sbin/nginx -t&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;start-service&quot;&gt;Start service&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/application/nginx/sbin/nginx&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/application/php/sbin/php-fpm&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/etc/init.d/mysqld start&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/application/zabbix/sbin/zabbix_server&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/application/zabbix/sbin/zabbix_agentd&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;pic&quot;&gt;Pic&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220119.png&quot; alt=&quot;2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220130.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220140.png&quot; alt=&quot;4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220148.png&quot; alt=&quot;5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220158.png&quot; alt=&quot;6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220339.png&quot; alt=&quot;7&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220350.png&quot; alt=&quot;8&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 03 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/system/Zabbix-install.html</link>
+        <guid isPermaLink="true">/system/Zabbix-install.html</guid>
+        
+        
+        <category>System</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker Swarm基础</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker Swarm基础&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Swarm-Basic.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker Swarm基础&lt;/h1&gt;
+        &lt;p&gt;Jan 1 2017&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#reference&quot; id=&quot;markdown-toc-reference&quot;&gt;Reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#swarm-mode-overview&quot; id=&quot;markdown-toc-swarm-mode-overview&quot;&gt;Swarm mode overview&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#feature-highlights&quot; id=&quot;markdown-toc-feature-highlights&quot;&gt;Feature highlights&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#swarm-mode-key-concepts&quot; id=&quot;markdown-toc-swarm-mode-key-concepts&quot;&gt;Swarm mode key concepts&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#swarm&quot; id=&quot;markdown-toc-swarm&quot;&gt;Swarm&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#node&quot; id=&quot;markdown-toc-node&quot;&gt;Node&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#services-and-tasks&quot; id=&quot;markdown-toc-services-and-tasks&quot;&gt;Services and tasks&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#load-balancing&quot; id=&quot;markdown-toc-load-balancing&quot;&gt;Load balancing&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#getting-started-with-swarm-mode&quot; id=&quot;markdown-toc-getting-started-with-swarm-mode&quot;&gt;Getting started with swarm mode&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#environment&quot; id=&quot;markdown-toc-environment&quot;&gt;environment&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#create-a-swarm&quot; id=&quot;markdown-toc-create-a-swarm&quot;&gt;Create a swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#join-nodes-to-a-swarm&quot; id=&quot;markdown-toc-join-nodes-to-a-swarm&quot;&gt;Join nodes to a swarm&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#join-as-a-worker-node&quot; id=&quot;markdown-toc-join-as-a-worker-node&quot;&gt;Join as a worker node&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#join-as-a-manager-node&quot; id=&quot;markdown-toc-join-as-a-manager-node&quot;&gt;Join as a manager node&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#manage-nodes-in-a-swarm&quot; id=&quot;markdown-toc-manage-nodes-in-a-swarm&quot;&gt;Manage nodes in a swarm&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#list-nodes&quot; id=&quot;markdown-toc-list-nodes&quot;&gt;List nodes&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#inspect-an-individual-node&quot; id=&quot;markdown-toc-inspect-an-individual-node&quot;&gt;Inspect an individual node&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#change-node-availability&quot; id=&quot;markdown-toc-change-node-availability&quot;&gt;Change node availability&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#add-or-remove-label-metadata&quot; id=&quot;markdown-toc-add-or-remove-label-metadata&quot;&gt;Add or remove label metadata&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#promote-or-demote-a-node&quot; id=&quot;markdown-toc-promote-or-demote-a-node&quot;&gt;Promote or demote a node&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#leave-the-swarm&quot; id=&quot;markdown-toc-leave-the-swarm&quot;&gt;Leave the swarm&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#deploy-a-service-to-the-swarm&quot; id=&quot;markdown-toc-deploy-a-service-to-the-swarm&quot;&gt;Deploy a service to the swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#inspect-a-service-on-the-swarm&quot; id=&quot;markdown-toc-inspect-a-service-on-the-swarm&quot;&gt;Inspect a service on the swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#scale-the-service-in-the-swarm&quot; id=&quot;markdown-toc-scale-the-service-in-the-swarm&quot;&gt;Scale the service in the swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#delete-the-service-running-on-the-swarm&quot; id=&quot;markdown-toc-delete-the-service-running-on-the-swarm&quot;&gt;Delete the service running on the swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#apply-rolling-updates-to-a-service&quot; id=&quot;markdown-toc-apply-rolling-updates-to-a-service&quot;&gt;Apply rolling updates to a service&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#drain-a-node-on-the-swarm&quot; id=&quot;markdown-toc-drain-a-node-on-the-swarm&quot;&gt;Drain a node on the swarm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#use-swarm-mode-routing-mesh&quot; id=&quot;markdown-toc-use-swarm-mode-routing-mesh&quot;&gt;Use swarm mode routing mesh&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#publish-a-port-for-a-service&quot; id=&quot;markdown-toc-publish-a-port-for-a-service&quot;&gt;Publish a port for a service&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#configure-an-external-load-balancer&quot; id=&quot;markdown-toc-configure-an-external-load-balancer&quot;&gt;Configure an external load balancer&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://docs.docker.com/engine/swarm/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;swarm-mode-overview&quot;&gt;Swarm mode overview&lt;/h2&gt;
+
+&lt;p&gt;Docker 1.12 内置了集群管理工具swarm，可使用docker的CLI去创建swarm集群；管理swarm集群；部署应用服务。&lt;/p&gt;
+
+&lt;h3 id=&quot;feature-highlights&quot;&gt;Feature highlights&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;引擎内置集群管理工具：使用docker的CLI即可创建管理集群；部署应用；无需额外的编排软件管理集群。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;分散式设计：不是在部署时处理节点角色之间的差异，而是在运行时进行专业化分工。 你可以使用Docker Engine部署两种类型的节点，manager和worker。 这意味着您可以从单个磁盘映像构建整个群集。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;声明性服务模型：Docker Engine使用声明性方法来定义应用程序堆栈中各种服务的所需状态。 例如，你可以描述由具有消息队列服务和数据库后端的Web前端服务组成的应用程序。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Scaling：你可以声明每个服务运行的副本数量，当你想要扩容或收缩时，swarm管理器通过自动添加或删除任务来适应所需的目标状态。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;期望状态协调：manager节点实时监视群集状态，并协调你声明的期望状态的实际状态之间的任何差异。 例如，如果你设置一个服务运行10个副本，如果其中两个副本所在计算机崩溃，manager则自动在可用的worker节点创建两个新的任务，以达到你希望的目标状态（10个副本）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;多主机网络：你可以为你的服务创建overlay网络，manager自动分配地址给容器在初始化或更新应用容器的时候。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;服务发现：manager自动为每个服务分配一个唯一的DNS名称，并对运行的容器负载均衡，你可以通过嵌入在swarm中的DNS服务器查询每个容器的域名信息。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;负载均衡：你可以暴露一个服务端口给外部的负载均衡器，在swarm内部。你可以指定如何在节点之间分发任务。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;安全：swarm节点之间之间采用TLS认证通信，你可以选择使用自签名或CA颁发的证书&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;滚动更新：你可以滚动更新你的应用，手动控制更新时的延时时间，如果出现问题，你可以回滚应用到之前的版本。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;swarm-mode-key-concepts&quot;&gt;Swarm mode key concepts&lt;/h2&gt;
+
+&lt;h3 id=&quot;swarm&quot;&gt;Swarm&lt;/h3&gt;
+
+&lt;p&gt;When you run Docker Engine outside of swarm mode, you execute container commands. When you run the Engine in swarm mode, you orchestrate services.&lt;/p&gt;
+
+&lt;h3 id=&quot;node&quot;&gt;Node&lt;/h3&gt;
+
+&lt;p&gt;一个node就是一个docker实例；&lt;/p&gt;
+
+&lt;p&gt;当你部署服务时，你在manager node定义服务（一个服务可能由多个task共同组成），manager节点将tasks调度到worker节点执行。&lt;/p&gt;
+
+&lt;p&gt;manager节点还负责维护集群管理功能使集群达到期望状态，manager节点中间会挑选一个leader出来负责编排任务。&lt;/p&gt;
+
+&lt;p&gt;woker节点负责接收并执行manager分配的任务，默认情况下，manager节点也是worker节点，但是你可以设置让manager节点仅仅作为manager&lt;/p&gt;
+
+&lt;h3 id=&quot;services-and-tasks&quot;&gt;Services and tasks&lt;/h3&gt;
+
+&lt;p&gt;service就是被定义在worker上执行的task；&lt;/p&gt;
+
+&lt;p&gt;当你创建service时，你指定所需的image和需在容器中执行的command&lt;/p&gt;
+
+&lt;p&gt;在replicated services 模式，manager会根据你设置的副本数量自动分配task&lt;/p&gt;
+
+&lt;p&gt;task就是一个容器，也是swarm调度的原子单位，manager节点根据你设置的副本数量分配任务到worker节点。当一个任务分配到node上，他就只能是runing或fail的状态。&lt;/p&gt;
+
+&lt;h3 id=&quot;load-balancing&quot;&gt;Load balancing&lt;/h3&gt;
+
+&lt;p&gt;manager使用ingress load balancing对外暴露服务，manager会自动分配PublishedPort 或者你也可以手动指定未被使用的端口号，如果是你不手动指定，swarm会自动在30000-32767中间分配一个端口号&lt;/p&gt;
+
+&lt;p&gt;你可以访问任意节点的PublishedPort，即使该节点上并没有任务相应的task在运行&lt;/p&gt;
+
+&lt;p&gt;Swarm有一个内部的DNS组件会自动为每个任务分配一条DNS记录，manager根据DNS域名负载该服务的所有请求。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;getting-started-with-swarm-mode&quot;&gt;Getting started with swarm mode&lt;/h2&gt;
+
+&lt;h3 id=&quot;environment&quot;&gt;environment&lt;/h3&gt;
+
+&lt;p&gt;host：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node0 manager1 192.168.1.130&lt;/li&gt;
+  &lt;li&gt;node1	manager2 192.168.1.131&lt;/li&gt;
+  &lt;li&gt;node2	manager3 192.168.1.132&lt;/li&gt;
+  &lt;li&gt;node4	worker1	 192.168.1.133&lt;/li&gt;
+  &lt;li&gt;node5	worker2	 192.168.1.134&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;docker-version：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Client:
+ Version:      1.12.3
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   6b644ec
+ Built:        
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      1.12.3
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   6b644ec
+ Built:        
+ OS/Arch:      linux/amd64&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;port：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TCP port 2377 for cluster management communications&lt;/li&gt;
+  &lt;li&gt;TCP and UDP port 7946 for communication among nodes&lt;/li&gt;
+  &lt;li&gt;TCP and UDP port 4789 for overlay network traffic&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;create-a-swarm&quot;&gt;Create a swarm&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker swarm init –advertise-addr &lt;MANAGER-IP&gt;&lt;/MANAGER-IP&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 ~]# docker swarm init --advertise-addr 192.168.1.130
+Swarm initialized: current node &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;36duyub88vg54x41e0dur9850&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; is now a manager.
+
+To add a worker to this swarm, run the following &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;:
+
+    docker swarm join &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --token SWMTKN-1-1n11n79rldx65uq8krc7h41irve0j4x6lmrlea33u2wriw8vym-8wfukcb9amac6wkcgm340aj6f &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    192.168.1.130:2377
+
+To add a manager to this swarm, run &lt;span class=&quot;s1&quot;&gt;'docker swarm join-token manager'&lt;/span&gt; and follow the instructions.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker info&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Containers: 0
+ Running: 0
+ Paused: 0
+ Stopped: 0
+Images: 35
+Server Version: 1.12.3
+...snip...
+Swarm: active
+ NodeID: 36duyub88vg54x41e0dur9850
+ Is Manager: &lt;span class=&quot;nb&quot;&gt;true
+ &lt;/span&gt;ClusterID: 4uxe2ejgkqky5x77g57p4cp3s
+ Managers: 1
+ Nodes: 1
+ ...snip...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node ls&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 ~]# docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+36duyub88vg54x41e0dur9850 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  node0     Ready   Active        Leader&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;* 表示你当前连接的主机；swarm自动用主机名命名node&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;join-nodes-to-a-swarm&quot;&gt;Join nodes to a swarm&lt;/h2&gt;
+
+&lt;p&gt;docker加入到集群是依赖&lt;code class=&quot;highlighter-rouge&quot;&gt;join-token&lt;/code&gt;的，node使用不同的token可以以不同的身份加入到集群中；如果你后来变更了token，也不影响已经加入到集群的node。&lt;/p&gt;
+
+&lt;h3 id=&quot;join-as-a-worker-node&quot;&gt;Join as a worker node&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker swarm join-token worker&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 ~]# docker swarm join-token worker
+To add a worker to this swarm, run the following &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;:
+
+    docker swarm join &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --token SWMTKN-1-1n11n79rldx65uq8krc7h41irve0j4x6lmrlea33u2wriw8vym-8wfukcb9amac6wkcgm340aj6f &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    192.168.1.130:2377&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;join-as-a-manager-node&quot;&gt;Join as a manager node&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker swarm join-token manager&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 ~]# docker swarm join-token manager
+To add a manager to this swarm, run the following &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;:
+
+    docker swarm join &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --token SWMTKN-1-1n11n79rldx65uq8krc7h41irve0j4x6lmrlea33u2wriw8vym-bdik5uby0lq4s955ij8gnrtkb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    192.168.1.130:2377&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;switches the Docker Engine on the current node into swarm mode.&lt;/li&gt;
+  &lt;li&gt;requests a TLS certificate from the manager.&lt;/li&gt;
+  &lt;li&gt;names the node with the machine hostname&lt;/li&gt;
+  &lt;li&gt;joins the current node to the swarm at the manager listen address based upon the swarm token.&lt;/li&gt;
+  &lt;li&gt;sets the current node to Active availability, meaning it can receive tasks from the scheduler.&lt;/li&gt;
+  &lt;li&gt;extends the ingress overlay network to the current node.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;manage-nodes-in-a-swarm&quot;&gt;Manage nodes in a swarm&lt;/h2&gt;
+
+&lt;h3 id=&quot;list-nodes&quot;&gt;List nodes&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 ~]# docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+36duyub88vg54x41e0dur9850 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  node0     Ready   Active        Leader
+4bgh5mz90cc2cni8vn7ur9gb4    node2     Ready   Active        
+9sh9731bp74enjx9nht6irbon    node3     Ready   Active        
+czavy0nt0bro4fj1tl15fby62    node4     Ready   Active        
+dazpqp2i92e6ityg064r75ahq    node1     Ready   Active    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;AVAILABILITY:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Active 可以分配任务到该节点&lt;/li&gt;
+  &lt;li&gt;Pause  不会分配新的任务到该节点，已有的任务继续运行&lt;/li&gt;
+  &lt;li&gt;Drain  不会分配新的任务到该节点，已有的任务调度到其他node上运行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MANAGER STATUS：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;没有值表示是worker节点，不参与选举。&lt;/li&gt;
+  &lt;li&gt;Leader 表示是主管理节点&lt;/li&gt;
+  &lt;li&gt;Reachable 表示是管理节点，当Leader挂掉后会参与选举。&lt;/li&gt;
+  &lt;li&gt;Unavailable 表示该node是管理节点，但是与其他的manager失去了联系。这时候应该将其降权，并提升一名worker作为新manager&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;inspect-an-individual-node&quot;&gt;Inspect an individual node&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node inspect &lt;NODE-ID&gt; --pretty&lt;/NODE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node inspect node0 --pretty
+ID:                     36duyub88vg54x41e0dur9850
+Hostname:               node0
+Joined at:              2017-01-01 07:18:11.827960041 +0000 utc
+Status:
+ State:                 Ready
+ Availability:          Active
+Manager Status:
+ Address:               192.168.1.130:2377
+ Raft Status:           Reachable
+ Leader:                Yes
+Platform:
+ Operating System:      linux
+ Architecture:          x86_64
+Resources:
+ CPUs:                  1
+ Memory:                977.9 MiB
+Plugins:
+  Network:              bridge, host, null, overlay
+  Volume:               &lt;span class=&quot;nb&quot;&gt;local
+&lt;/span&gt;Engine Version:         1.12.3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;change-node-availability&quot;&gt;Change node availability&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node update&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node update --availability drain node0
+node0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;add-or-remove-label-metadata&quot;&gt;Add or remove label metadata&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node update --label-add foo --label-add &lt;span class=&quot;nv&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;java node0
+node0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;promote-or-demote-a-node&quot;&gt;Promote or demote a node&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node promote&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# docker node promote node1 node2&lt;/span&gt;
+Node node1 promoted to a manager &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the swarm.
+Node node2 promoted to a manager &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the swarm.
+&lt;span class=&quot;c&quot;&gt;# docker node ls&lt;/span&gt;
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+36duyub88vg54x41e0dur9850 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  node0     Ready   Drain         Leader
+4bgh5mz90cc2cni8vn7ur9gb4    node2     Ready   Active        Reachable
+9sh9731bp74enjx9nht6irbon    node3     Ready   Active        
+czavy0nt0bro4fj1tl15fby62    node4     Ready   Active        
+dazpqp2i92e6ityg064r75ahq    node1     Ready   Active        Reachable&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node demote&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# docker node demote node1 node2&lt;/span&gt;
+Manager node1 demoted &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the swarm.
+Manager node2 demoted &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the swarm.
+&lt;span class=&quot;c&quot;&gt;# docker node ls&lt;/span&gt;
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+36duyub88vg54x41e0dur9850 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  node0     Ready   Drain         Leader
+4bgh5mz90cc2cni8vn7ur9gb4    node2     Ready   Active        
+9sh9731bp74enjx9nht6irbon    node3     Ready   Active        
+czavy0nt0bro4fj1tl15fby62    node4     Ready   Active        
+dazpqp2i92e6ityg064r75ahq    node1     Ready   Active  &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;leave-the-swarm&quot;&gt;Leave the swarm&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker swarm leave&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;worker离开集群&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker swarm leave
+Node left the swarm.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;manager离开集群&lt;/p&gt;
+
+&lt;p&gt;先降权成为worker，在以worker身份离开集群&lt;/p&gt;
+
+&lt;p&gt;当node离开了集群之后，可以删除node节点&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node rm&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node rm node1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;deploy-a-service-to-the-swarm&quot;&gt;Deploy a service to the swarm&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service create&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --replicas 1 --name helloworld alpine ping docker.com&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service ls&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;inspect-a-service-on-the-swarm&quot;&gt;Inspect a service on the swarm&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service inspect –pretty &lt;SERVICE-ID&gt;&lt;/SERVICE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service inspect --pretty helloworld&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service ps &lt;SERVICE-ID&gt;&lt;/SERVICE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service ps helloworld&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;scale-the-service-in-the-swarm&quot;&gt;Scale the service in the swarm&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service scale &lt;SERVICE-ID&gt;=&lt;NUMBER-OF-TASKS&gt;&lt;/NUMBER-OF-TASKS&gt;&lt;/SERVICE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service scale &lt;span class=&quot;nv&quot;&gt;helloworld&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service ps &lt;SERVICE-ID&gt;&lt;/SERVICE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service ps helloworld&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;delete-the-service-running-on-the-swarm&quot;&gt;Delete the service running on the swarm&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service rm h&lt;SERVICE-ID&gt;&lt;/SERVICE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service rm helloworld&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;apply-rolling-updates-to-a-service&quot;&gt;Apply rolling updates to a service&lt;/h2&gt;
+
+&lt;p&gt;部署 Redis 3.0.6 并设置update服务时的延时为10s&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --replicas 3 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --name redis &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --update-delay 10s &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  redis:3.0.6&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--update-delay&lt;/code&gt; 标签用来配置update服务时的延时间隔；可选格式：3h 5m 10m30s 10s&lt;/p&gt;
+
+&lt;p&gt;默认情况下一次升级所有服务，你可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;--update-parallelism&lt;/code&gt;标签设置一次更新任务的数量&lt;/p&gt;
+
+&lt;p&gt;默认情况下，更新任务中如果有失败的情况，会停止继续更新，当然，你可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;--update-failure-action&lt;/code&gt;标签去控制更新失败后的行为&lt;/p&gt;
+
+&lt;p&gt;Inspect the redis service:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service inspect --pretty redis&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;updates service：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service update –image redis:3.0.7 redis&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;调度更新过程如下：&lt;/p&gt;
+
+&lt;p&gt;停止第一个任务&lt;/p&gt;
+
+&lt;p&gt;升级刚才停止的任务&lt;/p&gt;
+
+&lt;p&gt;启动新的容器替换刚才停止任务&lt;/p&gt;
+
+&lt;p&gt;如果更新状态是RUNNING，等待延时间隔，续集更新下一个任务&lt;/p&gt;
+
+&lt;p&gt;如果跟新状态是FAILED，停止更新&lt;/p&gt;
+
+&lt;p&gt;Run docker service inspect –pretty redis to see the new image in the desired state:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service inspect --pretty redis&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;To restart a paused update run docker service update &lt;SERVICE-ID&gt;. For example:&lt;/SERVICE-ID&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service update redis&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Run docker service ps &lt;SERVICE-ID&gt; to watch the rolling update:&lt;/SERVICE-ID&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service ps redis&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;drain-a-node-on-the-swarm&quot;&gt;Drain a node on the swarm&lt;/h2&gt;
+
+&lt;p&gt;默认情况下，swarm manager会向所有状态为&lt;code class=&quot;highlighter-rouge&quot;&gt;ACTIVE &lt;/code&gt;的节点分配任务，包括manager自身。&lt;/p&gt;
+
+&lt;p&gt;当你需要使某台设备下架维护时，你可以将这台设备设置为&lt;code class=&quot;highlighter-rouge&quot;&gt;DRAIN&lt;/code&gt;状态，那么这台设备上的任务会被停止掉，自动在状态为 &lt;code class=&quot;highlighter-rouge&quot;&gt;ACTIVE &lt;/code&gt;的节点上启动该任务。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node update –availability drain &lt;NODE-ID&gt;&lt;/NODE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker node update –availability active &lt;NODE-ID&gt;&lt;/NODE-ID&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;use-swarm-mode-routing-mesh&quot;&gt;Use swarm mode routing mesh&lt;/h2&gt;
+
+&lt;p&gt;swarm使对外暴露服务端口变得简单，所有的节点加入到了&lt;code class=&quot;highlighter-rouge&quot;&gt;ngress routing mesh&lt;/code&gt;，routing mesh可以使每个节点都能接收外部的请求，即使某个节点上没有相关任务在运行，routing mesh也能正确的将请求路由到可用的节点。&lt;/p&gt;
+
+&lt;p&gt;为了使用 ingress network 你需要占用以下端口:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Port 7946 TCP/UDP for container network discovery.&lt;/li&gt;
+  &lt;li&gt;Port 4789 UDP for the container ingress network.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;publish-a-port-for-a-service&quot;&gt;Publish a port for a service&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --name &amp;lt;SERVICE-NAME&amp;gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --publish &amp;lt;PUBLISHED-PORT&amp;gt;:&amp;lt;TARGET-PORT&amp;gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &amp;lt;IMAGE&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;TARGET-PORT&amp;gt;&lt;/code&gt;表示容器监听的端口，&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;PUBLISHED-PORT&amp;gt;&lt;/code&gt; swarm服务监听的端口&lt;/p&gt;
+
+&lt;p&gt;例如：想对外提供8080的访问&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --name my-web &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --publish 8080:80 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --replicas 2 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;当你访问集群任意节点的8080端口，swarm自动负载路由请求到可用节点上。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/Docker-Swarm-Basic/ingress-routing-mesh.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;对于已经存在的服务，你可以使用update去更新对外端口&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service update &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --publish-add &amp;lt;PUBLISHED-PORT&amp;gt;:&amp;lt;TARGET-PORT&amp;gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &amp;lt;SERVICE&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;查看服务对外暴露的端口&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service inspect --format&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt; my-web&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;暴露TCP端口&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service create –name dns-cache -p 53:53 dns-cache&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service create –name dns-cache -p 53:53/tcp dns-cache&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;暴露UDP端口&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service create –name dns-cache -p 53:53/udp dns-cache&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;暴露TCP/UDP端口&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker service create –name dns-cache -p 53:53/tcp -p 53:53/udp dns-cache&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;configure-an-external-load-balancer&quot;&gt;Configure an external load balancer&lt;/h3&gt;
+
+&lt;p&gt;你可以配置一个外部的负载均衡器去路由请求到swarm节点，例如 HAProxy负载请求到nginx服务的8080端口&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/Docker-Swarm-Basic/ingress-lb.png&quot; alt=&quot;02&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Sun, 01 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Swarm-Basic.html</link>
+        <guid isPermaLink="true">/docker/Docker-Swarm-Basic.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker 1.12 Swarm集群实战 第七章</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker 1.12 Swarm集群实战 第七章&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Swarm7.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker 1.12 Swarm集群实战 第七章&lt;/h1&gt;
+        &lt;p&gt;Dec 24 2016&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#constraints&quot; id=&quot;markdown-toc-constraints&quot;&gt;constraints约束&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#volume&quot; id=&quot;markdown-toc-volume&quot;&gt;volume创建管理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;这一章节主要是对前面章节的补充说明；主要包括constraints约束和volume的挂载使用；&lt;/p&gt;
+
+&lt;h2 id=&quot;constraints&quot;&gt;constraints约束&lt;/h2&gt;
+
+&lt;p&gt;还记得在前面我们创建的registry服务的时候,有一个问题点需要注意：&lt;/p&gt;
+
+&lt;p&gt;我们的registry是由swarm自动调度到某个节点上的. 这样的话我们如果我们重启service以后, registry服务可能会被启动再随机的节点.&lt;/p&gt;
+
+&lt;p&gt;造成我们上传的镜像都不见了. 如何解决这个问题呢?&lt;/p&gt;
+
+&lt;p&gt;在创建service的时候可以使用–constraints参数,后面跟表达式,限制service容器在每个节点的调度情况.比如你想指定service运行在某个节点上等.
+例如指定service运行在node1上:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --name registry --publish 5000:5000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==node1'&lt;/span&gt; registry&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;除了hostname也可以使用其他节点属性来创建约束表达式；写法参见下面：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node.id&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;node.id == 2ivku8v2gvtg4&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node.hostname&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;node.hostname != node02&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node.role&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;node.role == manager&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;node.labels&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;node.labels.security == high&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;engine.labels&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;engine.labels.operatingsystem == ubuntu 14.04&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;用户自定义labels可以使用docker node update命令添加, 例如:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node update --label-add &lt;span class=&quot;nv&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;high node3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;查看自定义labels&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker node inspect node3
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;ID&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;jfasdjfirfjfijeia03012fa0&quot;&lt;/span&gt;,
+...
+        &lt;span class=&quot;s2&quot;&gt;&quot;Spec&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;s2&quot;&gt;&quot;Labels&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&quot;security&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;high&quot;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+            &lt;span class=&quot;s2&quot;&gt;&quot;Role&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;manager&quot;&lt;/span&gt;,
+            &lt;span class=&quot;s2&quot;&gt;&quot;Availability&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;active&quot;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;Description&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;s2&quot;&gt;&quot;Hostname&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;node3&quot;&lt;/span&gt;,
+            &lt;span class=&quot;s2&quot;&gt;&quot;Platform&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&quot;Architecture&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;x86_64&quot;&lt;/span&gt;,
+                &lt;span class=&quot;s2&quot;&gt;&quot;OS&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;linux&quot;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+...
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;对于已有service, 可以通过docker service update,添加constraint配置, 例如:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service update registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--constraint-add &lt;span class=&quot;s1&quot;&gt;'node.labels.security==high'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;volume&quot;&gt;volume创建管理&lt;/h2&gt;
+
+&lt;p&gt;有了service约束, 我们可以保证我们的registry服务, 一直在node01节点上了.&lt;/p&gt;
+
+&lt;p&gt;不过还有一个问题, 就是如果我们删除了registry服务. 那我们上传的容器镜像也就被删除了.&lt;/p&gt;
+
+&lt;p&gt;如何保证即使registry服务被删除, 镜像可以保留呢?&lt;/p&gt;
+
+&lt;p&gt;这里我们可以使用 docker volume指定挂载一个数据卷用来保存镜像, 即使registry服务被删除了. 我们重新启动一个服务, 挂载这个数据卷. 我们上传的镜像还可以保存的.&lt;/p&gt;
+
+&lt;p&gt;在swarm集群中我们可以创建本地卷或者全局卷来挂载到容器, 用来保存数据.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;全局卷可以被挂载在swarm集群的任意节点, 所以不管你的服务容器启动在哪个节点, 都可以访问到数据. 不过docker目前还没有默认的全局卷驱动支持, 你可以安装一些插件驱动来实现全局卷例如Flocker, Portworx等.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;本地卷就只存在与某个节点本地的一个挂载卷.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;为我们刚刚新建的registry服务, 挂载一个本地卷,可以使用如下命令:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service update registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount-add &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;volume,source&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;registry-vol,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/lib/registry&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;source=registry-vol 中registry-vol为卷名字, 执行上述命令以后,docker会自动为我们创建一个registry-vol本地卷.&lt;/p&gt;
+
+&lt;p&gt;可以使用docker volume ls命令查看:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker volume ls
+DRIVER              VOLUME NAME
+&lt;span class=&quot;nb&quot;&gt;local               &lt;/span&gt;registry-vol
+
+docker volume inspect registry-vol
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;registry-vol&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;Driver&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;Mountpoint&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;/var/lib/docker/volumes/registry-vol/_data&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;Labels&quot;&lt;/span&gt;: null,
+        &lt;span class=&quot;s2&quot;&gt;&quot;Scope&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;上面命令, 可以看到本机卷挂载到节点的目录.&lt;/p&gt;
+
+&lt;p&gt;这样即使我们现在删除registry服务. 也可以只用如下命令重新创建一个registry服务, 挂载registry-vol来找回我们的镜像.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --name registry --publish 5000:5000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;registry-vol,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;volume,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/lib/registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-e &lt;span class=&quot;nv&quot;&gt;SEARCH_BACKEND&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sqlalchemy &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==node3'&lt;/span&gt; registry&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+&lt;hr /&gt;
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Swarm7.html</link>
+        <guid isPermaLink="true">/docker/Docker-Swarm7.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker 1.12 Swarm集群实战 第六章</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker 1.12 Swarm集群实战 第六章&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Monitor.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker 1.12 Swarm集群实战 第六章&lt;/h1&gt;
+        &lt;p&gt;Dec 24 2016&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#influxdb&quot; id=&quot;markdown-toc-influxdb&quot;&gt;InfluxDB&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cadvisor&quot; id=&quot;markdown-toc-cadvisor&quot;&gt;cAdvisor&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#cadvisor-1&quot; id=&quot;markdown-toc-cadvisor-1&quot;&gt;验证cadvisor&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#grafana&quot; id=&quot;markdown-toc-grafana&quot;&gt;Grafana&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;添加数据源&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;新建性能绘图&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#end&quot; id=&quot;markdown-toc-end&quot;&gt;end&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;这一章我们来介绍如何使用cAdvisor+InfluxDB+Grafana搭建一个简单的swarm性能监控平台；&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;cAdvisor：用来收集docker容器内部和host主机上的性能数据；&lt;/li&gt;
+  &lt;li&gt;InfuxDB：开源分布式时序数据库, 用来保存cAvisor收集的性能数据；&lt;/li&gt;
+  &lt;li&gt;Grafana：性能绘图仪表盘工具, 读取Influxdb性能数据,绘图展示；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;influxdb&quot;&gt;InfluxDB&lt;/h2&gt;
+
+&lt;p&gt;启动一个lnfuxDB容器，用于收集docker性能数据&lt;/p&gt;
+
+&lt;p&gt;发布两个端口：8086用于lnfluxdb数据读写；8083用于数据库管理；&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --network logging -p 8083:8083 -p 8086:8086 --mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;influxdb-vol,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;volume,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/lib/influxdb --name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;influxdb --constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==node3'&lt;/span&gt; influxdb:alpine&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里使用logging网络, 如果你的swarm集群里面没有创建这个网络,使用命令创建：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker network create –driver overlay logging&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;influxdb启动成功后，访问集群任意节点ip的8083端口即可访问管理界面；&lt;/p&gt;
+
+&lt;p&gt;点击右上角的“连接设置”，输入用户名root，输入密码root，save保存&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/1.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;下面我们创建一个数据库cadvisor, 用于保存swarm集群性能数据&lt;/p&gt;
+
+&lt;p&gt;在Query框中输入, CREATE DATABASE “cadvisor”按回车执行&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/b368eca9-1c0e-45d6-9532-dd28e69f7231.png&quot; alt=&quot;02&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;SHOW DATABASES将会看到我们新建的数据库&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/141584c6-d026-485d-9e65-8adfdc4f0bbb.png&quot; alt=&quot;03&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;cadvisor&quot;&gt;cAdvisor&lt;/h2&gt;
+
+&lt;p&gt;Google开源的容器监控工具；在Goolge开源社区关注度排名第一的工具；&lt;/p&gt;
+
+&lt;p&gt;需在所有swarm节点运行cAdvisor服务&lt;/p&gt;
+
+&lt;p&gt;1.任意一台节点下载cadvisior镜像&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker pull google/cadvisor&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;2.retag完上传至本地仓库便于其他节点快速下载&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker push localhost:5000/cadvisor&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;3.使用global模式在所有节点上部署cAdvisor&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --network logging --name cadvisor --mode global &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/run,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/run,readonly&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/rootfs,readonly&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/sys,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/sys,readonly&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--mount &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/lib/docker,type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;,target&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/lib/docker,readonly&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+localhost:5000/cadvisor -storage_driver&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;influxdb -storage_driver_host&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;influxdb:8086 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-storage_driver_db&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cadvisor&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;–mode global 指定service运行在每个swarm节点上&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;–mount 挂载本地docker socket用于监控docker性能&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;-storage_driver=influxdb 指定存储驱动,使cadvisor将数据存储到数据库中&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;-storage_driver_host=influxdb:8086 InfluxDB地址&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;-storage_driver_db=cadvisor 数据库名称&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;4.验证启动情况&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service ps cadvisor
+ID                         NAME          IMAGE                    NODE   DESIRED STATE  CURRENT STATE          ERROR
+cnenwrggfqu2dqaiwu9z132l0  cadvisor      localhost:5000/cadvisor  node2  Running        Running 3 minutes ago  
+1eiyhx4xgz0dvsle9dlufpeyw   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cadvisor  localhost:5000/cadvisor  node1  Running        Running 3 minutes ago  
+1xo08qgm9rwn0hjwsfxr9w7tp   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cadvisor  localhost:5000/cadvisor  node0  Running        Running 3 minutes ago  
+ai2bmutq4g2nzinouhvkpvuug   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cadvisor  localhost:5000/cadvisor  node3  Running        Running 3 minutes ago  
+avxzu8ab7mtyig4dbo18oxdss   &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt; cadvisor  localhost:5000/cadvisor  node4  Running        Running 3 minutes ago  &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;cadvisor-1&quot;&gt;验证cadvisor&lt;/h3&gt;
+
+&lt;p&gt;打开InfluxDB的管理界面, 查询cadvisor数据库数据, 验证性能数据收集情况.&lt;/p&gt;
+
+&lt;p&gt;点击右上角切换数据库至cadvisor, 输入查询SHOW MEASUREMENTS.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/826491f7-de37-4f69-969a-ea5fd5f4d026.png&quot; alt=&quot;04&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果想查看具体的数据值可以使用select * from &lt;mesurements name=&quot;&quot;&gt;查询&lt;/mesurements&gt;&lt;/p&gt;
+
+&lt;p&gt;例如：例如我们查询下 memory_usage. 可以直接输入select * from memory_usage&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;grafana&quot;&gt;Grafana&lt;/h2&gt;
+
+&lt;p&gt;创建Grafana服务&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create --network logging &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-p 3000:3000 -e &lt;span class=&quot;s2&quot;&gt;&quot;GF_SECURITY_ADMIN_PASSWORD=admin&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==node1'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--name grafana grafana/grafana&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;打开浏览器访问swarm集群的3000端口,打开grafana webUI. 输入用户名密码登录&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/85cceb0a-e6b5-40b8-9579-43ec774a5829.jpg&quot; alt=&quot;05&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;添加数据源&lt;/h3&gt;
+
+&lt;p&gt;点击左上角图标, 选择Data Sources, 然后点击Add data source, 点击Default&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/9c53b468-ae1d-4fef-bf17-edb3ca04603c.png&quot; alt=&quot;06&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/24de34ef-5975-452f-adc4-8dfb0d8a53b7.png&quot; alt=&quot;07&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;新建性能绘图&lt;/h3&gt;
+
+&lt;p&gt;以node1为例, 我们新建一个dashboard名为node1.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Filesystem Limit/Usage&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;点击Home, 点击Create New, 点击右侧绿色块选Add Panel, 选Graph&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/62b772c9-fe6e-408c-b981-33be49063cf5.png&quot; alt=&quot;07&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;General面板 Title填Filesystem Limit/Usage, Span填6&lt;/p&gt;
+
+&lt;p&gt;Metrics面板 Panel data source选Influxdb_source, 点击Add query,在上面的A, B查询框中分别输入查询:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;fs_limit&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;fs_usage&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;8ko8h0egr0vgydoww6poysg70 是我的node1的ID，请根据实际情况修改（docker node ls 查看nodeID）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/69604c2b-bfcd-4204-a40a-79605c38403e.png&quot; alt=&quot;08&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Axes面板, Left Y-&amp;gt;Unit-&amp;gt;data-&amp;gt;bytes, Right Y-&amp;gt;Unit-&amp;gt;data-&amp;gt;bytes 保存&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/035f25b4-535c-4de6-ac3f-73aa4af20886.png&quot; alt=&quot;09&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;回到dashboard可以看到我们的监控绘图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/7fd47ea5-c416-409f-a732-525b0e30a444.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;CPU Usage&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;点击左上角绿色隐藏模块；选Add Panel, 选Graph&lt;/p&gt;
+
+&lt;p&gt;General面板 Title填CPU Usage, Span填6&lt;/p&gt;
+
+&lt;p&gt;Metrics面板 Panel data source选Influxdb_source, 查询窗口输入如下语句:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;cpu_usage_system&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;container_name&quot;&lt;/span&gt; !&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt; AND &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;container_name&quot;&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Axes面板, Left Y-&amp;gt;Unit-&amp;gt;time-&amp;gt;Hertz(1/s), Right Y-&amp;gt;Unit-&amp;gt;time-&amp;gt;Hertz(1/s) 保存&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Memory Usage&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;点击右侧Add rows, 点击左侧绿色块选Add Panel, 选Graph&lt;/p&gt;
+
+&lt;p&gt;General面板 Title填Memory Usage, Span填6&lt;/p&gt;
+
+&lt;p&gt;Metrics面板 Panel data source选Influxdb_source, 查询窗口输入如下语句&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;memory_usage&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;container_name&quot;&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Axes面板, Left Y-&amp;gt;Unit-&amp;gt;time-&amp;gt;bytes, Right Y-&amp;gt;Unit-&amp;gt;time-&amp;gt;bytes 保存&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Network Transmit / Receive&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;点击左侧绿色块选Add Panel, 选Graph&lt;/p&gt;
+
+&lt;p&gt;General面板 Title填Network Transmit / Receive, Span填6&lt;/p&gt;
+
+&lt;p&gt;Metrics面板 Panel data source选Influxdb_source, 点击Add query,在上面的A, B查询框中分别输入查询:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;rx_bytes&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; FROM &lt;span class=&quot;s2&quot;&gt;&quot;tx_bytes&quot;&lt;/span&gt; WHERE &lt;span class=&quot;s2&quot;&gt;&quot;com.docker.swarm.node.id&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'8ko8h0egr0vgydoww6poysg70'&lt;/span&gt; AND &lt;span class=&quot;nv&quot;&gt;$timeFilter&lt;/span&gt; GROUP BY &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; fill&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;null&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Axes面板, Left Y-&amp;gt;Unit-&amp;gt;data rate-&amp;gt;bytes/sec, Right Y-&amp;gt;Unit-&amp;gt;time-&amp;gt;bytes/sec 保存&lt;/p&gt;
+
+&lt;p&gt;最后完成我们就可以看到这个节点的性能数据了：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-monitor/5a308da1-7801-42f4-993e-f2dc1246a65e.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;其他节点监控&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;你可以点击左上齿轮图标选Save As保存, 复制一份node1的配置. 然后编辑每个图表的查询语句替换com.docker.swarm.node.id, 就可以了.&lt;/p&gt;
+
+&lt;h2 id=&quot;end&quot;&gt;end&lt;/h2&gt;
+
+&lt;p&gt;Grafana 的绘图功能很强大, 而且支持多重数据源, 本章只是简单介绍下几个图的绘制方法,可能并没有什么实际意义, 只是希望能给大家一个入门的了解.&lt;/p&gt;
+
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Monitor.html</link>
+        <guid isPermaLink="true">/docker/Docker-Monitor.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker 1.12 Swarm集群实战 第五章</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker 1.12 Swarm集群实战 第五章&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-ELK.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker 1.12 Swarm集群实战 第五章&lt;/h1&gt;
+        &lt;p&gt;Dec 24 2016&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#elk&quot; id=&quot;markdown-toc-elk&quot;&gt;ELK日志平台&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;现在我们有了docker swarm集群，上面跑了docker币应用，以后还会有更多的应用跑在集群上；&lt;/p&gt;
+
+&lt;p&gt;如何监控每个应用的运行状态呢？&lt;/p&gt;
+
+&lt;p&gt;所以我们需要一个日志平台用来收集分析展示所有的swarm集群上应用的日志;&lt;/p&gt;
+
+&lt;h2 id=&quot;elk&quot;&gt;ELK日志平台&lt;/h2&gt;
+
+&lt;p&gt;在本小节我们使用ELK日志平台，什么是ELK？&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ElasticSearch：存储和索引日志&lt;/li&gt;
+  &lt;li&gt;Logstash：接收，发送，过滤，分隔日志&lt;/li&gt;
+  &lt;li&gt;Kibana：用来索引，展示，分析日志的UI&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我们会在每个swarm节点上使用syslgo协议发送日志到logstash，存储在elasticsearch中；最后使用kibana分析展示日志。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;e……后续完善&lt;/p&gt;
+
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-ELK.html</link>
+        <guid isPermaLink="true">/docker/Docker-ELK.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker 基础知识点介绍</title>
+        <description>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+  &lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;title&gt;Docker 基础知识点介绍&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Basic.html&quot;&gt;
+	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+&lt;/head&gt;
+
+
+ &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
+  &lt;body&gt;
+
+    &lt;header&gt;
+
+&lt;!-- navbar --&gt;
+  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
+    &lt;div class=&quot;navbar-header&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
+      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
+    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+
+        
+          &lt;li&gt;
+        
+        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+            
+              &lt;li&gt;
+            
+            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
+          
+        
+          
+        
+          
+        
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt;
+
+&lt;/header&gt;
+
+    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
+      &lt;div class=&quot;row&quot;&gt;
+  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
+    &lt;div class=&quot;post-area post&quot;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Docker 基础知识点介绍&lt;/h1&gt;
+        &lt;p&gt;Dec 24 2016&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;hr&gt;
+      &lt;article&gt;
+        &lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#install-docker-112&quot; id=&quot;markdown-toc-install-docker-112&quot;&gt;Install docker 1.12&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#install-with-yum&quot; id=&quot;markdown-toc-install-with-yum&quot;&gt;Install with yum&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#install-docker-from-binaries&quot; id=&quot;markdown-toc-install-docker-from-binaries&quot;&gt;Install Docker from binaries&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#install-with-the-script&quot; id=&quot;markdown-toc-install-with-the-script&quot;&gt;Install with the script&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#docker-command&quot; id=&quot;markdown-toc-docker-command&quot;&gt;Docker Command&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#docker4&quot; id=&quot;markdown-toc-docker4&quot;&gt;Docker的4种网络模式&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#host&quot; id=&quot;markdown-toc-host&quot;&gt;host模式&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#container&quot; id=&quot;markdown-toc-container&quot;&gt;container模式&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#none&quot; id=&quot;markdown-toc-none&quot;&gt;none模式&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#bridge&quot; id=&quot;markdown-toc-bridge&quot;&gt;bridge模式（默认模式）&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#docker&quot; id=&quot;markdown-toc-docker&quot;&gt;Docker存储&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;数据卷&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;数据卷容器&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#dockerfile&quot; id=&quot;markdown-toc-dockerfile&quot;&gt;Dockerfile&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#namespace&quot; id=&quot;markdown-toc-namespace&quot;&gt;Namespace资源隔离&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#control-groups-cgroups&quot; id=&quot;markdown-toc-control-groups-cgroups&quot;&gt;Control Groups (cgroups)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#docker-registry&quot; id=&quot;markdown-toc-docker-registry&quot;&gt;Docker-Registry&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#http-registry&quot; id=&quot;markdown-toc-http-registry&quot;&gt;HTTP-registry&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#https-registry&quot; id=&quot;markdown-toc-https-registry&quot;&gt;HTTPS-registry&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#docker-compose&quot; id=&quot;markdown-toc-docker-compose&quot;&gt;Docker-compose&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#install-docker-compose&quot; id=&quot;markdown-toc-install-docker-compose&quot;&gt;Install docker-compose&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#get-started-with-docker-compose&quot; id=&quot;markdown-toc-get-started-with-docker-compose&quot;&gt;Get started with Docker Compose&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;install-docker-112&quot;&gt;Install docker 1.12&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Docker requires a 64-bit OS and version 3.10 or higher of the Linux kernel.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To check your current kernel version, open a terminal and use uname -r to display your kernel version:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;uname -r
+3.10.0-327.el7.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;install-with-yum&quot;&gt;Install with yum&lt;/h3&gt;
+
+&lt;p&gt;Add the yum repo.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tee /etc/yum.repos.d/docker.repo &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;-'EOF'
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Install the Docker package.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install docker-engine&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Enable the service and start docker daemon.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;docker.service
+systemctl start docker&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Verification&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;install-docker-from-binaries&quot;&gt;Install Docker from binaries&lt;/h3&gt;
+
+&lt;p&gt;Download the docker binaries&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://get.docker.com/builds/Linux/x86_64/docker-1.12.0.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Install and start docker daemon&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tar xf docker-1.12.0.tgz
+mv docker/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /usr/bin/
+dockerd &amp;amp;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Verification&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;install-with-the-script&quot;&gt;Install with the script&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -fsSL https://get.docker.com/ | sh&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;docker.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl start docker&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;docker-command&quot;&gt;Docker Command&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;下载镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker pull ubuntu:14.04&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;导出镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker save centos &amp;gt;/opt/centos.tar.gz&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;导入镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker load &amp;lt;/opt/centos.tar.gz&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;列出当前已下载的镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker images&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker rmi image-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ps:如果镜像被用来创建了容器，那么需先删除容器&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在dockerhub上搜索镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker search centos&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动一个容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker run -name myfirst_docker -it ubuntu:14.04 /bin/bash&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;后台启动容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker run -d centos:6.6 /bin/bash -c “whilr ture;do echo “hahah”;sleep 1;done”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;-d:后台启动&lt;/p&gt;
+
+&lt;p&gt;-name：定义容器名称&lt;/p&gt;
+
+&lt;p&gt;-i：打开容器的标准输入&lt;/p&gt;
+
+&lt;p&gt;-t：分配一个伪终端并绑定到容器的标准输入上&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;容器退出时自动删除该容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker run –rm centos echo “hello world”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动一个已停止的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker start container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看启动的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker ps&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看所有的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker ps -a&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取容器内的log&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker logs container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看容器内部进程&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker top container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;停止容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker stop container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;极端方式停止容器（不推荐）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker kill container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取所有启动的容器的ID号&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker ps -q&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取所有容器的ID号&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker ps -a -q&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;批量杀掉启动的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker kill $(docker ps -q)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除已停止的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker rm container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除正在运行的容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker rm -f container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除所有容器和镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker kill $(docker ps -q)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker rm $(docker ps -a -q)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker rmi $(docker images -q -a)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;进入正在运行的容器中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker attach container-ID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Note：多个窗口同时attach到同一个容器中时，会同步显示某个窗口的一切信息，当这个窗口阻塞，其他窗口也无法操作&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;nsenter命令&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;nsenter可以访问另一个进程的名字空间，需要root权限&lt;/p&gt;
+
+&lt;p&gt;yum -y install util-linux&lt;/p&gt;
+
+&lt;p&gt;docker inspect –format &quot;\{\{.State.Pid\}\}&quot; 867e6627a194&lt;/p&gt;
+
+&lt;p&gt;找到容器的第一个进程的PID&lt;/p&gt;
+
+&lt;p&gt;nsenter -t 20012 -u -i -n -p&lt;/p&gt;
+
+&lt;p&gt;利用PID进入该容器&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;commit镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker commit -m “my nginx” container-ID test/mynginx:v1   #自定义一个镜像&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;docker4&quot;&gt;Docker的4种网络模式&lt;/h2&gt;
+
+&lt;h3 id=&quot;host&quot;&gt;host模式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;众所周知，Docker使用了Linux的Namespaces技术来进行资源隔离，如PID Namespace隔离进程，Mount Namespace隔离文件系统，Network Namespace隔离网络等。一个Network Namespace提供了一份独立的网络环境，包括网卡、路由、Iptable规则等都与其他的Network Namespace隔离。一个Docker容器一般会分配一个独立的Network Namespace。但如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。
+例如，我们在10.10.101.105/24的机器上用host模式启动一个含有web应用的Docker容器，监听tcp80端口。当我们在容器中执行任何类似ifconfig命令查看网络环境时，看到的都是宿主机上的信息。而外界访问容器中的应用，则直接使用10.10.101.105:80即可，不用任何NAT转换，就如直接跑在宿主机中一样。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;container&quot;&gt;container模式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在理解了host模式后，这个模式也就好理解了。这个模式指定新创建的容器和已经存在的一个容器共享一个Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过lo网卡设备通信。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;none&quot;&gt;none模式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;这个模式和前两个不同。在这种模式下，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;bridge&quot;&gt;bridge模式（默认模式）&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;当Docker server启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。接下来就要为容器分配IP了，Docker会从RFC1918所定义的私有IP网段中，选择一个和宿主机不同的IP地址和子网分配给docker0，连接到docker0的容器就从这个子网中选择一个未占用的IP使用。如一般Docker会使用172.17.0.0/16这个网段，并将172.17.42.1/16分配给docker0网桥（在主机上使用ifconfig命令是可以看到docker0的，可以认为它是网桥的管理接口，在宿主机上作为一块虚拟网卡使用）。单机环境下的网络拓扑如下，主机地址为10.10.101.105/24。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动容器时指定端口&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker run -d -p 80:8080 nginx&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;host的80映射到container的8080端口&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;docker&quot;&gt;Docker存储&lt;/h2&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;数据卷&lt;/h3&gt;
+
+&lt;p&gt;-v /data挂载data目录
+-v file 挂在一个文件
+-v src:dst 指定一个挂载目录，开发常用，挂载物理机代码所在目录，nginx直接使用代码创建一个centos容器，挂载/data目录，挂载时可以指定权限 ro rw 等&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -it --name volume-test1 -v /data centos     &lt;span class=&quot;c&quot;&gt;#给容器挂载一个/data目录&lt;/span&gt;
+docker inspect 023072ed38db |grep -A 5 &lt;span class=&quot;s2&quot;&gt;&quot;Mounts&quot;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;#查看容器中/data目录对应真实的物理位置&lt;/span&gt;
+docker run -it -v /tmp:/opt centos   &lt;span class=&quot;c&quot;&gt;#挂载物理机的tmp目录到容器的opt下&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;数据卷容器&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -d --name myvolume centos
+docker run -it --name myvolum-test --volumes-from myvolume centos&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;dockerfile&quot;&gt;Dockerfile&lt;/h2&gt;
+
+&lt;p&gt;Dockerfile:镜像的描述文件；所有镜像都由Dockerfile生成；&lt;/p&gt;
+
+&lt;p&gt;dockerfile 4大部分&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;基础镜像信息&lt;/li&gt;
+  &lt;li&gt;维护者信息&lt;/li&gt;
+  &lt;li&gt;镜像操作指令&lt;/li&gt;
+  &lt;li&gt;容器启动时执行指令&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Dockerfile 实例:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /opt/dockerfille/nginx/Dockerfile
+&lt;span class=&quot;c&quot;&gt;# This is nginx Dockfile&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Verion 1.1.1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Author Chuck.Ma&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Date 2016/1/6&lt;/span&gt;
+FROM centos
+MAINTAINER robin.wangrubin@gmail.com
+RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm
+RUN yum install -y nginx
+RUN &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Robin.Wangrubin&quot;&lt;/span&gt; &amp;gt; /usr/share/nginx/html/index.html
+RUN &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;daemon off;&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/nginx/nginx.conf
+EXPOSE 80
+CMD &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nginx&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;生成镜像文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker build -t &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;/mynginx:v5 /opt/dockerfille/nginx/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Note：/opt/dockerfille/nginx/下面的Dockerfile文件务必命名为[Dockerfile] ；D大写！&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;namespace&quot;&gt;Namespace资源隔离&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-Basic/759122388670221.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pid namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;不同用户的进程就是通过pid namespace隔离开的，且不同 namespace 中可以有相同pid。所有的LXC进程在docker中的父进程为docker进程，每个lxc进程具有不同的namespace。同时由于允许嵌套，因此可以很方便的实现 Docker in Docker。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;net namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;有了 pid namespace, 每个namespace中的pid能够相互隔离，但是网络端口还是共享host的端口。网络隔离是通过net namespace实现的， 每个net namespace有独立的 network devices, IP addresses, IP routing tables, /proc/net 目录。这样每个container的网络就能隔离开来。docker默认采用veth的方式将container中的虚拟网卡同host上的一个docker bridge: docker0连接在一起。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ipc namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;container中进程交互还是采用linux常见的进程间交互方法(interprocess communication – IPC), 包括常见的信号量、消息队列和共享内存。然而同 VM 不同的是，container 的进程间交互实际上还是host上具有相同pid namespace中的进程间交互，因此需要在IPC资源申请时加入namespace信息 – 每个IPC资源有一个唯一的32位ID。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;mnt namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;类似chroot，将一个进程放到一个特定的目录执行。mnt namespace允许不同namespace的进程看到的文件结构不同，这样每个 namespace 中的进程所看到的文件目录就被隔离开了。同chroot不同，每个namespace中的container在/proc/mounts的信息只包含所在namespace的mount point。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;uts namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;UTS(“UNIX Time-sharing System”) namespace允许每个container拥有独立的hostname和domain name, 使其在网络上可以被视作一个独立的节点而非Host上的一个进程。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;user namespace&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;每个container可以有不同的 user 和 group id, 也就是说可以在container内部用container内部的用户执行程序而非Host上的用户。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ps：我是没看懂&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;control-groups-cgroups&quot;&gt;Control Groups (cgroups)&lt;/h2&gt;
+
+&lt;p&gt;cgroups 实现了对资源的配额和度量。 cgroups 的使用非常简单，提供类似文件的接口，在 /cgroup目录下新建一个文件夹即可新建一个group，在此文件夹中新建task文件，并将pid写入该文件，即可实现对该进程的资源控制。groups可以限制blkio、cpu、cpuacct、cpuset、devices、freezer、memory、net_cls、ns九大子系统的资源，以下是每个子系统的详细说明（可以使用docker run –help查看）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;blkio 这个子系统设置限制每个块设备的输入输出控制。例如:磁盘，光盘以及usb等等。&lt;/li&gt;
+  &lt;li&gt;cpu 这个子系统使用调度程序为cgroup任务提供cpu的访问。&lt;/li&gt;
+  &lt;li&gt;cpuacct 产生cgroup任务的cpu资源报告。&lt;/li&gt;
+  &lt;li&gt;cpuset 如果是多核心的cpu，这个子系统会为cgroup任务分配单独的cpu和内存。&lt;/li&gt;
+  &lt;li&gt;devices 允许或拒绝cgroup任务对设备的访问。&lt;/li&gt;
+  &lt;li&gt;freezer 暂停和恢复cgroup任务。&lt;/li&gt;
+  &lt;li&gt;memory 设置每个cgroup的内存限制以及产生内存资源报告。&lt;/li&gt;
+  &lt;li&gt;net_cls 标记每个网络包以供cgroup方便使用。&lt;/li&gt;
+  &lt;li&gt;ns 名称空间子系统。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;docker-registry&quot;&gt;Docker-Registry&lt;/h2&gt;
+
+&lt;p&gt;Registry是docker的镜像仓库；主要用于存储企业内部私有的镜像文件，解决了镜像的安全性和高速拉取镜像问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;http-registry&quot;&gt;HTTP-registry&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;下载registry镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker pull registry:2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动registry容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker run -d -p 5000:5000 –restart=always –name registry -v /docker-registry/data:/var/lib/registry registry:2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;retag镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker tag nginx 192.168.1.130:5000/nginx:v2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;push镜像&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker push 192.168.1.130:5000/nginx:v2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;The push refers to a repository [192.168.1.130:5000/nginx]&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Get https://192.168.1.130:5000/v1/_ping: http: server gave HTTP response to HTTPS client&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;PS:目前registry默认需要以HTTPS方式访问；如果强制用HTTP访问，需要修改配置文件&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;https://docs.docker.com/engine/admin/systemd/&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mkdir /etc/systemd/system/docker.service.d&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &amp;gt;/etc/systemd/system/docker.service.d/docker-config.conf&amp;lt;&amp;lt;EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.130:5000
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;systemctl daemon-reload&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;systemctl restart docker&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;https-registry&quot;&gt;HTTPS-registry&lt;/h3&gt;
+
+&lt;p&gt;待解决&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;docker-compose&quot;&gt;Docker-compose&lt;/h2&gt;
+&lt;p&gt;docker-compose是一款应用控制工具，主要是针对application的；Dockerfile可以理解为镜像的描述文件，那么docker-compose的yaml文件可以理解为应用的描述文件。&lt;/p&gt;
+
+&lt;p&gt;假如：你有一个应用，需要一个lnmp环境，正常情况下你需要手动启动4个容器（linux-OS nginx mysql php），而且需要关联容器彼此之间的关系，以及需要考虑容器先后启动的顺序等；&lt;/p&gt;
+
+&lt;p&gt;但是有了docker-compose，你只需把该应用需要的环境信息写进一个文件即可，用一条命令即可启动整个应用；无需考虑容器之间的联系和启动顺序。&lt;/p&gt;
+
+&lt;p&gt;使用docker-compose一般有3个步骤&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;定义应用需要的镜像的Dockerfile&lt;/li&gt;
+  &lt;li&gt;定义应用需要的服务（容器）&lt;/li&gt;
+  &lt;li&gt;docker-compose up 启动应用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;docker-compose.yml文件看起来像下面这样&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;dockercoins应用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;version: &quot;2&quot;
+services:
+  rng:
+    build: rng
+    ports:
+    - &quot;8001:80&quot;
+
+  hasher:
+    build: hasher
+    ports:
+    - &quot;8002:80&quot;
+
+  webui:
+    build: webui
+    ports:
+    - &quot;8000:80&quot;
+    volumes:
+    - &quot;./webui/files/:/files/&quot;
+
+  redis:
+    image: redis
+
+  worker:
+    build: worker
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ELK应用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;version: &quot;2&quot;
+
+services:
+  elasticsearch:
+    image: elasticsearch
+    # If you need to access ES directly, just uncomment those lines.
+    #ports:
+    #  - &quot;9200:9200&quot;
+    #  - &quot;9300:9300&quot;
+
+  logstash:
+    image: logstash
+    command: |
+      -e '
+      input {
+        # Default port is 12201/udp
+        gelf { }
+        # This generates one test event per minute.
+        # It is great for debugging, but you might
+        # want to remove it in production.
+        heartbeat { }
+      }
+      # The following filter is a hack!
+      # The &quot;de_dot&quot; filter would be better, but it
+      # is not pre-installed with logstash by default.
+      filter {
+        ruby {
+          code =&amp;gt; &quot;
+            event.to_hash.keys.each { |k| event[ k.gsub('&quot;'.'&quot;','&quot;'_'&quot;') ] = event.remove(k) if k.include?'&quot;'.'&quot;' }
+          &quot;
+        }
+      }
+      output {
+        elasticsearch {
+          hosts =&amp;gt; [&quot;elasticsearch:9200&quot;]
+        }
+        # This will output every message on stdout.
+        # It is great when testing your setup, but in
+        # production, it will probably cause problems;
+        # either by filling up your disks, or worse,
+        # by creating logging loops! BEWARE!
+        stdout {
+          codec =&amp;gt; rubydebug
+        }
+      }'
+    ports:
+      - &quot;12201:12201/udp&quot;
+
+  kibana:
+    image: kibana
+    ports:
+      - &quot;5601:5601&quot;
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Compose has commands for managing the whole lifecycle of your application:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Start, stop and rebuild services&lt;/li&gt;
+  &lt;li&gt;View the status of running services&lt;/li&gt;
+  &lt;li&gt;Stream the log output of running services&lt;/li&gt;
+  &lt;li&gt;Run a one-off command on a service&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;install-docker-compose&quot;&gt;Install docker-compose&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;curl -L “https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)” -o /usr/local/bin/docker-compose&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;chmod +x /usr/local/bin/docker-compose&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version –short)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker-compose –version&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;get-started-with-docker-compose&quot;&gt;Get started with Docker Compose&lt;/h3&gt;
+
+&lt;p&gt;下面我们利用docker-compose启动一个简单的python web程序&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 1: Setup&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1.Create a directory for the project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir composetest
+cd composetest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;2.Create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;app.py&lt;/code&gt; in your project directory and paste this in:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from flask import Flask
+from redis import Redis
+
+app = Flask(__name__)
+redis = Redis(host='redis', port=6379)
+
+@app.route('/')
+def hello():
+    count = redis.incr('hits')
+    return 'Hello World! I have been seen {} times.\n'.format(count)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&quot;0.0.0.0&quot;, debug=True)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3.Create another file called &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; in your project directory and paste this in:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flask
+redis
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;These define the application’s dependencies.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 2: Create a Dockerfile&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In this step, you write a Dockerfile that builds a Docker image. The image contains all the dependencies the Python application requires, including Python itself.&lt;/p&gt;
+
+&lt;p&gt;In your project directory, create a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; and paste the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM python:3.4-alpine
+ADD . /code
+WORKDIR /code
+RUN pip install -r requirements.txt
+CMD [&quot;python&quot;, &quot;app.py&quot;]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This tells Docker to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Build an image starting with the Python 3.4 image.&lt;/li&gt;
+  &lt;li&gt;Add the current directory &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; into the path &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt; in the image.&lt;/li&gt;
+  &lt;li&gt;Set the working directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Install the Python dependencies.&lt;/li&gt;
+  &lt;li&gt;Set the default command for the container to &lt;code class=&quot;highlighter-rouge&quot;&gt;python app.py&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 3: Define services in a Compose file&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Create a file called docker-compose.yml in your project directory and paste the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;version: '2'
+services:
+  web:
+    build: .
+    ports:
+     - &quot;5000:5000&quot;
+    volumes:
+     - .:/code
+  redis:
+    image: &quot;redis:alpine&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This Compose file defines two services, &lt;code class=&quot;highlighter-rouge&quot;&gt;web&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;. The web service:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Uses an image that’s built from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; in the current directory.&lt;/li&gt;
+  &lt;li&gt;Forwards the exposed port 5000 on the container to port 5000 on the host machine.&lt;/li&gt;
+  &lt;li&gt;Mounts the project directory on the host to &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt; inside the container, allowing you to modify the code without having to rebuild the image.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The redis service uses a public &lt;code class=&quot;highlighter-rouge&quot;&gt;Redis&lt;/code&gt; image pulled from the Docker Hub registry.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 4: Build and run your app with Compose&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1.From your project directory, start up your application.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Compose pulls a Redis image, builds an image for your code, and start the services you defined.&lt;/p&gt;
+
+&lt;p&gt;2.Enter &lt;code class=&quot;highlighter-rouge&quot;&gt;http://0.0.0.0:5000/&lt;/code&gt; in a browser to see the application running.&lt;/p&gt;
+
+&lt;p&gt;If you’re using Docker on Linux natively, then the web app should now be listening on port 5000 on your Docker daemon host. If &lt;code class=&quot;highlighter-rouge&quot;&gt;http://0.0.0.0:5000&lt;/code&gt; doesn’t resolve, you can also try &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:5000&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you’re using Docker Machine on a Mac, use docker-machine ip MACHINE_VM to get the IP address of your Docker host. Then, open &lt;code class=&quot;highlighter-rouge&quot;&gt;http://MACHINE_VM_IP:5000&lt;/code&gt; in a browser.&lt;/p&gt;
+
+&lt;p&gt;You should see a message in your browser saying:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World! I have been seen 1 times.&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;3.Refresh the page.
+The number should increment.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 5: Update the application&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Because the application code is mounted into the container using a volume, you can make changes to its code and see the changes instantly, without having to rebuild the image.&lt;/p&gt;
+
+&lt;p&gt;1.Change the greeting in &lt;code class=&quot;highlighter-rouge&quot;&gt;app.py&lt;/code&gt; and save it. For example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;return 'Hello from Docker! I have been seen {} times.\n'.format(count)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;2.Refresh the app in your browser. The greeting should be updated, and the counter should still be incrementing.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Step 6: Experiment with some other commands&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you want to run your services in the background, you can pass the &lt;code class=&quot;highlighter-rouge&quot;&gt;-d&lt;/code&gt; flag (for “detached” mode) to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose ps&lt;/code&gt; to see what is currently running:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up -d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose run&lt;/code&gt; command allows you to run one-off commands for your services. For example, to see what environment variables are available to the web service:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose run web env
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;See &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose --help&lt;/code&gt; to see other available commands. You can also install &lt;code class=&quot;highlighter-rouge&quot;&gt;command completion&lt;/code&gt; for the bash and zsh shell, which will also show you available commands.&lt;/p&gt;
+
+&lt;p&gt;If you started Compose with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up -d&lt;/code&gt;, you’ll probably want to stop your services once you’ve finished with them:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose stop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can bring everything down, removing the containers entirely, with the &lt;code class=&quot;highlighter-rouge&quot;&gt;down&lt;/code&gt; command. Pass &lt;code class=&quot;highlighter-rouge&quot;&gt;--volumes&lt;/code&gt; to also remove the data volume used by the Redis container:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose down --volumes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;At this point, you have seen the basics of how Compose works.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;关于 Dockerfile 和 docker-compose 后面会有单独的章节讲解常用的命令参数以及更过示例~&lt;/p&gt;
+
+      &lt;/article&gt;
+      &lt;hr&gt;
+        &lt;script&gt;
+            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        &lt;/script&gt;
+    &lt;/div&gt;
+	    
+  &lt;/div&gt;
+  
+  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
+    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
+    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
+      &lt;div class=&quot;categories-list-header&quot;&gt;
+        Content
+      &lt;/div&gt;
+      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;
+
+    &lt;/div&gt;
+
+    
+    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
+      &lt;a href=&quot;javascript:;&quot;&gt;
+        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;footer class=&quot;&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;col-md-12&quot;&gt;
+        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
+        &lt;span&gt;|&lt;/span&gt;
+        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+  
+  &lt;/body&gt;
+&lt;/html&gt;
+</description>
+        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Basic.html</link>
+        <guid isPermaLink="true">/docker/Docker-Basic.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>Ubuntu 替换默认源</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;备份默认源&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cp /etc/apt/sources.list /etc/apt/sources.list.bak&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;选择合适的源，重定向到sources.list&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;使用官方源：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt;/etc/apt/sources.list &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+deb http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;使用163源：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt;/etc/apt/sources.list &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+deb http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;使用搜狐源：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt;/etc/apt/sources.list &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+deb http://mirrors.sohu.com/ubuntu/ trusty main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ trusty-backports main restricted universe multiverse
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note：不同系统版本需参考下面更改源中的名称即可，例如：sed -i ‘s#trusty#xenial#g’ sources.list&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/update-ubuntu-sources/308450367.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/update-ubuntu-sources/859440133.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;刷新源&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sudo apt-get update&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;更新软件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sudo apt-get -y upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;清除本地缓存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;apt-get clean
+rm -rf /var/lib/apt/lists/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+        <link>/system/How-to-update-ubuntu-sources.html</link>
+        <guid isPermaLink="true">/system/How-to-update-ubuntu-sources.html</guid>
+        
+        
+        <category>System</category>
+        
+      </item>
+    
+      <item>
+        <title>Linux speedtest 网络测速</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;wget https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mv speedtest_cli.py /usr/local/bin/speedtest-cli&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;chmod +x /usr/local/bin/speedtest-cli&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;speedtest-cli&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+        <link>/point/speedtest.html</link>
+        <guid isPermaLink="true">/point/speedtest.html</guid>
+        
+        
+        <category>Point</category>
+        
+      </item>
+    
+      <item>
+        <title>事务一致性</title>
+        <description>&lt;p&gt;举例说明如下：&lt;/p&gt;
+
+&lt;p&gt;银行A账户向B账户汇款100元；&lt;/p&gt;
+
+&lt;p&gt;一致性：A给B转钱，单从数据库的角度来看，从A上减掉100块钱，然后就提交，本身这个操作没有问题。但是从业务的角度来看，你必须得给B上加上100块钱，这样整体数据才算一致。因此：&lt;/p&gt;
+
+&lt;p&gt;A-100；&lt;/p&gt;
+
+&lt;p&gt;B+100；&lt;/p&gt;
+
+&lt;p&gt;这样才算一个事务，因为它保证了数据的一致，即要满足业务需求，在数据上A与B也要一致。&lt;/p&gt;
+
+&lt;p&gt;一致性的本质就是你在进行一个事务的时候，是应该选择将A-100作为一个事务呢，还是应该选择将A-100以及B+100整体作为一个事务呢。&lt;/p&gt;
+
+&lt;p&gt;原子性：是假如你选择了将A-100以及B+100整体作为一个事务，那么他们就是一个整体，要么大家都成功，要么大家都失败。&lt;/p&gt;
+
+&lt;p&gt;原子性的本质就是A减去100执行成功了，那B加100一定也要执行成功，也就是A成功，B也要成功, A失败，b也要失败。将A和b看做一个整体。&lt;/p&gt;
+
+&lt;p&gt;原子性与一致性的区别是：一致性是选择要不要加上B+100这个条件，而原子性是B+100与A-100是否要作为一个整体考虑。&lt;/p&gt;
+
+&lt;p&gt;数据库的ACID原则：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A：原子性: 即要么泡妞成功，要么泡妞不成功，绝对不能出现暧昧不清的情况&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;C：一致性: 即如果对方对你好，你就不能耍脾气，也要对对方好，状态要保持一致&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I：隔离性: 谈恋爱期间钱归钱，爱归爱，两者不能混淆，爱不应收到穷富的干扰&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;D：持久性: e……&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
+        <link>/point/ACID.html</link>
+        <guid isPermaLink="true">/point/ACID.html</guid>
+        
+        
+        <category>Point</category>
+        
+      </item>
+    
+  </channel>
+</rss>

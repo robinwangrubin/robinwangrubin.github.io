@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Docker 1.12 Swarm集群实战 第二章</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/docker/Docker-Swarm2.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Projects</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Docker 1.12 Swarm集群实战 第二章</h1>
+        <p>Nov 16 2016</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">前言</a></li>
+  <li><a href="#swarm" id="markdown-toc-swarm">Swarm模式简介</a></li>
+  <li><a href="#swarm-1" id="markdown-toc-swarm-1">创建Swarm集群</a></li>
+  <li><a href="#swarm-2" id="markdown-toc-swarm-2">在Swarm集群上运行服务</a></li>
+  <li><a href="#scale-out" id="markdown-toc-scale-out">Scale out服务</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">暴露一个服务端口</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">清理环境</a></li>
+</ul>
+
+<h2 id="section">前言</h2>
+
+<p>为了解决上一章的docker币应用单节点瓶颈问题，我们引出以下章节内容：</p>
+
+<ol>
+  <li>
+    <p>部署docker swarm集群，worker节点分布到不同虚拟机上运行</p>
+  </li>
+  <li>
+    <p>scale out rng节点，横向扩展多个rng节点消除瓶颈</p>
+  </li>
+</ol>
+
+<h2 id="swarm">Swarm模式简介</h2>
+
+<p>Docker Engine 1.12 集成了Swarm集群工具;主要使用四个命令工具管理swarm集群</p>
+
+<ul>
+  <li>
+    <p>docker swarm：开启swarm模式；加入swarm集群；配置集群参数</p>
+  </li>
+  <li>
+    <p>docker node：查询节点信息；提升/降低管理节点；管理swarm节点主机</p>
+  </li>
+  <li>
+    <p>docker network：创建管理集群网络</p>
+  </li>
+  <li>
+    <p>docker service：创建管理集群服务</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="swarm-1">创建Swarm集群</h2>
+
+<p>在node0上初始化swarm集群</p>
+
+<blockquote>
+  <p>Note：只需在node0上初始化swarm集群，其他的node只需加入这个集群就行</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker swarm init --advertise-addr 192.168.1.130
+Swarm initialized: current node <span class="o">(</span>7gf4hu3kyc5u0vbyq0k0p2xoa<span class="o">)</span> is now a manager.
+To add a worker to this swarm, run the following <span class="nb">command</span>:
+    docker swarm join <span class="se">\</span>
+    --token SWMTKN-1-2wfd88l7jst8tomvk72z9k3byfatfprdtbwxnwq917tumprxua-6t5xnckb1d8ylquqqpylx65m7 <span class="se">\</span>
+    192.168.1.130:2377
+To add a manager to this swarm, run <span class="s1">'docker swarm join-token manager'</span> and follow the instructions.</code></pre></figure>
+
+<p>--advertise-addr参数, 后面跟你swarm集群的通讯地址, 也就是node0的IP地址.</p>
+
+<p>查询加入swarm集群的命令和密钥可以使用如下方式分别查看worker节点和manager节点的加入命令</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker swarm join-token worker
+<span class="o">[</span>root@node0 ~]# docker swarm join-token manager</code></pre></figure>
+
+<p>其他节点服务器,以worker角色加入swarm集群：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker swarm join <span class="se">\</span>
+    --token SWMTKN-1-2wfd88l7jst8tomvk72z9k3byfatfprdtbwxnwq917tumprxua-6t5xnckb1d8ylquqqpylx65m7 <span class="se">\</span>
+    192.168.1.130:2377</code></pre></figure>
+
+<p>其他节点服务器,以manager角色加入swarm集群：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker swarm join <span class="se">\</span>
+    --token SWMTKN-1-2wfd88l7jst8tomvk72z9k3byfatfprdtbwxnwq917tumprxua-483ps7pt4xcroqjxuekwnt2ra <span class="se">\</span>
+    192.168.1.130:2377</code></pre></figure>
+
+<p>检查node0 docker swarm mode信息:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker info
+...
+Swarm: active
+ NodeID: 7gf4hu3kyc5u0vbyq0k0p2xoa
+ Is Manager: <span class="nb">true
+ </span>ClusterID: do10yu1fqms1foc2bqu2y4upm
+ Managers: 1
+ Nodes: 1
+ Orchestration:
+  Task History Retention Limit: 5
+ Raft:
+  Snapshot Interval: 10000
+  Heartbeat Tick: 1
+  Election Tick: 3
+ Dispatcher:
+  Heartbeat Period: 5 seconds
+ CA Configuration:
+  Expiry Duration: 3 months
+ Node Address: 192.168.1.130
+...</code></pre></figure>
+
+<p>查看swarm集群node列表</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+7gf4hu3kyc5u0vbyq0k0p2xoa <span class="k">*</span>  node0     Ready   Active        Leader</code></pre></figure>
+
+<p>目前swarm集群中只有一个节点，我们先把其他所有节点都以worker身份加入到我们的集群中</p>
+
+<p>在node0 上以ssh方式批量将node1-node4加入集群</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="k">for </span>N <span class="k">in</span> <span class="k">$(</span>seq 1 4<span class="k">)</span>; <span class="se">\</span>
+<span class="k">do </span>ssh node<span class="k">${</span><span class="nv">N</span><span class="k">}</span> <span class="se">\</span>
+docker swarm join <span class="se">\</span>
+--token SWMTKN-1-2wfd88l7jst8tomvk72z9k3byfatfprdtbwxnwq917tumprxua-6t5xnckb1d8ylquqqpylx65m7 <span class="se">\</span>
+192.168.1.130:2377 <span class="se">\</span>
+;<span class="k">done</span></code></pre></figure>
+
+<p>验证集群节点列表，可以看到所有的节点服务器都加入到了swarm集群了</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+23gu2oc96su1tn7opoapv1ikd    node4     Ready   Active        
+57xdzm22a9syigrnbg8fqqox6    node3     Ready   Active        
+7gf4hu3kyc5u0vbyq0k0p2xoa <span class="k">*</span>  node0     Ready   Active        Leader
+8ko8h0egr0vgydoww6poysg70    node1     Ready   Active        
+8ls5ajugjza3utgrwy2qhgxe6    node2     Ready   Active        </code></pre></figure>
+
+<p>不过我们的集群只有一个manager节点node0，为了swarm集群的高可用，我们再建立2个manager节点</p>
+
+<p>只需通过命令提升node1 和node2 为manager节点</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker node promote node1 node2
+Node node1 promoted to a manager <span class="k">in </span>the swarm.
+Node node2 promoted to a manager <span class="k">in </span>the swarm.</code></pre></figure>
+
+<p>查看集群节点信息</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+23gu2oc96su1tn7opoapv1ikd    node4     Ready   Active        
+57xdzm22a9syigrnbg8fqqox6    node3     Ready   Active        
+7gf4hu3kyc5u0vbyq0k0p2xoa <span class="k">*</span>  node0     Ready   Active        Leader
+8ko8h0egr0vgydoww6poysg70    node1     Ready   Active        Reachable
+8ls5ajugjza3utgrwy2qhgxe6    node2     Ready   Active        Reachable</code></pre></figure>
+
+<p>我们看到：现在有两个manager节点和一个leader节点，现在你也可以在node1 node2上管理整个集群了</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# ssh node1 docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+23gu2oc96su1tn7opoapv1ikd    node4     Ready   Active        
+57xdzm22a9syigrnbg8fqqox6    node3     Ready   Active        
+7gf4hu3kyc5u0vbyq0k0p2xoa    node0     Ready   Active        Leader
+8ko8h0egr0vgydoww6poysg70 <span class="k">*</span>  node1     Ready   Active        Reachable
+8ls5ajugjza3utgrwy2qhgxe6    node2     Ready   Active        Reachable
+<span class="o">[</span>root@node0 ~]# ssh node2 docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+23gu2oc96su1tn7opoapv1ikd    node4     Ready   Active        
+57xdzm22a9syigrnbg8fqqox6    node3     Ready   Active        
+7gf4hu3kyc5u0vbyq0k0p2xoa    node0     Ready   Active        Leader
+8ko8h0egr0vgydoww6poysg70    node1     Ready   Active        Reachable
+8ls5ajugjza3utgrwy2qhgxe6 <span class="k">*</span>  node2     Ready   Active        Reachable</code></pre></figure>
+
+<p>到此为止，swarm集群搭建完毕</p>
+
+<hr />
+
+<h2 id="swarm-2">在Swarm集群上运行服务</h2>
+
+<p>使用docker service 命令创建集群服务</p>
+
+<p>例如：在swarm集群上启动一个alping镜像ping 8.8.8.8</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service create --name ping-google alpine ping 8.8.8.8
+dnnpgwqjlnixm0xlzi9sggzr2</code></pre></figure>
+
+<p>查看我们刚刚创建的service</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service ls
+ID            NAME         REPLICAS  IMAGE   COMMAND
+dnnpgwqjlnix  ping-google  1/1       alpine  ping 8.8.8.8</code></pre></figure>
+
+<p>查看服务跑在哪台节点服务器上</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service ps ping-google
+ID                         NAME           IMAGE   NODE   DESIRED STATE  CURRENT STATE               ERROR
+3j9l5pfug5p6wmj0gw8wwizwc  ping-google.1  alpine  node0  Running        Running about a minute ago  </code></pre></figure>
+
+<p>当前service是跑在node0上，当前状态是运行状态</p>
+
+<blockquote>
+  <p>如果容器启动失败，swarm集群会不断的重启容器，直到成功为止</p>
+</blockquote>
+
+<hr />
+
+<h2 id="scale-out">Scale out服务</h2>
+
+<p>我们scale服务到10个副本</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service scale ping-google<span class="o">=</span>10
+ping-google scaled to 10
+<span class="o">[</span>root@node0 ~]# docker service ls
+ID            NAME         REPLICAS  IMAGE   COMMAND
+dnnpgwqjlnix  ping-google  1/10      alpine  ping 8.8.8.8</code></pre></figure>
+
+<p>注意REPLICAS现在显示1/10表示这个service一共有10个副本,现在成功运行了1个. 集群正在启动其他的副本.</p>
+
+<p>这这时候查看service进程</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service ps ping-google
+ID                         NAME            IMAGE   NODE   DESIRED STATE  CURRENT STATE           ERROR
+3j9l5pfug5p6wmj0gw8wwizwc  ping-google.1   alpine  node0  Running        Running 5 minutes ago   
+8dg45mx9xdnpc5skr6cf3qg3h  ping-google.2   alpine  node1  Running        Running 35 seconds ago  
+29mphyj1vskqfgza443m5rjzu  ping-google.3   alpine  node3  Running        Running 16 seconds ago  
+bozqod88a84c886lnrn9nyix8  ping-google.4   alpine  node3  Running        Running 28 seconds ago  
+1hlyg2qlu1memo64yowqsla1z  ping-google.5   alpine  node2  Running        Running 25 seconds ago  
+685ltkj4l3lfxp1p9horqn05q  ping-google.6   alpine  node1  Running        Running 35 seconds ago  
+60bb0vgik71xqpgprgz6axqu3  ping-google.7   alpine  node0  Running        Running 21 seconds ago  
+8qud2w1k0y6c9jey9at6mcfoe  ping-google.8   alpine  node4  Running        Running 32 seconds ago  
+c0g1lqc6ukzacz5qhvftok4od  ping-google.9   alpine  node4  Running        Running 19 seconds ago  
+04zq57a07b3vxpp1d1b03awd8  ping-google.10  alpine  node2  Running        Running 25 seconds ago  
+<span class="o">[</span>root@node0 ~]# docker service ls
+ID            NAME         REPLICAS  IMAGE   COMMAND
+dnnpgwqjlnix  ping-google  10/10     alpine  ping 8.8.8.8</code></pre></figure>
+
+<p>所有副本都启动成功了，swarm集群会自动编排10个副本在我们的5台虚拟机上，每个节点会启动2个容器</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# ssh node0 docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+e19530521f15        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.7.60bb0vgik71xqpgprgz6axqu3
+d08f19033a61        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      7 minutes ago       Up 7 minutes                            ping-google.1.3j9l5pfug5p6wmj0gw8wwizwc
+<span class="o">[</span>root@node0 ~]# ssh node1 docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+1df631edd4e3        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.6.685ltkj4l3lfxp1p9horqn05q
+d92107463664        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.2.8dg45mx9xdnpc5skr6cf3qg3h
+<span class="o">[</span>root@node0 ~]# ssh node2 docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+f8ca000b213d        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.10.04zq57a07b3vxpp1d1b03awd8
+2c9d2eed1223        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.5.1hlyg2qlu1memo64yowqsla1z
+<span class="o">[</span>root@node0 ~]# ssh node3 docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+3cfc4404460f        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.3.29mphyj1vskqfgza443m5rjzu
+1913a46d8885        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.4.bozqod88a84c886lnrn9nyix8
+<span class="o">[</span>root@node0 ~]# ssh node4 docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+5112d6ea366e        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.9.c0g1lqc6ukzacz5qhvftok4od
+9af36d32f162        alpine:latest       <span class="s2">"ping 8.8.8.8"</span>      2 minutes ago       Up 2 minutes                            ping-google.8.8qud2w1k0y6c9jey9at6mcfoe</code></pre></figure>
+
+<hr />
+
+<h2 id="section-1">暴露一个服务端口</h2>
+
+<p>和我们单机使用docker一样，你可以将容器的端口暴露到主机网络中，swarm集群的service端口暴露端口有如下特性:</p>
+
+<ul>
+  <li>公共的端口会暴露在每一个swarm集群中的节点服务器上.</li>
+  <li>请求进如公共端口后会负载均衡到所有的sevice实例上.</li>
+</ul>
+
+<p>使用命令：docker service create -p</p>
+
+<p>下面我们启动10个Nginx服务，发布端口9999</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service create --name my_nginx -p 9999:80 --replicas 10 nginx</code></pre></figure>
+
+<p>使用以下命令监控 service 创建过程</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# watch docker service ps my_nginx</code></pre></figure>
+
+<p>注意CURRENT STATE 列, 一个service副本的创建过程,会经历以下几个状态:</p>
+
+<ul>
+  <li>accepted：任务已经被分配到某一个节点执行</li>
+  <li>preparing：准备资源, 现在来说一般是从网络拉取image</li>
+  <li>running：副本运行成功</li>
+  <li>shutdown：报错,被停止了</li>
+</ul>
+
+<blockquote>
+  <p>当一个任务被终止stoped or killed.., 任务不能被重启, 但是一个替代的任务会被创建.</p>
+</blockquote>
+
+<p>在swarm集群任意节点上都可访问Nginx服务；验证如下：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# curl localhost:9999</code></pre></figure>
+
+<hr />
+
+<p>ok，docker swarm集群已经搭建并且测试完毕；下一章在swarm集群上部署我们的docker币应用</p>
+
+<h2 id="section-2">清理环境</h2>
+
+<p>清除所有servcie</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker service ls -q|xargs docker service rm</code></pre></figure>
+
+<p>清除指定servcie</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service rm ping-google</code></pre></figure>
+
+<hr />
+
+<p>20161222 ADD：</p>
+
+<p>此节点不运行任务</p>
+
+<blockquote>
+  <p>docker node update –availability drain node01</p>
+</blockquote>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>

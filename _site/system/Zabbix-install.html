@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>LNMP环境安装Zabbix3</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/system/Zabbix-install.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Projects</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>LNMP环境安装Zabbix3</h1>
+        <p>Jan 3 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#environment" id="markdown-toc-environment">Environment</a></li>
+  <li><a href="#downloads-packages" id="markdown-toc-downloads-packages">Downloads Packages</a></li>
+  <li><a href="#install-dependent" id="markdown-toc-install-dependent">Install Dependent</a></li>
+  <li><a href="#install-nginx" id="markdown-toc-install-nginx">Install Nginx</a></li>
+  <li><a href="#install-php" id="markdown-toc-install-php">Install PHP</a>    <ul>
+      <li><a href="#modify-config" id="markdown-toc-modify-config">Modify config</a></li>
+      <li><a href="#check-config" id="markdown-toc-check-config">Check config</a></li>
+    </ul>
+  </li>
+  <li><a href="#install-mysql" id="markdown-toc-install-mysql">Install Mysql</a>    <ul>
+      <li><a href="#modify-config-1" id="markdown-toc-modify-config-1">Modify config</a></li>
+    </ul>
+  </li>
+  <li><a href="#install-zabbix" id="markdown-toc-install-zabbix">Install Zabbix</a>    <ul>
+      <li><a href="#initialization" id="markdown-toc-initialization">Initialization</a></li>
+      <li><a href="#config-zabbixserver" id="markdown-toc-config-zabbixserver">Config zabbix_server</a></li>
+      <li><a href="#config-zabbixagentd" id="markdown-toc-config-zabbixagentd">Config zabbix_agentd</a></li>
+      <li><a href="#config-nginx" id="markdown-toc-config-nginx">config Nginx</a></li>
+    </ul>
+  </li>
+  <li><a href="#start-service" id="markdown-toc-start-service">Start service</a></li>
+  <li><a href="#pic" id="markdown-toc-pic">Pic</a></li>
+</ul>
+
+<h2 id="environment">Environment</h2>
+
+<ul>
+  <li>CentOS Linux release 7.2.1511 (Core)</li>
+  <li>nginx:1.9.15</li>
+  <li>Mysql:5.5.49</li>
+  <li>PHP:5.5.35</li>
+  <li>zabbix:3.2.3</li>
+</ul>
+
+<hr />
+
+<h2 id="downloads-packages">Downloads Packages</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir /application/tools
+<span class="nb">cd</span> /application/tools/
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+wget http://cn2.php.net/get/php-5.5.35.tar.gz/from/this/mirror <span class="o">&amp;&amp;</span> mv mirror php-5.5.35.tar.gz
+wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.49.tar.gz
+wget http://jaist.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.2.3/zabbix-3.2.3.tar.gz</code></pre></figure>
+
+<hr />
+
+<h2 id="install-dependent">Install Dependent</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre<span class="k">*</span> make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel</code></pre></figure>
+
+<hr />
+
+<h2 id="install-nginx">Install Nginx</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">useradd nginx -s /sbin/nologin -M
+<span class="nb">cd</span> /application/tools/
+tar xf nginx-1.9.15.tar.gz
+<span class="nb">cd </span>nginx-1.9.15
+./configure --prefix<span class="o">=</span>/application/nginx-1.9.15 --user<span class="o">=</span>nginx --group<span class="o">=</span>nginx --with-http_ssl_module --with-http_stub_status_module
+make <span class="o">&amp;&amp;</span> make install
+ln -s /application/nginx-1.9.15/ /application/nginx</code></pre></figure>
+
+<hr />
+
+<h2 id="install-php">Install PHP</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/tools/
+tar xf php-5.5.35.tar.gz 
+<span class="nb">cd </span>php-5.5.35
+./configure --prefix<span class="o">=</span>/application/php-5.5.35 <span class="se">\</span>
+--with-config-file-path<span class="o">=</span>/application/php-5.5.35/etc <span class="se">\</span>
+--with-bz2 <span class="se">\</span>
+--with-curl <span class="se">\</span>
+--enable-ftp <span class="se">\</span>
+--enable-sockets <span class="se">\</span>
+--disable-ipv6 <span class="se">\</span>
+--with-gd <span class="se">\</span>
+--with-jpeg-dir<span class="o">=</span>/usr/local <span class="se">\</span>
+--with-png-dir<span class="o">=</span>/usr/local <span class="se">\</span>
+--with-freetype-dir<span class="o">=</span>/usr/local <span class="se">\</span>
+--enable-gd-native-ttf <span class="se">\</span>
+--with-iconv-dir<span class="o">=</span>/usr/local <span class="se">\</span>
+--enable-mbstring <span class="se">\</span>
+--enable-calendar <span class="se">\</span>
+--with-gettext <span class="se">\</span>
+--with-libxml-dir<span class="o">=</span>/usr/local <span class="se">\</span>
+--with-zlib <span class="se">\</span>
+--with-pdo-mysql<span class="o">=</span>mysqlnd <span class="se">\</span>
+--with-mysqli<span class="o">=</span>mysqlnd <span class="se">\</span>
+--with-mysql<span class="o">=</span>mysqlnd <span class="se">\</span>
+--enable-dom <span class="se">\</span>
+--enable-xml <span class="se">\</span>
+--enable-fpm <span class="se">\</span>
+--with-libdir<span class="o">=</span>lib64 <span class="se">\</span>
+--enable-bcmath
+make <span class="o">&amp;&amp;</span> make install
+ln -s /application/php-5.5.35/ /application/php</code></pre></figure>
+
+<h3 id="modify-config">Modify config</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/tools/php-5.5.35
+cp php.ini-production /application/php/etc/php.ini
+<span class="nb">cd</span> /application/php/etc/
+cp php-fpm.conf.default php-fpm.conf
+sed -i <span class="s1">'s#max_execution_time =.*#max_execution_time = 300#g'</span> php.ini
+sed -i <span class="s1">'s#memory_limit = .*#memory_limit = 128M#g'</span> php.ini
+sed -i <span class="s1">'s#post_max_size = .*#post_max_size = 16M#g'</span> php.ini            
+sed -i <span class="s1">'s#upload_max_filesize = .*#upload_max_filesize = 2M#g'</span> php.ini             
+sed -i <span class="s1">'s#max_input_time = .*#max_input_time = 300#g'</span> php.ini 
+sed -i <span class="s1">'s#date.timezone = .*#date.timezone = PRC#g'</span> php.ini    </code></pre></figure>
+
+<h3 id="check-config">Check config</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grep <span class="s2">"max_execution_time = "</span> php.ini
+grep <span class="s2">"memory_limit = "</span> php.ini 
+grep <span class="s2">"post_max_size ="</span> php.ini
+grep <span class="s2">"upload_max_filesize ="</span> php.ini 
+grep <span class="s2">"max_input_time ="</span> php.ini 
+grep <span class="s2">"date.timezone ="</span> php.ini</code></pre></figure>
+
+<hr />
+
+<h2 id="install-mysql">Install Mysql</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/tools/
+tar xf mysql-5.5.49.tar.gz 
+useradd mysql -s /sbin/nologin -M
+mkdir /data/mysql -p
+chown -R mysql.mysql /data/mysql/
+yum install -y cmake gcc<span class="k">*</span> ncurses-devel
+<span class="nb">cd </span>mysql-5.5.49
+cmake -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/application/mysql5.5.49 -DDEFAULT_CHARSET<span class="o">=</span>utf8 -DENABLED_LOCAL_INFILE<span class="o">=</span>1 -DMYSQL_DATADIR<span class="o">=</span>/data/mysql -DWITH_EXTRA_CHARSETS<span class="o">=</span>all -DWITH_READLINE<span class="o">=</span>1 -DWITH_INNOBASE_STORAGE_ENGINE<span class="o">=</span>1 -DMYSQL_TCP_PORT<span class="o">=</span>3306 -DDEFAULT_COLLATION<span class="o">=</span>utf8_general_ci
+make <span class="o">&amp;&amp;</span> make install
+ln -s /application/mysql5.5.49/ /application/mysql
+<span class="se">\c</span>p /application/mysql/bin/<span class="k">*</span> /usr/bin/</code></pre></figure>
+
+<h3 id="modify-config-1">Modify config</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /data/mysql
+<span class="nb">cd</span> /application/mysql/support-files/
+rm -f /etc/my.cnf
+cp my-medium.cnf /data/mysql/my.cnf
+cp mysql.server /etc/init.d/mysqld
+chmod 755 /etc/init.d/mysqld </code></pre></figure>
+
+<hr />
+
+<h2 id="install-zabbix">Install Zabbix</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /home/mtime/tools/
+tar xf zabbix-3.2.3.tar.gz
+<span class="nb">cd </span>zabbix-3.2.3
+yum install -y net-snmp-devel mysql-devel
+useradd zabbix -s /sbin/nologin -M
+./configure --prefix<span class="o">=</span>/application/zabbix-3.0.3/ --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2
+make install
+ln -s /application/zabbix-3.0.3/ /application/zabbix</code></pre></figure>
+
+<h3 id="initialization">Initialization</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mysql -e <span class="s2">"create database zabbix default charset utf8;"</span>
+mysql -e <span class="s2">"grant all on zabbix.* to zabbix@localhost identified by 'zabbix';"</span>
+mysql -uzabbix -pzabbix zabbix &lt;/application/tools/zabbix-3.2.3/database/mysql/schema.sql
+mysql -uzabbix -pzabbix zabbix &lt;/application/tools/zabbix-3.2.3/database/mysql/images.sql
+mysql -uzabbix -pzabbix zabbix &lt;/application/tools/zabbix-3.2.3/database/mysql/data.sql</code></pre></figure>
+
+<h3 id="config-zabbixserver">Config zabbix_server</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cat &gt; /application/zabbix/etc/zabbix_server.conf <span class="sh">&lt;&lt;EOF
+ListenPort=10051
+LogFile=/tmp/zabbix_server.log
+PidFile=/tmp/zabbix_server.pid
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=zabbix
+DBSocket=/tmp/mysql.sock
+DBPort=3306
+Timeout=4
+LogSlowQueries=3000
+</span><span class="err">EOF</span></code></pre></figure>
+
+<h3 id="config-zabbixagentd">Config zabbix_agentd</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cat &gt; /application/zabbix/etc/zabbix_agentd.conf <span class="sh">&lt;&lt;EOF
+PidFile=/tmp/zabbix_agentd.pid
+LogFile=/tmp/zabbix_agentd.log
+LogFileSize=0
+EnableRemoteCommands=1
+Server=127.0.0.1,192.168.3.134
+ServerActive=127.0.0.1,192.168.3.134:10051
+Hostname=192.168.3.134
+BufferSend=10
+Timeout=30
+AllowRoot=1
+UnsafeUserParameters=1
+</span><span class="err">EOF</span></code></pre></figure>
+
+<hr />
+
+<h3 id="config-nginx">config Nginx</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/nginx
+mkdir html/zabbix
+cat &gt;conf/nginx.conf<span class="sh">&lt;&lt;EOF
+user  nginx;
+worker_processes  1;
+
+#error_log  logs/error.log warning;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+    include extra/*.conf;
+
+}
+EOF
+</span>mkdir conf/extra
+cat &gt;conf/extra/zabbix.conf <span class="sh">&lt;&lt;EOF
+server {
+listen 80;
+server_name localhost;
+access_log /var/log/zabbix/nginx_zabbix.log main;
+root html/zabbix;
+
+location / {
+           index index.html index.php index.html;
+        }
+
+location ~ .*\.(php|php5)?$
+            {
+             fastcgi_pass  127.0.0.1:9000;
+             fastcgi_index index.php;
+             include fastcgi.conf;
+           }
+}
+EOF
+</span>mkdir -p /var/log/zabbix
+<span class="se">\c</span>p -a /application/tools/zabbix-3.2.3/frontends/php/<span class="k">*</span> /application/nginx/html/zabbix/
+/application/nginx/sbin/nginx -t</code></pre></figure>
+
+<hr />
+
+<h2 id="start-service">Start service</h2>
+
+<blockquote>
+  <p>/application/nginx/sbin/nginx</p>
+</blockquote>
+
+<blockquote>
+  <p>/application/php/sbin/php-fpm</p>
+</blockquote>
+
+<blockquote>
+  <p>/etc/init.d/mysqld start</p>
+</blockquote>
+
+<blockquote>
+  <p>/application/zabbix/sbin/zabbix_server</p>
+</blockquote>
+
+<blockquote>
+  <p>/application/zabbix/sbin/zabbix_agentd</p>
+</blockquote>
+
+<hr />
+
+<h2 id="pic">Pic</h2>
+
+<p><img src="/pic/zabbix-install/1.png" alt="1" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220119.png" alt="2" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220130.png" alt="3" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220140.png" alt="4" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220148.png" alt="5" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220158.png" alt="6" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220339.png" alt="7" /></p>
+
+<p><img src="/pic/zabbix-install/QQ截图20170103220350.png" alt="8" /></p>
+
+<hr />
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
