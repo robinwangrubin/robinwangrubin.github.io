@@ -7,14 +7,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Docker Swarm基础</title>
 	<meta name="description" content="">
+	
 	<link rel="canonical" href="/docker/Docker-Swarm-Basic.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
-        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
 	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
 	<script type="text/javascript" src="/static/js/index.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 </head>
@@ -53,14 +66,14 @@
             
               <li>
             
-            <a href="/project/"><span class="glyphicon "></span> Project</a></li>
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
           
         
           
             
               <li>
             
-            <a href="/about/"><span class="glyphicon "></span> About</a></li>
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
           
         
           
@@ -74,9 +87,12 @@
 
 </header>
 
+
     <div id="main" class="container main">
       <div class="row">
+
   <div id="myArticle" class="col-sm-9">
+
     <div class="post-area post">
       <header>
         <h1>Docker Swarm基础</h1>
@@ -172,11 +188,8 @@
 </blockquote>
 
 <blockquote>
-  <p>负载均衡：你可以暴露一个服务端口给外部的负载均衡器，在swarm内部。你可以指定如何在节点之间分发任务。</p>
-</blockquote>
-
-<blockquote>
-  <p>安全：swarm节点之间之间采用TLS认证通信，你可以选择使用自签名或CA颁发的证书</p>
+  <p>负载均衡：你可以暴露一个服务端口给外部的负载均衡器，在swarm内部。你可以指定如何在节点之间分发任务。
+安全：swarm节点之间之间采用TLS认证通信，你可以选择使用自签名或CA颁发的证书</p>
 </blockquote>
 
 <blockquote>
@@ -231,8 +244,8 @@
   <li>node0 manager1 192.168.1.130</li>
   <li>node1	manager2 192.168.1.131</li>
   <li>node2	manager3 192.168.1.132</li>
-  <li>node4	worker1	 192.168.1.133</li>
-  <li>node5	worker2	 192.168.1.134</li>
+  <li>node4	worker1	192.168.1.133</li>
+  <li>node5	worker2	192.168.1.134</li>
 </ul>
 
 <p>docker-version：</p>
@@ -266,7 +279,7 @@ Server:
 <h2 id="create-a-swarm">Create a swarm</h2>
 
 <blockquote>
-  <p>docker swarm init –advertise-addr <MANAGER-IP></MANAGER-IP></p>
+  <p>docker swarm init –advertise-addr</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@node0 ~]# docker swarm init --advertise-addr 192.168.1.130
@@ -307,7 +320,9 @@ Swarm: active
 ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
 36duyub88vg54x41e0dur9850 <span class="k">*</span>  node0     Ready   Active        Leader</code></pre></figure>
 
-<p>* 表示你当前连接的主机；swarm自动用主机名命名node</p>
+<ul>
+  <li>表示你当前连接的主机；swarm自动用主机名命名node</li>
+</ul>
 
 <hr />
 
@@ -370,8 +385,8 @@ dazpqp2i92e6ityg064r75ahq    node1     Ready   Active    </code></pre></figure>
 
 <ul>
   <li>Active 可以分配任务到该节点</li>
-  <li>Pause  不会分配新的任务到该节点，已有的任务继续运行</li>
-  <li>Drain  不会分配新的任务到该节点，已有的任务调度到其他node上运行</li>
+  <li>Pause 不会分配新的任务到该节点，已有的任务继续运行</li>
+  <li>Drain 不会分配新的任务到该节点，已有的任务调度到其他node上运行</li>
 </ul>
 
 <p>MANAGER STATUS：</p>
@@ -386,7 +401,7 @@ dazpqp2i92e6ityg064r75ahq    node1     Ready   Active    </code></pre></figure>
 <h3 id="inspect-an-individual-node">Inspect an individual node</h3>
 
 <blockquote>
-  <p>docker node inspect <NODE-ID> --pretty</NODE-ID></p>
+  <p>docker node inspect –pretty</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker node inspect node0 --pretty
@@ -499,13 +514,13 @@ Node left the swarm.</code></pre></figure>
 <h2 id="inspect-a-service-on-the-swarm">Inspect a service on the swarm</h2>
 
 <blockquote>
-  <p>docker service inspect –pretty <SERVICE-ID></SERVICE-ID></p>
+  <p>docker service inspect –pretty</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service inspect --pretty helloworld</code></pre></figure>
 
 <blockquote>
-  <p>docker service ps <SERVICE-ID></SERVICE-ID></p>
+  <p>docker service ps</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service ps helloworld</code></pre></figure>
@@ -515,13 +530,13 @@ Node left the swarm.</code></pre></figure>
 <h2 id="scale-the-service-in-the-swarm">Scale the service in the swarm</h2>
 
 <blockquote>
-  <p>docker service scale <SERVICE-ID>=<NUMBER-OF-TASKS></NUMBER-OF-TASKS></SERVICE-ID></p>
+  <p>docker service scale</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service scale <span class="nv">helloworld</span><span class="o">=</span>5</code></pre></figure>
 
 <blockquote>
-  <p>docker service ps <SERVICE-ID></SERVICE-ID></p>
+  <p>docker service ps</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service ps helloworld</code></pre></figure>
@@ -531,7 +546,7 @@ Node left the swarm.</code></pre></figure>
 <h2 id="delete-the-service-running-on-the-swarm">Delete the service running on the swarm</h2>
 
 <blockquote>
-  <p>docker service rm h<SERVICE-ID></SERVICE-ID></p>
+  <p>docker service rm</p>
 </blockquote>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service rm helloworld</code></pre></figure>
@@ -548,7 +563,7 @@ Node left the swarm.</code></pre></figure>
   --update-delay 10s <span class="se">\</span>
   redis:3.0.6</code></pre></figure>
 
-<p><code class="highlighter-rouge">--update-delay</code> 标签用来配置update服务时的延时间隔；可选格式：3h 5m 10m30s 10s</p>
+<p><code class="highlighter-rouge">--update-delay</code>标签用来配置update服务时的延时间隔；可选格式：3h 5m 10m30s 10s</p>
 
 <p>默认情况下一次升级所有服务，你可以使用<code class="highlighter-rouge">--update-parallelism</code>标签设置一次更新任务的数量</p>
 
@@ -560,9 +575,7 @@ Node left the swarm.</code></pre></figure>
 
 <p>updates service：</p>
 
-<blockquote>
-  <p>docker service update –image redis:3.0.7 redis</p>
-</blockquote>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service update –image redis:3.0.7 redis</code></pre></figure>
 
 <p>调度更新过程如下：</p>
 
@@ -580,11 +593,11 @@ Node left the swarm.</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service inspect --pretty redis</code></pre></figure>
 
-<p>To restart a paused update run docker service update <SERVICE-ID>. For example:</SERVICE-ID></p>
+<p>To restart a paused update run docker service update . For example:</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service update redis</code></pre></figure>
 
-<p>Run docker service ps <SERVICE-ID> to watch the rolling update:</SERVICE-ID></p>
+<p>Run docker service ps to watch the rolling update:</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker service ps redis</code></pre></figure>
 
@@ -592,23 +605,23 @@ Node left the swarm.</code></pre></figure>
 
 <h2 id="drain-a-node-on-the-swarm">Drain a node on the swarm</h2>
 
-<p>默认情况下，swarm manager会向所有状态为<code class="highlighter-rouge">ACTIVE </code>的节点分配任务，包括manager自身。</p>
+<p>默认情况下，swarm manager会向所有状态为<code class="highlighter-rouge">ACTIVE</code> 的节点分配任务，包括manager自身。</p>
 
-<p>当你需要使某台设备下架维护时，你可以将这台设备设置为<code class="highlighter-rouge">DRAIN</code>状态，那么这台设备上的任务会被停止掉，自动在状态为 <code class="highlighter-rouge">ACTIVE </code>的节点上启动该任务。</p>
+<p>当你需要使某台设备下架维护时，你可以将这台设备设置为<code class="highlighter-rouge">DRAIN</code>状态，那么这台设备上的任务会被停止掉，自动在状态为 <code class="highlighter-rouge">ACTIVE</code>的节点上启动该任务。</p>
 
 <blockquote>
-  <p>docker node update –availability drain <NODE-ID></NODE-ID></p>
+  <p>docker node update –availability drain</p>
 </blockquote>
 
 <blockquote>
-  <p>docker node update –availability active <NODE-ID></NODE-ID></p>
+  <p>docker node update –availability active</p>
 </blockquote>
 
 <hr />
 
 <h2 id="use-swarm-mode-routing-mesh">Use swarm mode routing mesh</h2>
 
-<p>swarm使对外暴露服务端口变得简单，所有的节点加入到了<code class="highlighter-rouge">ngress routing mesh</code>，routing mesh可以使每个节点都能接收外部的请求，即使某个节点上没有相关任务在运行，routing mesh也能正确的将请求路由到可用的节点。</p>
+<p>swarm使对外暴露服务端口变得简单，所有的节点加入到了ngress routing mesh，routing mesh可以使每个节点都能接收外部的请求，即使某个节点上没有相关任务在运行，routing mesh也能正确的将请求路由到可用的节点。</p>
 
 <p>为了使用 ingress network 你需要占用以下端口:</p>
 
@@ -636,7 +649,7 @@ Node left the swarm.</code></pre></figure>
 
 <p>当你访问集群任意节点的8080端口，swarm自动负载路由请求到可用节点上。</p>
 
-<p><img src="/pic/Docker-Swarm-Basic/ingress-routing-mesh.png" alt="01" /></p>
+<p><img src="/pic/Docker-Swarm-Basic/ingress-routing-mesh.png" alt="1" /></p>
 
 <p>对于已经存在的服务，你可以使用update去更新对外端口</p>
 
@@ -674,7 +687,7 @@ Node left the swarm.</code></pre></figure>
 
 <p>你可以配置一个外部的负载均衡器去路由请求到swarm节点，例如 HAProxy负载请求到nginx服务的8080端口</p>
 
-<p><img src="/pic/Docker-Swarm-Basic/ingress-lb.png" alt="02" /></p>
+<p><img src="/pic/Docker-Swarm-Basic/ingress-lb.png" alt="1" /></p>
 
 <hr />
 
@@ -683,21 +696,22 @@ Node left the swarm.</code></pre></figure>
 
       </article>
       <hr>
-        <script>
-            window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    </div>
-	    
+     </div>
+
   </div>
   
   <div id="content" class="col-sm-3">
     <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
     <div id="myAffix" class="shadow-bottom-center hidden-xs" >
-      <div class="categories-list-header">
+  
+     <div class="categories-list-header">
         Content
       </div>
+  
       <div class="content-text"></div>
-    </div>
+   
+   </div>
+
   </div>
   
 </div>
@@ -716,11 +730,20 @@ Node left the swarm.</code></pre></figure>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <a href="mailto:robin.wangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robin.wangrubin@gmail.com</a>
-        <span>|</span>
-        <span>Copyright&copy; 2016 WangRuBin</span>
-        <span>|</span>
-        <span>Powered By Jekyll · Theme By Gaohaoyang</span>
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
       </div>
     </div>
   </div>
