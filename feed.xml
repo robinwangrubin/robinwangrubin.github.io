@@ -5,99 +5,13 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 16 Jan 2017 14:05:06 +0800</pubDate>
-    <lastBuildDate>Mon, 16 Jan 2017 14:05:06 +0800</lastBuildDate>
+    <pubDate>Mon, 16 Jan 2017 14:47:22 +0800</pubDate>
+    <lastBuildDate>Mon, 16 Jan 2017 14:47:22 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
         <title>Docker Swarm Shipyard</title>
-        <description>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-
-  &lt;head&gt;
-	&lt;meta charset=&quot;utf-8&quot;&gt;
-	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
-	&lt;title&gt;Docker Swarm Shipyard&lt;/title&gt;
-	&lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
-	&lt;link rel=&quot;canonical&quot; href=&quot;/docker/Docker-Swarm-Shipyard.html&quot;&gt;
-	&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Robin's Personal Website&quot; href=&quot;/feed.xml&quot; /&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/bootstrap.min.css&quot;&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/index.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
-        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/static/css/monokai_sublime.min.css&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/highlight.min.js&quot;&gt;&lt;/script&gt;
-	&lt;script type=&quot;text/javascript&quot; src=&quot;/static/js/index.js&quot;&gt;&lt;/script&gt;
-	&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
-&lt;/head&gt;
-
-
- &lt;!--  &lt;body data-spy=&quot;scroll&quot; data-target=&quot;#myAffix&quot;&gt; --&gt;
-  &lt;body&gt;
-
-    &lt;header&gt;
-
-&lt;!-- navbar --&gt;
-  &lt;nav class=&quot;navbar navbar-inverse&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;!-- Brand and toggle get grouped for better mobile display --&gt;
-    &lt;div class=&quot;navbar-header&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#bs-example-navbar-collapse-1&quot;&gt;
-        &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-      &lt;/button&gt;
-      &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;Robin's Personal Website&lt;/a&gt;
-      &lt;p class=&quot;navbar-text&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;!-- Collect the nav links, forms, and other content for toggling --&gt;
-    &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;bs-example-navbar-collapse-1&quot;&gt;
-      &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
-
-        
-          &lt;li&gt;
-        
-        &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
-
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/project/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; Project&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-            
-              &lt;li&gt;
-            
-            &lt;a href=&quot;/about/&quot;&gt;&lt;span class=&quot;glyphicon &quot;&gt;&lt;/span&gt; About&lt;/a&gt;&lt;/li&gt;
-          
-        
-          
-        
-          
-        
-      &lt;/ul&gt;
-    &lt;/div&gt;&lt;!-- /.navbar-collapse --&gt;
-  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
-&lt;/nav&gt;
-
-&lt;/header&gt;
-
-    &lt;div id=&quot;main&quot; class=&quot;container main&quot;&gt;
-      &lt;div class=&quot;row&quot;&gt;
-  &lt;div id=&quot;myArticle&quot; class=&quot;col-sm-9&quot;&gt;
-    &lt;div class=&quot;post-area post&quot;&gt;
-      &lt;header&gt;
-        &lt;h1&gt;Docker Swarm Shipyard&lt;/h1&gt;
-        &lt;p&gt;Jan 4 2017&lt;/p&gt;
-      &lt;/header&gt;
-      &lt;hr&gt;
-      &lt;article&gt;
-        &lt;ul id=&quot;markdown-toc&quot;&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#reference&quot; id=&quot;markdown-toc-reference&quot;&gt;Reference&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#introduction&quot; id=&quot;markdown-toc-introduction&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#shipyard-deployment&quot; id=&quot;markdown-toc-shipyard-deployment&quot;&gt;Shipyard Deployment&lt;/a&gt;    &lt;ul&gt;
@@ -131,7 +45,7 @@
 
 &lt;p&gt;Shipard是docker集群的可视化解决方案，shipyard利用内置的swarm组建管理集群，并提供图形化管理界面。可管理容器，镜像，节点，私有仓库等。还提供了用户认证和访问控制。&lt;/p&gt;
 
-&lt;p&gt;Shipyard完全100%利用的&lt;code class=&quot;highlighter-rouge&quot;&gt;Docker Remote API&lt;/code&gt;实现的，&lt;/p&gt;
+&lt;p&gt;Shipyard完全100%利用的&lt;code class=&quot;highlighter-rouge&quot;&gt;Docker Remote API&lt;/code&gt;实现的&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -140,7 +54,14 @@
 &lt;h3 id=&quot;automated-deployment&quot;&gt;Automated Deployment&lt;/h3&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;curl -sSL https://shipyard-project.com/deploy | bash -s&lt;/p&gt;
+  &lt;table&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;curl -sSL https://shipyard-project.com/deploy&lt;/td&gt;
+        &lt;td&gt;bash -s&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;manual-deployment&quot;&gt;Manual Deployment&lt;/h3&gt;
@@ -316,61 +237,14 @@ INFO[0357] controller listening on :8080          &lt;/code&gt;&lt;/pre&gt;&lt;/
 
 &lt;p&gt;http://192.168.1.130:8080/&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/QQ截图20170105170016.png&quot; alt=&quot;01&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/QQ截图20170105170016.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/123.png&quot; alt=&quot;02&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/123.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;p&gt;end&lt;/p&gt;
 
-      &lt;/article&gt;
-      &lt;hr&gt;
-        &lt;script&gt;
-            window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        &lt;/script&gt;
-    &lt;/div&gt;
-	    
-  &lt;/div&gt;
-  
-  &lt;div id=&quot;content&quot; class=&quot;col-sm-3&quot;&gt;
-    &lt;!-- &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; data-spy=&quot;affix&quot; data-offset-top=&quot;0&quot; data-offset-bottom=&quot;-20&quot;&gt; --&gt;
-    &lt;div id=&quot;myAffix&quot; class=&quot;shadow-bottom-center hidden-xs&quot; &gt;
-      &lt;div class=&quot;categories-list-header&quot;&gt;
-        Content
-      &lt;/div&gt;
-      &lt;div class=&quot;content-text&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-&lt;/div&gt;
-
-    &lt;/div&gt;
-
-    
-    &lt;div id=&quot;top&quot; data-toggle=&quot;tooltip&quot; data-placement=&quot;left&quot; title=&quot;back to top&quot;&gt;
-      &lt;a href=&quot;javascript:;&quot;&gt;
-        &lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;stick&quot;&gt;&lt;/div&gt;
-      &lt;/a&gt;
-    &lt;/div&gt;
-
-    &lt;footer class=&quot;&quot;&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;row&quot;&gt;
-      &lt;div class=&quot;col-md-12&quot;&gt;
-        &lt;a href=&quot;mailto:robin.wangrubin@gmail.com&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-envelope&quot;&gt;&lt;/span&gt; robin.wangrubin@gmail.com&lt;/a&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Copyright&amp;copy; 2016 WangRuBin&lt;/span&gt;
-        &lt;span&gt;|&lt;/span&gt;
-        &lt;span&gt;Powered By Jekyll · Theme By Gaohaoyang&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/footer&gt;
-
-  
-  &lt;/body&gt;
-&lt;/html&gt;
 </description>
         <pubDate>Wed, 04 Jan 2017 00:00:00 +0800</pubDate>
         <link>/docker/Docker-Swarm-Shipyard.html</link>
