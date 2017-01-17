@@ -5,9 +5,278 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 16 Jan 2017 14:47:22 +0800</pubDate>
-    <lastBuildDate>Mon, 16 Jan 2017 14:47:22 +0800</lastBuildDate>
+    <pubDate>Tue, 17 Jan 2017 15:51:21 +0800</pubDate>
+    <lastBuildDate>Tue, 17 Jan 2017 15:51:21 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Docker Mesos集群架构</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;实验环境准备&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;系统环境准备&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#zookeeper&quot; id=&quot;markdown-toc-zookeeper&quot;&gt;部署zookeeper&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#zk&quot; id=&quot;markdown-toc-zk&quot;&gt;安装zk&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#zk-1&quot; id=&quot;markdown-toc-zk-1&quot;&gt;配置zk&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#zk-2&quot; id=&quot;markdown-toc-zk-2&quot;&gt;启动zk&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#zk-3&quot; id=&quot;markdown-toc-zk-3&quot;&gt;验证zk&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mesos&quot; id=&quot;markdown-toc-mesos&quot;&gt;部署mesos&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#mesos-1&quot; id=&quot;markdown-toc-mesos-1&quot;&gt;安装mesos&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#mesos-2&quot; id=&quot;markdown-toc-mesos-2&quot;&gt;配置mesos&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#mesos-master&quot; id=&quot;markdown-toc-mesos-master&quot;&gt;启动mesos-master&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#mesos-slave&quot; id=&quot;markdown-toc-mesos-slave&quot;&gt;启动mesos-slave&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#mesos-3&quot; id=&quot;markdown-toc-mesos-3&quot;&gt;验证mesos&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#marathon&quot; id=&quot;markdown-toc-marathon&quot;&gt;部署marathon&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#marathon-1&quot; id=&quot;markdown-toc-marathon-1&quot;&gt;安装marathon&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#marathon-2&quot; id=&quot;markdown-toc-marathon-2&quot;&gt;验证marathon&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#marathonmesosdocker&quot; id=&quot;markdown-toc-marathonmesosdocker&quot;&gt;marathon调用mesos部署docker容器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;实验环境准备&lt;/h2&gt;
+
+&lt;p&gt;使用VMware创建5台虚拟机搭建mesos集群：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;系统要求：CentOS-7.2&lt;/li&gt;
+  &lt;li&gt;内核要求：3.10.0-327.el7.x86_64&lt;/li&gt;
+  &lt;li&gt;Docker版本：Docker version 1.12.3, build 6b644ec&lt;/li&gt;
+  &lt;li&gt;JAVA环境：JDK_1.8&lt;/li&gt;
+  &lt;li&gt;Mesos版本：mesos-1.1.0&lt;/li&gt;
+  &lt;li&gt;Zookeeper版本：zookeeper-3.4.6&lt;/li&gt;
+  &lt;li&gt;Marathon版本：marathon-1.3.6&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;主机名和IP地址规划如下：&lt;/p&gt;
+
+&lt;p&gt;mesos-master01 ==== 192.168.1.101	mesos-master zookeeper marathon&lt;/p&gt;
+
+&lt;p&gt;mesos-master02 ==== 192.168.1.102   mesos-master zookeeper&lt;/p&gt;
+
+&lt;p&gt;mesos-master03 ==== 192.168.1.103   mesos-master zookeeper&lt;/p&gt;
+
+&lt;p&gt;mesos-slave01 ==== 192.168.1.104	mesos-slave&lt;/p&gt;
+
+&lt;p&gt;mesos-slave02 ==== 192.168.1.105	mesos-slave&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;系统环境准备&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;主机名解析&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所有节点：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.1.101  mesos-master01
+192.168.1.102  mesos-master02
+192.168.1.103  mesos-master03
+192.168.1.104  mesos-slave01
+192.168.1.105  mesos-slave02&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;JAVA_1.8环境部署&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;master节点：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tar xf jdk-8u11-linux-x64.tar.gz -C /usr/local/
+cat &amp;gt;&amp;gt; /etc/profile &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_11
+export CLASSPATH=.:\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;zookeeper&quot;&gt;部署zookeeper&lt;/h2&gt;
+
+&lt;h3 id=&quot;zk&quot;&gt;安装zk&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;三台master节点部署zookeeper&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
+wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+tar xf zookeeper-3.4.6.tar.gz
+mv zookeeper-3.4.6 /application/
+ln -s /application/zookeeper-3.4.6/ /application/zookeeper
+mv /application/zookeeper/conf/zoo_sample.cfg /application/zookeeper/conf/zoo.cfg&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;zk-1&quot;&gt;配置zk&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grep &lt;span class=&quot;s1&quot;&gt;'^[a-z]'&lt;/span&gt; zoo.cfg
+&lt;span class=&quot;nv&quot;&gt;tickTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000
+&lt;span class=&quot;nv&quot;&gt;initLimit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10
+&lt;span class=&quot;nv&quot;&gt;syncLimit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5
+&lt;span class=&quot;nv&quot;&gt;dataDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/tmp/zookeeper
+&lt;span class=&quot;nv&quot;&gt;clientPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2181
+server .1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.101:3181:4181
+server .2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.102:3181:4181
+server .3&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.103:3181:4181&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /tmp/zookeeper/
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1 &amp;gt; /tmp/zookeeper/myid		//master01执行
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;2 &amp;gt; /tmp/zookeeper/myid		//master02执行
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;3 &amp;gt; /tmp/zookeeper/myid		//master03执行&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;zk-2&quot;&gt;启动zk&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/application/zookeeper/bin/zkServer.sh start /application/zookeeper/conf/zoo.cfg&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;zk-3&quot;&gt;验证zk&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@mesos-master01 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: follower&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@mesos-master02 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: leader&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@mesos-master03 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: follower&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;zk部署完成&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;mesos&quot;&gt;部署mesos&lt;/h2&gt;
+
+&lt;h3 id=&quot;mesos-1&quot;&gt;安装mesos&lt;/h3&gt;
+
+&lt;p&gt;rpm包安装&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://open.mesosphere.com/downloads/mesos/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;所有节点都部署mesos&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://repos.mesosphere.com/el/7/x86_64/RPMS/mesos-1.1.0-2.0.107.centos701406.x86_64.rpm
+yum localinstall mesos-1.1.0-2.0.107.centos701406.x86_64.rpm -y&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Yum安装&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;rpm -ivh http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+yum -y install mesos&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;mesos-2&quot;&gt;配置mesos&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;所有节点加入如下配置&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;zk://192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181/mesos&quot;&lt;/span&gt; &amp;gt; /etc/mesos/zk &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;master节点加入如下配置&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;2 &amp;gt;/etc/mesos-master/quorum&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;mesos-master&quot;&gt;启动mesos-master&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;mesos-master
+systemctl start mesos-master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;mesos-slave&quot;&gt;启动mesos-slave&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;mesos-slave
+systemctl start mesos-slave&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;mesos-3&quot;&gt;验证mesos&lt;/h3&gt;
+
+&lt;p&gt;http://192.168.1.101:5050&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/2.png&quot; alt=&quot;2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;MASTER=$(mesos-resolve `cat /etc/mesos/zk`)&lt;/p&gt;
+
+&lt;p&gt;mesos-execute –master=$MASTER –name=”cluster-test” –command=”sleep 180”&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/3.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;marathon&quot;&gt;部署marathon&lt;/h2&gt;
+
+&lt;h3 id=&quot;marathon-1&quot;&gt;安装marathon&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;第一台master上部署marathon&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;rpm -ivh http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+yum -y install marathon&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;修改所有slave节点配置并重启slave&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'docker,mesos'&lt;/span&gt; | tee /etc/mesos-slave/containerizers
+systemctl start marathon&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;marathon-2&quot;&gt;验证marathon&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/4.png&quot; alt=&quot;4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;http://192.168.1.101:8080&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/5.png&quot; alt=&quot;5&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;marathonmesosdocker&quot;&gt;marathon调用mesos部署docker容器&lt;/h2&gt;
+
+&lt;p&gt;vim /root/nginx.json&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;nginx&quot;&lt;/span&gt;,
+    &lt;span class=&quot;s2&quot;&gt;&quot;cpus&quot;&lt;/span&gt;: 0.2,
+    &lt;span class=&quot;s2&quot;&gt;&quot;mem&quot;&lt;/span&gt;: 32,
+    &lt;span class=&quot;s2&quot;&gt;&quot;instances&quot;&lt;/span&gt;: 1,
+    &lt;span class=&quot;s2&quot;&gt;&quot;constraints&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;,
+    &lt;span class=&quot;s2&quot;&gt;&quot;container&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;DOCKER&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;docker&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;s2&quot;&gt;&quot;image&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;nginx&quot;&lt;/span&gt;,
+            &lt;span class=&quot;s2&quot;&gt;&quot;network&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;BRIDGE&quot;&lt;/span&gt;,
+            &lt;span class=&quot;s2&quot;&gt;&quot;portMappings&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;s2&quot;&gt;&quot;containerPort&quot;&lt;/span&gt;: 80,
+                    &lt;span class=&quot;s2&quot;&gt;&quot;hostPort&quot;&lt;/span&gt;: 0,
+                    &lt;span class=&quot;s2&quot;&gt;&quot;servicePort&quot;&lt;/span&gt;: 0,
+                    &lt;span class=&quot;s2&quot;&gt;&quot;protocol&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;tcp&quot;&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -X POST http://192.168.1.101:8080/v2/apps -d @/root/nginx.json -H &lt;span class=&quot;s2&quot;&gt;&quot;Content-type: application/json&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/6.png&quot; alt=&quot;6&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 16 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/docker/Docker-Mesos2.html</link>
+        <guid isPermaLink="true">/docker/Docker-Mesos2.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
     
       <item>
         <title>Docker Swarm Shipyard</title>
@@ -2621,60 +2890,6 @@ rm -rf /var/lib/apt/lists/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;/cod
         <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
         <link>/point/speedtest.html</link>
         <guid isPermaLink="true">/point/speedtest.html</guid>
-        
-        
-        <category>Point</category>
-        
-      </item>
-    
-      <item>
-        <title>事务一致性</title>
-        <description>&lt;p&gt;举例说明如下：&lt;/p&gt;
-
-&lt;p&gt;银行A账户向B账户汇款100元；&lt;/p&gt;
-
-&lt;p&gt;一致性：A给B转钱，单从数据库的角度来看，从A上减掉100块钱，然后就提交，本身这个操作没有问题。但是从业务的角度来看，你必须得给B上加上100块钱，这样整体数据才算一致。因此：&lt;/p&gt;
-
-&lt;p&gt;A-100；&lt;/p&gt;
-
-&lt;p&gt;B+100；&lt;/p&gt;
-
-&lt;p&gt;这样才算一个事务，因为它保证了数据的一致，即要满足业务需求，在数据上A与B也要一致。&lt;/p&gt;
-
-&lt;p&gt;一致性的本质就是你在进行一个事务的时候，是应该选择将A-100作为一个事务呢，还是应该选择将A-100以及B+100整体作为一个事务呢。&lt;/p&gt;
-
-&lt;p&gt;原子性：是假如你选择了将A-100以及B+100整体作为一个事务，那么他们就是一个整体，要么大家都成功，要么大家都失败。&lt;/p&gt;
-
-&lt;p&gt;原子性的本质就是A减去100执行成功了，那B加100一定也要执行成功，也就是A成功，B也要成功, A失败，b也要失败。将A和b看做一个整体。&lt;/p&gt;
-
-&lt;p&gt;原子性与一致性的区别是：一致性是选择要不要加上B+100这个条件，而原子性是B+100与A-100是否要作为一个整体考虑。&lt;/p&gt;
-
-&lt;p&gt;数据库的ACID原则：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;A：原子性: 即要么泡妞成功，要么泡妞不成功，绝对不能出现暧昧不清的情况&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;C：一致性: 即如果对方对你好，你就不能耍脾气，也要对对方好，状态要保持一致&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;I：隔离性: 谈恋爱期间钱归钱，爱归爱，两者不能混淆，爱不应收到穷富的干扰&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;D：持久性: e……&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
-        <link>/point/ACID.html</link>
-        <guid isPermaLink="true">/point/ACID.html</guid>
         
         
         <category>Point</category>

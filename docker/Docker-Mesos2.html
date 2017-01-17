@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Docker Mesos集群架构</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/docker/Docker-Mesos2.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Docker Mesos集群架构</h1>
+        <p>Jan 16 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">实验环境准备</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">系统环境准备</a></li>
+  <li><a href="#zookeeper" id="markdown-toc-zookeeper">部署zookeeper</a>    <ul>
+      <li><a href="#zk" id="markdown-toc-zk">安装zk</a></li>
+      <li><a href="#zk-1" id="markdown-toc-zk-1">配置zk</a></li>
+      <li><a href="#zk-2" id="markdown-toc-zk-2">启动zk</a></li>
+      <li><a href="#zk-3" id="markdown-toc-zk-3">验证zk</a></li>
+    </ul>
+  </li>
+  <li><a href="#mesos" id="markdown-toc-mesos">部署mesos</a>    <ul>
+      <li><a href="#mesos-1" id="markdown-toc-mesos-1">安装mesos</a></li>
+      <li><a href="#mesos-2" id="markdown-toc-mesos-2">配置mesos</a></li>
+      <li><a href="#mesos-master" id="markdown-toc-mesos-master">启动mesos-master</a></li>
+      <li><a href="#mesos-slave" id="markdown-toc-mesos-slave">启动mesos-slave</a></li>
+      <li><a href="#mesos-3" id="markdown-toc-mesos-3">验证mesos</a></li>
+    </ul>
+  </li>
+  <li><a href="#marathon" id="markdown-toc-marathon">部署marathon</a>    <ul>
+      <li><a href="#marathon-1" id="markdown-toc-marathon-1">安装marathon</a></li>
+      <li><a href="#marathon-2" id="markdown-toc-marathon-2">验证marathon</a></li>
+    </ul>
+  </li>
+  <li><a href="#marathonmesosdocker" id="markdown-toc-marathonmesosdocker">marathon调用mesos部署docker容器</a></li>
+</ul>
+
+<h2 id="section">实验环境准备</h2>
+
+<p>使用VMware创建5台虚拟机搭建mesos集群：</p>
+
+<ul>
+  <li>系统要求：CentOS-7.2</li>
+  <li>内核要求：3.10.0-327.el7.x86_64</li>
+  <li>Docker版本：Docker version 1.12.3, build 6b644ec</li>
+  <li>JAVA环境：JDK_1.8</li>
+  <li>Mesos版本：mesos-1.1.0</li>
+  <li>Zookeeper版本：zookeeper-3.4.6</li>
+  <li>Marathon版本：marathon-1.3.6</li>
+</ul>
+
+<p>主机名和IP地址规划如下：</p>
+
+<p>mesos-master01 ==== 192.168.1.101	mesos-master zookeeper marathon</p>
+
+<p>mesos-master02 ==== 192.168.1.102   mesos-master zookeeper</p>
+
+<p>mesos-master03 ==== 192.168.1.103   mesos-master zookeeper</p>
+
+<p>mesos-slave01 ==== 192.168.1.104	mesos-slave</p>
+
+<p>mesos-slave02 ==== 192.168.1.105	mesos-slave</p>
+
+<hr />
+
+<h2 id="section-1">系统环境准备</h2>
+
+<ul>
+  <li>主机名解析</li>
+</ul>
+
+<p>所有节点：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.1.101  mesos-master01
+192.168.1.102  mesos-master02
+192.168.1.103  mesos-master03
+192.168.1.104  mesos-slave01
+192.168.1.105  mesos-slave02</code></pre></figure>
+
+<ul>
+  <li>JAVA_1.8环境部署</li>
+</ul>
+
+<p>master节点：</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">tar xf jdk-8u11-linux-x64.tar.gz -C /usr/local/
+cat &gt;&gt; /etc/profile <span class="sh">&lt;&lt;EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_11
+export CLASSPATH=.:\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+</span><span class="nb">source</span> /etc/profile</code></pre></figure>
+
+<hr />
+
+<h2 id="zookeeper">部署zookeeper</h2>
+
+<h3 id="zk">安装zk</h3>
+
+<p><code class="highlighter-rouge">三台master节点部署zookeeper</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/tools/
+wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+tar xf zookeeper-3.4.6.tar.gz
+mv zookeeper-3.4.6 /application/
+ln -s /application/zookeeper-3.4.6/ /application/zookeeper
+mv /application/zookeeper/conf/zoo_sample.cfg /application/zookeeper/conf/zoo.cfg</code></pre></figure>
+
+<h3 id="zk-1">配置zk</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grep <span class="s1">'^[a-z]'</span> zoo.cfg
+<span class="nv">tickTime</span><span class="o">=</span>2000
+<span class="nv">initLimit</span><span class="o">=</span>10
+<span class="nv">syncLimit</span><span class="o">=</span>5
+<span class="nv">dataDir</span><span class="o">=</span>/tmp/zookeeper
+<span class="nv">clientPort</span><span class="o">=</span>2181
+server .1<span class="o">=</span>192.168.1.101:3181:4181
+server .2<span class="o">=</span>192.168.1.102:3181:4181
+server .3<span class="o">=</span>192.168.1.103:3181:4181</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /tmp/zookeeper/
+<span class="nb">echo </span>1 &gt; /tmp/zookeeper/myid		//master01执行
+<span class="nb">echo </span>2 &gt; /tmp/zookeeper/myid		//master02执行
+<span class="nb">echo </span>3 &gt; /tmp/zookeeper/myid		//master03执行</code></pre></figure>
+
+<h3 id="zk-2">启动zk</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">/application/zookeeper/bin/zkServer.sh start /application/zookeeper/conf/zoo.cfg</code></pre></figure>
+
+<h3 id="zk-3">验证zk</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@mesos-master01 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: follower</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@mesos-master02 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: leader</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@mesos-master03 ~]# /application/zookeeper/bin/zkServer.sh status /application/zookeeper/conf/zoo.cfg
+JMX enabled by default
+Using config: /application/zookeeper/conf/zoo.cfg
+Mode: follower</code></pre></figure>
+
+<p>zk部署完成</p>
+
+<hr />
+
+<h2 id="mesos">部署mesos</h2>
+
+<h3 id="mesos-1">安装mesos</h3>
+
+<p>rpm包安装</p>
+
+<blockquote>
+  <p>https://open.mesosphere.com/downloads/mesos/</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">所有节点都部署mesos</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">wget http://repos.mesosphere.com/el/7/x86_64/RPMS/mesos-1.1.0-2.0.107.centos701406.x86_64.rpm
+yum localinstall mesos-1.1.0-2.0.107.centos701406.x86_64.rpm -y</code></pre></figure>
+
+<p>Yum安装</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">rpm -ivh http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+yum -y install mesos</code></pre></figure>
+
+<h3 id="mesos-2">配置mesos</h3>
+
+<p><code class="highlighter-rouge">所有节点加入如下配置</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"zk://192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181/mesos"</span> &gt; /etc/mesos/zk </code></pre></figure>
+
+<p><code class="highlighter-rouge">master节点加入如下配置</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo </span>2 &gt;/etc/mesos-master/quorum</code></pre></figure>
+
+<h3 id="mesos-master">启动mesos-master</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">systemctl <span class="nb">enable </span>mesos-master
+systemctl start mesos-master</code></pre></figure>
+
+<h3 id="mesos-slave">启动mesos-slave</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">systemctl <span class="nb">enable </span>mesos-slave
+systemctl start mesos-slave</code></pre></figure>
+
+<h3 id="mesos-3">验证mesos</h3>
+
+<p>http://192.168.1.101:5050</p>
+
+<p><img src="/pic/docker-mesos/1.png" alt="1" /></p>
+
+<p><img src="/pic/docker-mesos/2.png" alt="2" /></p>
+
+<p>MASTER=$(mesos-resolve `cat /etc/mesos/zk`)</p>
+
+<p>mesos-execute –master=$MASTER –name=”cluster-test” –command=”sleep 180”</p>
+
+<p><img src="/pic/docker-mesos/3.png" alt="3" /></p>
+
+<hr />
+
+<h2 id="marathon">部署marathon</h2>
+
+<h3 id="marathon-1">安装marathon</h3>
+
+<p><code class="highlighter-rouge">第一台master上部署marathon</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">rpm -ivh http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+yum -y install marathon</code></pre></figure>
+
+<p><code class="highlighter-rouge">修改所有slave节点配置并重启slave</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">'docker,mesos'</span> | tee /etc/mesos-slave/containerizers
+systemctl start marathon</code></pre></figure>
+
+<h3 id="marathon-2">验证marathon</h3>
+
+<p><img src="/pic/docker-mesos/4.png" alt="4" /></p>
+
+<p>http://192.168.1.101:8080</p>
+
+<p><img src="/pic/docker-mesos/5.png" alt="5" /></p>
+
+<hr />
+
+<h2 id="marathonmesosdocker">marathon调用mesos部署docker容器</h2>
+
+<p>vim /root/nginx.json</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">{</span>
+    <span class="s2">"id"</span>: <span class="s2">"nginx"</span>,
+    <span class="s2">"cpus"</span>: 0.2,
+    <span class="s2">"mem"</span>: 32,
+    <span class="s2">"instances"</span>: 1,
+    <span class="s2">"constraints"</span>: <span class="o">[]</span>,
+    <span class="s2">"container"</span>: <span class="o">{</span>
+        <span class="s2">"type"</span>: <span class="s2">"DOCKER"</span>,
+        <span class="s2">"docker"</span>: <span class="o">{</span>
+            <span class="s2">"image"</span>: <span class="s2">"nginx"</span>,
+            <span class="s2">"network"</span>: <span class="s2">"BRIDGE"</span>,
+            <span class="s2">"portMappings"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"containerPort"</span>: 80,
+                    <span class="s2">"hostPort"</span>: 0,
+                    <span class="s2">"servicePort"</span>: 0,
+                    <span class="s2">"protocol"</span>: <span class="s2">"tcp"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">curl -X POST http://192.168.1.101:8080/v2/apps -d @/root/nginx.json -H <span class="s2">"Content-type: application/json"</span></code></pre></figure>
+
+<p><img src="/pic/docker-mesos/6.png" alt="6" /></p>
+
+<hr />
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
