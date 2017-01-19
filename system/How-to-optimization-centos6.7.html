@@ -152,7 +152,7 @@ mkdir -p /service/scripts/                              //脚本存放目录</co
   <li>关闭SElinux</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">sed -i <span class="s1">'s#SELINUX=enforcing#SELINUX=disabled#g'</span> /etc/selinux/config</code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">sed -i <span class="s1">'s/SELINUX=.*/SELINUX=disabled/g'</span> /etc/selinux/config </code></pre></figure>
 
 <ul>
   <li>开机自动清空网卡缓存信息</li>
