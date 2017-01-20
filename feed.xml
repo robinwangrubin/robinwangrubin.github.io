@@ -5,9 +5,122 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 20 Jan 2017 14:51:42 +0800</pubDate>
-    <lastBuildDate>Fri, 20 Jan 2017 14:51:42 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Jan 2017 16:01:51 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Jan 2017 16:01:51 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>shell循环语句</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#if&quot; id=&quot;markdown-toc-if&quot;&gt;IF循环&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#for&quot; id=&quot;markdown-toc-for&quot;&gt;FOR循环&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#while&quot; id=&quot;markdown-toc-while&quot;&gt;WHILE循环&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;if&quot;&gt;IF循环&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/hosts &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ture&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;fail&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/hosts &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/hosts is ture&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/sysconfig/network-scripts/ifcfg-eth0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ifcfg-eth0 is ture&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;all fail&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;STATUS_CODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;curl -I --connect-timeout 10 -o /dev/null -s -w %&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;http_code&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; wangrubin.com&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$STATUS_CODE&lt;/span&gt; -eq 200 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is Ok&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is Fail&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;for&quot;&gt;FOR循环&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;n &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq 10&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&amp;lt;&lt;span class=&quot;nv&quot;&gt;$num&lt;/span&gt;;i+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Author: wangrubin&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Email: robinwangrubin@gmail.com&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Description: This script is for &lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;ERROR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;com.talkweb.wanda.det.pho.exception.ShowSeatCacheException&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/var/wd/wandadet_20*/logs/catalina.out&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TATAL_NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+&lt;span class=&quot;nv&quot;&gt;DATE_TIME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date &lt;span class=&quot;s2&quot;&gt;&quot;+%F %H:%M&quot;&lt;/span&gt; -d &lt;span class=&quot;s2&quot;&gt;&quot;1 minute ago&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;FILE &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;;
+&lt;span class=&quot;k&quot;&gt;do
+          &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DATE_TIME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; |grep &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ERROR&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; |wc -l&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;nv&quot;&gt;TATAL_NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;TATAL_NUM+NUM&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TATAL_NUM&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;n &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;1..255&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+ &lt;/span&gt;ping -c 2 -W 2 10.0.0.&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &amp;amp;&amp;gt;/dev/null
+ &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.0.0.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is active&quot;&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.0.0.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is shutdown&quot;&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;fi
+done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;while&quot;&gt;WHILE循环&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
+  &lt;span class=&quot;nb&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;int+1
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; :
+&lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line
+&lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; &amp;lt; /etc/passwd&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/shell/shell-2.html</link>
+        <guid isPermaLink="true">/shell/shell-2.html</guid>
+        
+        
+        <category>Shell</category>
+        
+      </item>
     
       <item>
         <title>shell基础</title>
@@ -2189,860 +2302,6 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
         <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
         <link>/docker/Docker-ELK.html</link>
         <guid isPermaLink="true">/docker/Docker-ELK.html</guid>
-        
-        
-        <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Docker 基础知识点介绍</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-docker-112&quot; id=&quot;markdown-toc-install-docker-112&quot;&gt;Install docker 1.12&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#install-with-yum&quot; id=&quot;markdown-toc-install-with-yum&quot;&gt;Install with yum&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#install-docker-from-binaries&quot; id=&quot;markdown-toc-install-docker-from-binaries&quot;&gt;Install Docker from binaries&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#install-with-the-script&quot; id=&quot;markdown-toc-install-with-the-script&quot;&gt;Install with the script&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#docker-command&quot; id=&quot;markdown-toc-docker-command&quot;&gt;Docker Command&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#docker4&quot; id=&quot;markdown-toc-docker4&quot;&gt;Docker的4种网络模式&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#host&quot; id=&quot;markdown-toc-host&quot;&gt;host模式&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#container&quot; id=&quot;markdown-toc-container&quot;&gt;container模式&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#none&quot; id=&quot;markdown-toc-none&quot;&gt;none模式&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#bridge&quot; id=&quot;markdown-toc-bridge&quot;&gt;bridge模式（默认模式）&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#docker&quot; id=&quot;markdown-toc-docker&quot;&gt;Docker存储&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;数据卷&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;数据卷容器&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#dockerfile&quot; id=&quot;markdown-toc-dockerfile&quot;&gt;Dockerfile&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#namespace&quot; id=&quot;markdown-toc-namespace&quot;&gt;Namespace资源隔离&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#pid-namespace&quot; id=&quot;markdown-toc-pid-namespace&quot;&gt;pid namespace&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#net-namespace&quot; id=&quot;markdown-toc-net-namespace&quot;&gt;net namespace&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ipc-namespace&quot; id=&quot;markdown-toc-ipc-namespace&quot;&gt;ipc namespace&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#mnt-namespace&quot; id=&quot;markdown-toc-mnt-namespace&quot;&gt;mnt namespace&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#uts-namespace&quot; id=&quot;markdown-toc-uts-namespace&quot;&gt;uts namespace&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#user-namespace&quot; id=&quot;markdown-toc-user-namespace&quot;&gt;user namespace&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#control-groups-cgroups&quot; id=&quot;markdown-toc-control-groups-cgroups&quot;&gt;Control Groups (cgroups)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#docker-registry&quot; id=&quot;markdown-toc-docker-registry&quot;&gt;Docker-Registry&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#http-registry&quot; id=&quot;markdown-toc-http-registry&quot;&gt;HTTP-registry&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#https-registry&quot; id=&quot;markdown-toc-https-registry&quot;&gt;HTTPS-registry&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#docker-compose&quot; id=&quot;markdown-toc-docker-compose&quot;&gt;Docker-compose&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#install-docker-compose&quot; id=&quot;markdown-toc-install-docker-compose&quot;&gt;Install docker-compose&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#get-started-with-docker-compose&quot; id=&quot;markdown-toc-get-started-with-docker-compose&quot;&gt;Get started with Docker Compose&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;install-docker-112&quot;&gt;Install docker 1.12&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Docker requires a 64-bit OS and version 3.10 or higher of the Linux kernel.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;To check your current kernel version, open a terminal and use uname -r to display your kernel version:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;uname -r
-3.10.0-327.el7.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;install-with-yum&quot;&gt;Install with yum&lt;/h3&gt;
-
-&lt;p&gt;Add the yum repo.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tee /etc/yum.repos.d/docker.repo &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;-'EOF'
-[dockerrepo]
-name=Docker Repository
-baseurl=https://yum.dockerproject.org/repo/main/centos/7/
-enabled=1
-gpgcheck=1
-gpgkey=https://yum.dockerproject.org/gpg
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Install the Docker package.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install docker-engine&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Enable the service and start docker daemon.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;docker.service
-systemctl start docker&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Verification&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;install-docker-from-binaries&quot;&gt;Install Docker from binaries&lt;/h3&gt;
-
-&lt;p&gt;Download the docker binaries&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://get.docker.com/builds/Linux/x86_64/docker-1.12.0.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Install and start docker daemon&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tar xf docker-1.12.0.tgz
-mv docker/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /usr/bin/
-dockerd &amp;amp;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Verification&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;install-with-the-script&quot;&gt;Install with the script&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -fsSL https://get.docker.com/ | sh&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;docker.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl start docker&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;docker-command&quot;&gt;Docker Command&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;下载镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker pull ubuntu:14.04&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;导出镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker save centos &amp;gt;/opt/centos.tar.gz&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;导入镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker load &amp;lt;/opt/centos.tar.gz&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;列出当前已下载的镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker images&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;删除镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker rmi image-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;ps:如果镜像被用来创建了容器，那么需先删除容器&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;在dockerhub上搜索镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker search centos&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动一个容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker run -name myfirst_docker -it ubuntu:14.04 /bin/bash&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;后台启动容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker run -d centos:6.6 /bin/bash -c “whilr ture;do echo “hahah”;sleep 1;done”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;-d:后台启动&lt;/p&gt;
-
-&lt;p&gt;-name：定义容器名称&lt;/p&gt;
-
-&lt;p&gt;-i：打开容器的标准输入&lt;/p&gt;
-
-&lt;p&gt;-t：分配一个伪终端并绑定到容器的标准输入上&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;容器退出时自动删除该容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker run –rm centos echo “hello world”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动一个已停止的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker start container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看启动的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker ps&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看所有的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker ps -a&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取容器内的log&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker logs container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看容器内部进程&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker top container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;停止容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker stop container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;极端方式停止容器（不推荐）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker kill container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取所有启动的容器的ID号&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker ps -q&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取所有容器的ID号&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker ps -a -q&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;批量杀掉启动的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker kill $(docker ps -q)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;删除已停止的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker rm container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;删除正在运行的容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker rm -f container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;删除所有容器和镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker kill $(docker ps -q)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker rm $(docker ps -a -q)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker rmi $(docker images -q -a)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;进入正在运行的容器中&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker attach container-ID&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Note：多个窗口同时attach到同一个容器中时，会同步显示某个窗口的一切信息，当这个窗口阻塞，其他窗口也无法操作&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;nsenter命令&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;nsenter可以访问另一个进程的名字空间，需要root权限&lt;/p&gt;
-
-&lt;p&gt;yum -y install util-linux&lt;/p&gt;
-
-&lt;p&gt;docker inspect –format “{{.State.Pid}}” 867e6627a194&lt;/p&gt;
-
-&lt;p&gt;找到容器的第一个进程的PID&lt;/p&gt;
-
-&lt;p&gt;nsenter -t 20012 -u -i -n -p&lt;/p&gt;
-
-&lt;p&gt;利用PID进入该容器&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;commit镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker commit -m “my nginx” container-ID test/mynginx:v1 #自定义一个镜像&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;docker4&quot;&gt;Docker的4种网络模式&lt;/h2&gt;
-
-&lt;h3 id=&quot;host&quot;&gt;host模式&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;众所周知，Docker使用了Linux的Namespaces技术来进行资源隔离，如PID Namespace隔离进程，Mount Namespace隔离文件系统，Network Namespace隔离网络等。一个Network Namespace提供了一份独立的网络环境，包括网卡、路由、Iptable规则等都与其他的Network Namespace隔离。一个Docker容器一般会分配一个独立的Network Namespace。但如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。 例如，我们在10.10.101.105/24的机器上用host模式启动一个含有web应用的Docker容器，监听tcp80端口。当我们在容器中执行任何类似ifconfig命令查看网络环境时，看到的都是宿主机上的信息。而外界访问容器中的应用，则直接使用10.10.101.105:80即可，不用任何NAT转换，就如直接跑在宿主机中一样。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;container&quot;&gt;container模式&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;在理解了host模式后，这个模式也就好理解了。这个模式指定新创建的容器和已经存在的一个容器共享一个Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过lo网卡设备通信。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;none&quot;&gt;none模式&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;这个模式和前两个不同。在这种模式下，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;bridge&quot;&gt;bridge模式（默认模式）&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;当Docker server启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。接下来就要为容器分配IP了，Docker会从RFC1918所定义的私有IP网段中，选择一个和宿主机不同的IP地址和子网分配给docker0，连接到docker0的容器就从这个子网中选择一个未占用的IP使用。如一般Docker会使用172.17.0.0/16这个网段，并将172.17.42.1/16分配给docker0网桥（在主机上使用ifconfig命令是可以看到docker0的，可以认为它是网桥的管理接口，在宿主机上作为一块虚拟网卡使用）。单机环境下的网络拓扑如下，主机地址为10.10.101.105/24。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动容器时指定端口&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker run -d -p 80:8080 nginx&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;host的80映射到container的8080端口&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;docker&quot;&gt;Docker存储&lt;/h2&gt;
-
-&lt;h3 id=&quot;section&quot;&gt;数据卷&lt;/h3&gt;
-
-&lt;p&gt;-v /data挂载data目录 -v file 挂在一个文件 -v src:dst 指定一个挂载目录，开发常用，挂载物理机代码所在目录，nginx直接使用代码创建一个centos容器，挂载/data目录，挂载时可以指定权限 ro rw 等&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -it --name volume-test1 -v /data centos     &lt;span class=&quot;c&quot;&gt;#给容器挂载一个/data目录&lt;/span&gt;
-docker inspect 023072ed38db |grep -A 5 &lt;span class=&quot;s2&quot;&gt;&quot;Mounts&quot;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;#查看容器中/data目录对应真实的物理位置&lt;/span&gt;
-docker run -it -v /tmp:/opt centos   &lt;span class=&quot;c&quot;&gt;#挂载物理机的tmp目录到容器的opt下&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section-1&quot;&gt;数据卷容器&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -d --name myvolume centos
-docker run -it --name myvolum-test --volumes-from myvolume centos&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;dockerfile&quot;&gt;Dockerfile&lt;/h2&gt;
-
-&lt;p&gt;Dockerfile:镜像的描述文件；所有镜像都由Dockerfile生成；&lt;/p&gt;
-
-&lt;p&gt;dockerfile 4大部分&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;基础镜像信息&lt;/li&gt;
-  &lt;li&gt;维护者信息&lt;/li&gt;
-  &lt;li&gt;镜像操作指令&lt;/li&gt;
-  &lt;li&gt;容器启动时执行指令&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Dockerfile 实例:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /opt/dockerfille/nginx/Dockerfile
-&lt;span class=&quot;c&quot;&gt;# This is nginx Dockfile&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# Verion 1.1.1&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# Author Chuck.Ma&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# Date 2016/1/6&lt;/span&gt;
-FROM centos
-MAINTAINER robin.wangrubin@gmail.com
-RUN rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm
-RUN yum install -y nginx
-RUN &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Robin.Wangrubin&quot;&lt;/span&gt; &amp;gt; /usr/share/nginx/html/index.html
-RUN &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;daemon off;&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/nginx/nginx.conf
-EXPOSE 80
-CMD &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nginx&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;生成镜像文件&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker build -t &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;/mynginx:v5 /opt/dockerfille/nginx/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Note：/opt/dockerfille/nginx/下面的Dockerfile文件务必命名为[Dockerfile] ；D大写！&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;namespace&quot;&gt;Namespace资源隔离&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/docker-Basic/759122388670221.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;pid-namespace&quot;&gt;pid namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;不同用户的进程就是通过pid namespace隔离开的，且不同 namespace 中可以有相同pid。所有的LXC进程在docker中的父进程为docker进程，每个lxc进程具有不同的namespace。同时由于允许嵌套，因此可以很方便的实现 Docker in Docker。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;net-namespace&quot;&gt;net namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;有了 pid namespace, 每个namespace中的pid能够相互隔离，但是网络端口还是共享host的端口。网络隔离是通过net namespace实现的， 每个net namespace有独立的 network devices, IP addresses, IP routing tables, /proc/net 目录。这样每个container的网络就能隔离开来。docker默认采用veth的方式将container中的虚拟网卡同host上的一个docker bridge: docker0连接在一起。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;ipc-namespace&quot;&gt;ipc namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;container中进程交互还是采用linux常见的进程间交互方法(interprocess communication – IPC), 包括常见的信号量、消息队列和共享内存。然而同 VM 不同的是，container 的进程间交互实际上还是host上具有相同pid namespace中的进程间交互，因此需要在IPC资源申请时加入namespace信息 – 每个IPC资源有一个唯一的32位ID。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;mnt-namespace&quot;&gt;mnt namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;类似chroot，将一个进程放到一个特定的目录执行。mnt namespace允许不同namespace的进程看到的文件结构不同，这样每个 namespace 中的进程所看到的文件目录就被隔离开了。同chroot不同，每个namespace中的container在/proc/mounts的信息只包含所在namespace的mount point。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;uts-namespace&quot;&gt;uts namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;UTS(“UNIX Time-sharing System”) namespace允许每个container拥有独立的hostname和domain name, 使其在网络上可以被视作一个独立的节点而非Host上的一个进程。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;user-namespace&quot;&gt;user namespace&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;每个container可以有不同的 user 和 group id, 也就是说可以在container内部用container内部的用户执行程序而非Host上的用户。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;control-groups-cgroups&quot;&gt;Control Groups (cgroups)&lt;/h2&gt;
-
-&lt;p&gt;cgroups 实现了对资源的配额和度量。 cgroups 的使用非常简单，提供类似文件的接口，在 /cgroup目录下新建一个文件夹即可新建一个group，在此文件夹中新建task文件，并将pid写入该文件，即可实现对该进程的资源控制。groups可以限制blkio、cpu、cpuacct、cpuset、devices、freezer、memory、net_cls、ns九大子系统的资源，以下是每个子系统的详细说明（可以使用docker run –help查看）：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;blkio 这个子系统设置限制每个块设备的输入输出控制。例如:磁盘，光盘以及usb等等。&lt;/li&gt;
-  &lt;li&gt;cpu 这个子系统使用调度程序为cgroup任务提供cpu的访问。&lt;/li&gt;
-  &lt;li&gt;cpuacct 产生cgroup任务的cpu资源报告。&lt;/li&gt;
-  &lt;li&gt;cpuset 如果是多核心的cpu，这个子系统会为cgroup任务分配单独的cpu和内存。&lt;/li&gt;
-  &lt;li&gt;devices 允许或拒绝cgroup任务对设备的访问。&lt;/li&gt;
-  &lt;li&gt;freezer 暂停和恢复cgroup任务。&lt;/li&gt;
-  &lt;li&gt;memory 设置每个cgroup的内存限制以及产生内存资源报告。&lt;/li&gt;
-  &lt;li&gt;net_cls 标记每个网络包以供cgroup方便使用。&lt;/li&gt;
-  &lt;li&gt;ns 名称空间子系统。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;docker-registry&quot;&gt;Docker-Registry&lt;/h2&gt;
-
-&lt;p&gt;Registry是docker的镜像仓库；主要用于存储企业内部私有的镜像文件，解决了镜像的安全性和高速拉取镜像问题。&lt;/p&gt;
-
-&lt;h3 id=&quot;http-registry&quot;&gt;HTTP-registry&lt;/h3&gt;
-
-&lt;p&gt;下载registry镜像&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker pull registry:2&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;启动registry容器&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker run -d -p 5000:5000 –restart=always –name registry -v /docker-registry/data:/var/lib/registry registry:2&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;retag镜像&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker tag nginx 192.168.1.130:5000/nginx:v2&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;push镜像&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker push 192.168.1.130:5000/nginx:v2&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;The push refers to a repository [192.168.1.130:5000/nginx] Get https://192.168.1.130:5000/v1/_ping: http: server gave HTTP response to HTTPS client&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;PS:目前registry默认需要以HTTPS方式访问；如果强制用HTTP访问，需要修改配置文件&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;https://docs.docker.com/engine/admin/systemd/&lt;/code&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;mkdir /etc/systemd/system/docker.service.d&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt;/etc/systemd/system/docker.service.d/docker-config.conf&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
-[Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd --insecure-registry=192.168.1.130:5000
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;systemctl daemon-reload&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;systemctl restart docker&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;https-registry&quot;&gt;HTTPS-registry&lt;/h3&gt;
-
-&lt;p&gt;Note: 有待补充&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;docker-compose&quot;&gt;Docker-compose&lt;/h2&gt;
-
-&lt;p&gt;docker-compose是一款应用控制工具，主要是针对application的；Dockerfile可以理解为镜像的描述文件，那么docker-compose的yaml文件可以理解为应用的描述文件。&lt;/p&gt;
-
-&lt;p&gt;假如：你有一个应用，需要一个lnmp环境，正常情况下你需要手动启动4个容器（linux-OS nginx mysql php），而且需要关联容器彼此之间的关系，以及需要考虑容器先后启动的顺序等；&lt;/p&gt;
-
-&lt;p&gt;但是有了docker-compose，你只需把该应用需要的环境信息写进一个文件即可，用一条命令即可启动整个应用；无需考虑容器之间的联系和启动顺序。&lt;/p&gt;
-
-&lt;p&gt;使用docker-compose一般有3个步骤&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;定义应用需要的镜像的Dockerfile&lt;/li&gt;
-  &lt;li&gt;定义应用需要的服务（容器）&lt;/li&gt;
-  &lt;li&gt;docker-compose up 启动应用&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;docker-compose.yml文件看起来像下面这样&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;dockercoins应用&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;version: &lt;span class=&quot;s2&quot;&gt;&quot;2&quot;&lt;/span&gt;
-services:
-  rng:
-    build: rng
-    ports:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;8001:80&quot;&lt;/span&gt;
-
-  hasher:
-    build: hasher
-    ports:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;8002:80&quot;&lt;/span&gt;
-
-  webui:
-    build: webui
-    ports:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;8000:80&quot;&lt;/span&gt;
-    volumes:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;./webui/files/:/files/&quot;&lt;/span&gt;
-
-  redis:
-    image: redis
-
-  worker:
-    build: worker&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ELK应用&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;version: &lt;span class=&quot;s2&quot;&gt;&quot;2&quot;&lt;/span&gt;
-
-services:
-  elasticsearch:
-    image: elasticsearch
-    &lt;span class=&quot;c&quot;&gt;# If you need to access ES directly, just uncomment those lines.&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;#ports:&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;#  - &quot;9200:9200&quot;&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;#  - &quot;9300:9300&quot;&lt;/span&gt;
-
-  logstash:
-    image: logstash
-    &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;: |
-      -e &lt;span class=&quot;s1&quot;&gt;'
-      input {
-        # Default port is 12201/udp
-        gelf { }
-        # This generates one test event per minute.
-        # It is great for debugging, but you might
-        # want to remove it in production.
-        heartbeat { }
-      }
-      # The following filter is a hack!
-      # The &quot;de_dot&quot; filter would be better, but it
-      # is not pre-installed with logstash by default.
-      filter {
-        ruby {
-          code =&amp;gt; &quot;
-            event.to_hash.keys.each { |k| event[ k.gsub('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'.'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;','&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') ] = event.remove(k) if k.include?'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'.'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;' }
-          &quot;
-        }
-      }
-      output {
-        elasticsearch {
-          hosts =&amp;gt; [&quot;elasticsearch:9200&quot;]
-        }
-        # This will output every message on stdout.
-        # It is great when testing your setup, but in
-        # production, it will probably cause problems;
-        # either by filling up your disks, or worse,
-        # by creating logging loops! BEWARE!
-        stdout {
-          codec =&amp;gt; rubydebug
-        }
-      }'&lt;/span&gt;
-    ports:
-      - &lt;span class=&quot;s2&quot;&gt;&quot;12201:12201/udp&quot;&lt;/span&gt;
-
-  kibana:
-    image: kibana
-    ports:
-      - &lt;span class=&quot;s2&quot;&gt;&quot;5601:5601&quot;&lt;/span&gt;
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Compose has commands for managing the whole lifecycle of your application:&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Start, stop and rebuild services&lt;/li&gt;
-  &lt;li&gt;View the status of running services&lt;/li&gt;
-  &lt;li&gt;Stream the log output of running services&lt;/li&gt;
-  &lt;li&gt;Run a one-off command on a service&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;install-docker-compose&quot;&gt;Install docker-compose&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;curl -L “https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)” -o /usr/local/bin/docker-compose&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;chmod +x /usr/local/bin/docker-compose&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version –short)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;docker-compose –version&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;get-started-with-docker-compose&quot;&gt;Get started with Docker Compose&lt;/h3&gt;
-
-&lt;p&gt;下面我们利用docker-compose启动一个简单的python web程序&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 1: Setup&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;1.Create a directory for the project:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir composetest
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;composetest&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;2.Create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;app.py&lt;/code&gt; in your project directory and paste this in:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from flask import Flask
-from redis import Redis
-
-app &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Flask&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;__name__&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-redis &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Redis&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'redis'&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6379&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-@app.route&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-def hello&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;:
-    count &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; redis.incr&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hits'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Hello World! I have been seen {} times.\n'&lt;/span&gt;.format&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;count&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;__name__ &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;__main__&quot;&lt;/span&gt;:
-    app.run&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0&quot;&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;debug&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;3.Create another file called &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; in your project directory and paste this in:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;flask
-redis&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;These define the application’s dependencies.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 2: Create a Dockerfile&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;In this step, you write a Dockerfile that builds a Docker image. The image contains all the dependencies the Python application requires, including Python itself.&lt;/p&gt;
-
-&lt;p&gt;In your project directory, create a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; and paste the following:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;FROM python:3.4-alpine
-ADD . /code
-WORKDIR /code
-RUN pip install -r requirements.txt
-CMD &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;python&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;app.py&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;This tells Docker to:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Build an image starting with the Python 3.4 image.&lt;/li&gt;
-  &lt;li&gt;Add the current directory &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; into the path &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt; in the image.&lt;/li&gt;
-  &lt;li&gt;Set the working directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Install the Python dependencies.&lt;/li&gt;
-  &lt;li&gt;Set the default command for the container to &lt;code class=&quot;highlighter-rouge&quot;&gt;python app.py&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 3: Define services in a Compose file&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Create a file called docker-compose.yml in your project directory and paste the following:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;version: &lt;span class=&quot;s1&quot;&gt;'2'&lt;/span&gt;
-services:
-  web:
-    build: .
-    ports:
-     - &lt;span class=&quot;s2&quot;&gt;&quot;5000:5000&quot;&lt;/span&gt;
-    volumes:
-     - .:/code
-  redis:
-    image: &lt;span class=&quot;s2&quot;&gt;&quot;redis:alpine&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;This Compose file defines two services, &lt;code class=&quot;highlighter-rouge&quot;&gt;web&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;. The web service:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Uses an image that’s built from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; in the current directory.&lt;/li&gt;
-  &lt;li&gt;Forwards the exposed port 5000 on the container to port 5000 on the host machine.&lt;/li&gt;
-  &lt;li&gt;Mounts the project directory on the host to &lt;code class=&quot;highlighter-rouge&quot;&gt;/code&lt;/code&gt; inside the container, allowing you to modify the code without having to rebuild the image.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The redis service uses a public &lt;code class=&quot;highlighter-rouge&quot;&gt;Redis&lt;/code&gt; image pulled from the Docker Hub registry.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 4: Build and run your app with Compose&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;1.From your project directory, start up your application.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker-compose up&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Compose pulls a Redis image, builds an image for your code, and start the services you defined.&lt;/p&gt;
-
-&lt;p&gt;2.Enter &lt;code class=&quot;highlighter-rouge&quot;&gt;http://0.0.0.0:5000/&lt;/code&gt; in a browser to see the application running.&lt;/p&gt;
-
-&lt;p&gt;If you’re using Docker on Linux natively, then the web app should now be listening on port 5000 on your Docker daemon host. If &lt;code class=&quot;highlighter-rouge&quot;&gt;http://0.0.0.0:5000&lt;/code&gt; doesn’t resolve, you can also try &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:5000&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;If you’re using Docker Machine on a Mac, use docker-machine ip MACHINE_VM to get the IP address of your Docker host. Then, open &lt;code class=&quot;highlighter-rouge&quot;&gt;http://MACHINE_VM_IP:5000&lt;/code&gt; in a browser.&lt;/p&gt;
-
-&lt;p&gt;You should see a message in your browser saying:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World! I have been seen 1 times.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;3.Refresh the page. The number should increment.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 5: Update the application&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Because the application code is mounted into the container using a volume, you can make changes to its code and see the changes instantly, without having to rebuild the image.&lt;/p&gt;
-
-&lt;p&gt;1.Change the greeting in &lt;code class=&quot;highlighter-rouge&quot;&gt;app.py&lt;/code&gt; and save it. For example:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Hello from Docker! I have been seen {} times.\n'&lt;/span&gt;.format&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;count&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;2.Refresh the app in your browser. The greeting should be updated, and the counter should still be incrementing.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Step 6: Experiment with some other commands&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;If you want to run your services in the background, you can pass the &lt;code class=&quot;highlighter-rouge&quot;&gt;-d&lt;/code&gt; flag (for “detached” mode) to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose ps&lt;/code&gt; to see what is currently running:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker-compose up -d&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose run&lt;/code&gt; command allows you to run one-off commands for your services. For example, to see what environment variables are available to the web service:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker-compose run web env&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;See &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose --help&lt;/code&gt; to see other available commands. You can also install &lt;code class=&quot;highlighter-rouge&quot;&gt;command completion&lt;/code&gt; for the bash and zsh shell, which will also show you available commands.&lt;/p&gt;
-
-&lt;p&gt;If you started Compose with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up -d&lt;/code&gt;, you’ll probably want to stop your services once you’ve finished with them:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker-compose stop&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;You can bring everything down, removing the containers entirely, with the &lt;code class=&quot;highlighter-rouge&quot;&gt;down&lt;/code&gt; command. Pass &lt;code class=&quot;highlighter-rouge&quot;&gt;--volumes&lt;/code&gt; to also remove the data volume used by the Redis container:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker-compose down --volumes&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;At this point, you have seen the basics of how Compose works.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;关于 Dockerfile 和 docker-compose 后面会有单独的章节讲解常用的命令参数以及更过示例.&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
-        <link>/docker/Docker-Basic.html</link>
-        <guid isPermaLink="true">/docker/Docker-Basic.html</guid>
         
         
         <category>Docker</category>
