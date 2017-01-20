@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>date</title>
-	<meta name="description" content="显示当前时间">
+	<title>shell基础</title>
+	<meta name="description" content="">
 	
-	<link rel="canonical" href="/command/data.html">
+	<link rel="canonical" href="/shell/shell-1.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -95,82 +95,113 @@
 
     <div class="post-area post">
       <header>
-        <h1>date</h1>
+        <h1>shell基础</h1>
         <p>Jan 20 2017</p>
       </header>
       <hr>
       <article>
-        <h2 id="section">显示当前时间</h2>
+        <ul id="markdown-toc">
+  <li><a href="#shell" id="markdown-toc-shell">执行shell脚本的方式</a></li>
+  <li><a href="#shell-1" id="markdown-toc-shell-1">shell脚本开发基本规范</a></li>
+  <li><a href="#section" id="markdown-toc-section">变量的命名规则</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">引号</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">系统特殊变量</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">变量的数学运算</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">计算实例</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">条件判断</a></li>
+</ul>
 
-<h3 id="section-1">2017-01-20</h3>
+<h2 id="shell">执行shell脚本的方式</h2>
 
 <blockquote>
-  <p>date +%F</p>
+  <p>sh /service/scripts/test.sh</p>
 </blockquote>
 
 <blockquote>
-  <p>date +%Y-%m-%d</p>
-</blockquote>
-
-<h3 id="section-2">2017-01-20 11:08:03</h3>
-
-<blockquote>
-  <p>date +%F\ %H:%M:%S</p>
+  <p>. /service/scripts/test.sh //需要x权限</p>
 </blockquote>
 
 <blockquote>
-  <p>date +%F\ %T</p>
+  <p>source /service/scripts/test.sh  //需要x权限</p>
 </blockquote>
 
-<h3 id="section-3">01/20/17</h3>
+<p>Note: sourse或.的方式会导出脚本中的环境变量</p>
 
-<blockquote>
-  <p>date +%D</p>
-</blockquote>
+<h2 id="shell-1">shell脚本开发基本规范</h2>
 
-<blockquote>
-  <p>date +%m/%d/%y</p>
-</blockquote>
+<ul>
+  <li>脚本第一行指定解释器</li>
+  <li>脚本开头添加版权信息email等</li>
+  <li>避免中文</li>
+  <li>成对的符号一起敲打</li>
+  <li>中括号格式[ xxx ]</li>
+  <li>流程语句先写完整语法，再加内容</li>
+  <li>代码要缩进</li>
+  <li>脚本添加正确的扩展名</li>
+  <li>添加注释！！！</li>
+</ul>
 
-<h3 id="jan2017-1118">20/Jan/2017 11:18</h3>
+<h2 id="section">变量的命名规则</h2>
 
-<blockquote>
-  <p>date +%d/%b/%Y\ %H:%M</p>
-</blockquote>
+<ul>
+  <li>禁止数字开头</li>
+  <li>可使用特殊字符 下划线 _</li>
+</ul>
 
-<hr />
+<h2 id="section-1">引号</h2>
 
-<h2 id="section-4">显示一分钟之前的时间</h2>
+<ul>
+  <li>单引号：不解释变量</li>
+  <li>双引号：解释变量，变量赋值时可以是不连续的字符串</li>
+  <li>无引号：解释变量，变量赋值时必须是连续的字符串</li>
+  <li>反引号：变量赋值时需要引用命令 等价于$()</li>
+</ul>
 
-<blockquote>
-  <p>date +%F\ %H:%M:%S -d “-1 min”</p>
-</blockquote>
+<h2 id="section-2">系统特殊变量</h2>
 
-<blockquote>
-  <p>date +%F\ %T -d “-1 min”</p>
-</blockquote>
+<ul>
+  <li>$0：表示脚本本身的名字</li>
+  <li>$1：脚本后面的第一个参数</li>
+  <li>$2：脚本后面的第二个参数</li>
+  <li>$3：脚本后面的第三个参数</li>
+  <li>$9：脚本后面的第九个参数</li>
+  <li>$(10)：脚本后面第十个参数</li>
+  <li>$(11)：脚本后面第十一个参数</li>
+  <li>$#：取传参的个数</li>
+  <li>$?：上一个命令是否执行成功</li>
+  <li>$*：将所有传入参数当做一个参数（一行显示）</li>
+  <li>$@：将所有传入参数当多个参数处理（多行显示）</li>
+  <li>$$：当前脚本的进程号</li>
+</ul>
 
-<blockquote>
-  <p>date +%F\ %T -d “1 minutes ago”</p>
-</blockquote>
+<h2 id="section-3">变量的数学运算</h2>
 
-<h2 id="section-5">显示一天之前的此刻时间</h2>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>10
+<span class="nb">let </span><span class="nv">b</span><span class="o">=</span>a+5
+<span class="nb">echo</span> <span class="nv">$b</span>
+15</code></pre></figure>
 
-<blockquote>
-  <p>date +%F\  -d “1 day ago”</p>
-</blockquote>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>100
+<span class="o">((</span><span class="nv">b</span><span class="o">=</span>a+200<span class="o">))</span>
+<span class="nb">echo</span> <span class="nv">$b</span>
+300</code></pre></figure>
 
-<blockquote>
-  <p>date +%F\ %H:%M:%S -d “1 day ago”</p>
-</blockquote>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>100
+<span class="nv">b</span><span class="o">=</span>200
+<span class="nv">c</span><span class="o">=</span><span class="k">$((</span>a+b<span class="k">))</span>
+<span class="nb">echo</span> <span class="nv">$c</span>
+300</code></pre></figure>
 
-<blockquote>
-  <p>date +%F\ %T -d “-1 day”</p>
-</blockquote>
+<h2 id="section-4">计算实例</h2>
 
-<hr />
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="k">$((</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="k">))</span>
+1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
 
-<p>end</p>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10|bc<span class="sb">`</span>
+1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
+
+<h2 id="section-5">条件判断</h2>
+
 
       </article>
       <hr>

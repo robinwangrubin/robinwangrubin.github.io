@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>shell基础</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/shell/data.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>shell基础</h1>
+        <p>Jan 20 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#shell" id="markdown-toc-shell">执行shell脚本的方式</a></li>
+  <li><a href="#shell-1" id="markdown-toc-shell-1">shell脚本开发基本规范</a></li>
+  <li><a href="#section" id="markdown-toc-section">变量的命名规范</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">引号</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">系统特殊变量</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">变量的数学运算</a>    <ul>
+      <li><a href="#section-4" id="markdown-toc-section-4">计算实例</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-5" id="markdown-toc-section-5">文件表达式</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">整数变量表达式</a></li>
+  <li><a href="#section-7" id="markdown-toc-section-7">字符串变量表达式</a></li>
+  <li><a href="#section-8" id="markdown-toc-section-8">条件判断</a>    <ul>
+      <li><a href="#test" id="markdown-toc-test">test</a></li>
+      <li><a href="#xxx-" id="markdown-toc-xxx-">[ xxx ]</a></li>
+      <li><a href="#xxx--xxx-" id="markdown-toc-xxx--xxx-">[[ xxx &amp;&amp; xxx ]]</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="shell">执行shell脚本的方式</h2>
+
+<blockquote>
+  <p>sh /service/scripts/test.sh</p>
+</blockquote>
+
+<blockquote>
+  <p>. /service/scripts/test.sh //需要x权限</p>
+</blockquote>
+
+<blockquote>
+  <p>source /service/scripts/test.sh  //需要x权限</p>
+</blockquote>
+
+<p>Note: sourse或.的方式会导出脚本中的环境变量</p>
+
+<hr />
+
+<h2 id="shell-1">shell脚本开发基本规范</h2>
+
+<ul>
+  <li>脚本第一行指定解释器</li>
+  <li>脚本开头添加版权信息email等</li>
+  <li>避免中文</li>
+  <li>成对的符号一起敲打</li>
+  <li>中括号格式[ xxx ]</li>
+  <li>流程语句先写完整语法，再加内容</li>
+  <li>代码要缩进</li>
+  <li>脚本添加正确的扩展名</li>
+  <li>添加注释！！！</li>
+</ul>
+
+<hr />
+
+<h2 id="section">变量的命名规范</h2>
+
+<ul>
+  <li>禁止数字开头</li>
+  <li>可使用特殊字符 下划线 _</li>
+</ul>
+
+<h2 id="section-1">引号</h2>
+
+<ul>
+  <li>单引号：不解释变量</li>
+  <li>双引号：解释变量，变量赋值时可以是不连续的字符串</li>
+  <li>无引号：解释变量，变量赋值时必须是连续的字符串</li>
+  <li>反引号：变量赋值时需要引用命令 等价于$()</li>
+</ul>
+
+<h2 id="section-2">系统特殊变量</h2>
+
+<ul>
+  <li>$0：表示脚本本身的名字</li>
+  <li>$1：脚本后面的第一个参数</li>
+  <li>$2：脚本后面的第二个参数</li>
+  <li>$3：脚本后面的第三个参数</li>
+  <li>$9：脚本后面的第九个参数</li>
+  <li>$(10)：脚本后面第十个参数</li>
+  <li>$(11)：脚本后面第十一个参数</li>
+  <li>$#：取传参的个数</li>
+  <li>$?：上一个命令是否执行成功</li>
+  <li>$*：将所有传入参数当做一个参数（一行显示）</li>
+  <li>$@：将所有传入参数当多个参数处理（多行显示）</li>
+  <li>$$：当前脚本的进程号</li>
+</ul>
+
+<hr />
+
+<h2 id="section-3">变量的数学运算</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>10
+<span class="nb">let </span><span class="nv">b</span><span class="o">=</span>a+5
+<span class="nb">echo</span> <span class="nv">$b</span>
+15</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>100
+<span class="o">((</span><span class="nv">b</span><span class="o">=</span>a+200<span class="o">))</span>
+<span class="nb">echo</span> <span class="nv">$b</span>
+300</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>100
+<span class="nv">b</span><span class="o">=</span>200
+<span class="nv">c</span><span class="o">=</span><span class="k">$((</span>a+b<span class="k">))</span>
+<span class="nb">echo</span> <span class="nv">$c</span>
+300</code></pre></figure>
+
+<h3 id="section-4">计算实例</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="k">$((</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="k">))</span>
+1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10|bc<span class="sb">`</span>
+1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
+
+<h2 id="section-5">文件表达式</h2>
+
+<ul>
+  <li>-f file 文件存在 则为真</li>
+  <li>-d directory 目录存在 则为真</li>
+  <li>-s size 文仔存在且大小不为0 则为真</li>
+  <li>-x executable 文件存在且具有可执行权限 则为真</li>
+  <li>-w write</li>
+  <li>-r read</li>
+</ul>
+
+<h2 id="section-6">整数变量表达式</h2>
+
+<ul>
+  <li>-eq 等于</li>
+  <li>-ne 不等于</li>
+  <li>-ge 大于等于</li>
+  <li>-gt 大于</li>
+  <li>-le 小于等于</li>
+  <li>-lt 小于</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> 2 -gt 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -lt 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -eq 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -eq 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -ge 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -le 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0</code></pre></figure>
+
+<h2 id="section-7">字符串变量表达式</h2>
+
+<ul>
+  <li>=	等于 ==</li>
+  <li>!= 不等于</li>
+  <li>-n 字符串不为空</li>
+  <li>-z 字符串为空</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> <span class="s2">"abc"</span> <span class="o">==</span> <span class="s2">"abc"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> <span class="s2">"abc"</span> <span class="o">==</span> <span class="s2">"abcd"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> <span class="s2">"abc"</span> !<span class="o">=</span> <span class="s2">"abcd"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0</code></pre></figure>
+
+<h2 id="section-8">条件判断</h2>
+
+<h3 id="test">test</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">test</span> -f /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> -d /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> ! -d /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> -d /etc/ <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1 </code></pre></figure>
+
+<h3 id="xxx-">[ xxx ]</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> ! -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -f /etc/ <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1 
+<span class="o">[</span> -d /etc/ <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -f <span class="s2">"/etc/"</span> -o -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -d <span class="s2">"/etc/"</span> -a -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -d <span class="s2">"/etc/hosts"</span> -a -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="o">[</span> -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+cat /etc/hosts
+<span class="nb">echo</span> <span class="s2">"ok"</span>
+<span class="nb">exit </span>0
+<span class="o">}</span> <span class="o">||</span> <span class="o">{</span>
+<span class="nb">echo</span> <span class="s2">"fail"</span>
+<span class="o">}</span></code></pre></figure>
+
+<h3 id="xxx--xxx-">[[ xxx &amp;&amp; xxx ]]</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[[</span> -d <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">||</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1</code></pre></figure>
+
+<hr />
+
+<p>end</p>
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
