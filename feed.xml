@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 20 Jan 2017 16:01:51 +0800</pubDate>
-    <lastBuildDate>Fri, 20 Jan 2017 16:01:51 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Jan 2017 16:04:13 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Jan 2017 16:04:13 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -59,10 +59,10 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;#Author: wangrubin&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;#Email: robinwangrubin@gmail.com&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Description: This script is for &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Description: This script is for test&lt;/span&gt;
 
-&lt;span class=&quot;nv&quot;&gt;ERROR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;com.talkweb.wanda.det.pho.exception.ShowSeatCacheException&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/var/wd/wandadet_20*/logs/catalina.out&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;ERROR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ShowSeatCacheException&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/home/test_20*/logs/catalina.out&quot;&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;TATAL_NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
 &lt;span class=&quot;nv&quot;&gt;DATE_TIME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date &lt;span class=&quot;s2&quot;&gt;&quot;+%F %H:%M&quot;&lt;/span&gt; -d &lt;span class=&quot;s2&quot;&gt;&quot;1 minute ago&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
 
