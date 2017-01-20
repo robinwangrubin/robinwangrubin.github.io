@@ -119,6 +119,7 @@
       <li><a href="#xxx--xxx-" id="markdown-toc-xxx--xxx-">[[ xxx &amp;&amp; xxx ]]</a></li>
     </ul>
   </li>
+  <li><a href="#section-9" id="markdown-toc-section-9">交互式脚本</a></li>
 </ul>
 
 <h2 id="shell">执行shell脚本的方式</h2>
@@ -223,8 +224,10 @@
   <li>-d directory 目录存在 则为真</li>
   <li>-s size 文仔存在且大小不为0 则为真</li>
   <li>-x executable 文件存在且具有可执行权限 则为真</li>
-  <li>-w write</li>
-  <li>-r read</li>
+  <li>-w write 文件存在且可写 则为真</li>
+  <li>-r read 文件存在且可读 则为真</li>
+  <li>-nt newer than 文件1比文件2新 则为真</li>
+  <li>-ot older than 文件1比文件2旧 则为真</li>
 </ul>
 
 <h2 id="section-6">整数变量表达式</h2>
@@ -291,6 +294,14 @@ cat /etc/hosts
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[[</span> -d <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
 <span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
 <span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">||</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1</code></pre></figure>
+
+<h2 id="section-9">交互式脚本</h2>
+
+<blockquote>
+  <p>read -t 5 -p “Pls input a number:” a</p>
+</blockquote>
+
+<p>等待用户输入内容 并将内容复制给变量a 等待超时时间5s</p>
 
 <hr />
 

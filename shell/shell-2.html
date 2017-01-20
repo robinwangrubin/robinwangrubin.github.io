@@ -101,9 +101,27 @@
       <hr>
       <article>
         <ul id="markdown-toc">
-  <li><a href="#if" id="markdown-toc-if">IF循环</a></li>
-  <li><a href="#for" id="markdown-toc-for">FOR循环</a></li>
-  <li><a href="#while" id="markdown-toc-while">WHILE循环</a></li>
+  <li><a href="#if" id="markdown-toc-if">IF循环</a>    <ul>
+      <li><a href="#section" id="markdown-toc-section">生产脚本示例</a></li>
+    </ul>
+  </li>
+  <li><a href="#for" id="markdown-toc-for">FOR循环</a>    <ul>
+      <li><a href="#section-1" id="markdown-toc-section-1">生产脚本示例</a></li>
+    </ul>
+  </li>
+  <li><a href="#while" id="markdown-toc-while">WHILE循环</a>    <ul>
+      <li><a href="#section-2" id="markdown-toc-section-2">生产脚本示例</a></li>
+    </ul>
+  </li>
+  <li><a href="#case" id="markdown-toc-case">CASE语句</a>    <ul>
+      <li><a href="#section-3" id="markdown-toc-section-3">生产脚本示例</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-4" id="markdown-toc-section-4">函数</a>    <ul>
+      <li><a href="#section-5" id="markdown-toc-section-5">生产脚本示例</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-6" id="markdown-toc-section-6">数组</a></li>
 </ul>
 
 <h2 id="if">IF循环</h2>
@@ -122,6 +140,8 @@
 <span class="k">else
     </span><span class="nb">echo</span> <span class="s2">"all fail"</span>
 <span class="k">fi</span></code></pre></figure>
+
+<h3 id="section">生产脚本示例</h3>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
 <span class="nv">STATUS_CODE</span><span class="o">=</span><span class="k">$(</span>curl -I --connect-timeout 10 -o /dev/null -s -w %<span class="o">{</span>http_code<span class="o">}</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> wangrubin.com<span class="k">)</span>
@@ -145,13 +165,15 @@
     </span><span class="nb">echo</span> <span class="nv">$i</span>
 <span class="k">done</span></code></pre></figure>
 
+<h3 id="section-1">生产脚本示例</h3>
+
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
 <span class="c">#Author: wangrubin</span>
 <span class="c">#Email: robinwangrubin@gmail.com</span>
 <span class="c">#Description: This script is for test</span>
 
-<span class="nv">ERROR</span><span class="o">=</span><span class="s2">"ShowSeatCacheException"</span>
-<span class="nv">FILEPATHS</span><span class="o">=</span><span class="s2">"/home/test_20*/logs/catalina.out"</span>
+<span class="nv">ERROR</span><span class="o">=</span><span class="s2">"test.ShowSeatCacheException"</span>
+<span class="nv">FILEPATHS</span><span class="o">=</span><span class="s2">"/var/test_20*/logs/catalina.out"</span>
 <span class="nv">TATAL_NUM</span><span class="o">=</span>0
 <span class="nv">DATE_TIME</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">"+%F %H:%M"</span> -d <span class="s2">"1 minute ago"</span><span class="k">)</span>
 
@@ -193,14 +215,219 @@ done</span></code></pre></figure>
   </span><span class="nb">echo </span>123
 <span class="k">done</span></code></pre></figure>
 
+<h3 id="section-2">生产脚本示例</h3>
+
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="k">while </span><span class="nb">read </span>line
 <span class="k">do
   </span><span class="nb">echo</span> <span class="nv">$line</span>
 <span class="k">done</span> &lt; /etc/passwd</code></pre></figure>
 
-<hr />
-<p>end</p>
+<h2 id="case">CASE语句</h2>
 
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="nb">read</span> -t 5 -p <span class="s2">"Pls input a number less 10: "</span> n
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$n</span><span class="s2">"</span> <span class="k">in
+</span>1<span class="p">)</span>
+    <span class="nb">echo</span> <span class="s2">"The num you put is 1"</span>
+<span class="p">;;</span>
+2<span class="p">)</span>
+    <span class="nb">echo</span> <span class="s2">"The num you put is 2"</span>
+<span class="p">;;</span>
+<span class="o">[</span>3-9]<span class="p">)</span>
+    <span class="nb">echo</span> <span class="s2">"The num you put is </span><span class="nv">$n</span><span class="s2">"</span>
+<span class="p">;;</span>
+<span class="k">*</span><span class="p">)</span>
+    <span class="nb">echo</span> <span class="s2">"The num you put must be a number and the volue must be less 9"</span>
+    <span class="nb">exit</span>;
+<span class="k">esac</span></code></pre></figure>
+
+<h3 id="section-3">生产脚本示例</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="c">#chkconfig:2345 54 65</span>
+<span class="c">#description: Stop/Start/Reload Nginx scripts</span>
+<span class="nv">ACTION</span><span class="o">=</span><span class="nv">$1</span>
+. /etc/init.d/functions
+<span class="nv">nginx</span><span class="o">=</span><span class="s2">"/application/nginx/sbin/nginx"</span>
+<span class="nv">prog</span><span class="o">=</span><span class="s2">"nginx"</span>
+start<span class="o">(){</span>
+    <span class="k">if</span> <span class="o">[</span> -f /var/lock/subsys/<span class="nv">$prog</span> <span class="o">]</span>;<span class="k">then
+      </span><span class="nb">echo</span> <span class="s2">"Nginx is runing"</span>
+      <span class="k">return </span>0
+    <span class="k">fi</span>    
+    <span class="nv">$nginx</span> <span class="o">&amp;&amp;</span> <span class="nv">RETVAL</span><span class="o">=</span><span class="nv">$?</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="nv">$RETVAL</span> -eq 0 <span class="o">]</span>;<span class="k">then
+       </span>touch /var/lock/subsys/<span class="nv">$prog</span>
+       action <span class="s2">"Starting nginx"</span> /bin/true
+    <span class="k">else
+       </span>action <span class="s2">"Starting nginx"</span> /bin/false
+    <span class="k">fi
+    return</span> <span class="nv">$RETVAL</span>
+<span class="o">}</span>
+stop<span class="o">(){</span>
+    <span class="k">if</span> <span class="o">[</span> ! -f /var/lock/subsys/<span class="nv">$prog</span> <span class="o">]</span>;<span class="k">then
+       </span><span class="nb">echo</span> <span class="s2">"Nginx is stopped"</span>      
+       <span class="k">return </span>0 
+    <span class="k">fi</span>
+    <span class="nv">$nginx</span> -s stop <span class="o">&amp;&amp;</span> <span class="nv">RETVAL</span><span class="o">=</span><span class="nv">$?</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="nv">$RETVAL</span> -eq 0 <span class="o">]</span>;<span class="k">then
+       </span>rm -f /var/lock/subsys/<span class="nv">$prog</span>
+       action <span class="s2">"Stopping nginx"</span> /bin/true
+    <span class="k">else
+       </span>action <span class="s2">"Stopping nginx"</span> /bin/false
+    <span class="k">fi
+    return</span> <span class="nv">$RETVAL</span>
+<span class="o">}</span>
+reload<span class="o">(){</span>
+    <span class="nv">$nginx</span> -s reload <span class="o">&amp;&amp;</span> <span class="nv">RETVAL</span><span class="o">=</span><span class="nv">$?</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="nv">$RETVAL</span> -eq 0 <span class="o">]</span>;<span class="k">then
+       </span>action <span class="s2">"Reloading nginx"</span> /bin/true
+    <span class="k">else
+       </span>action <span class="s2">"Reloading nginx"</span> /bin/false
+    <span class="k">fi
+    return</span> <span class="nv">$RETVAL</span>
+<span class="o">}</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$ACTION</span><span class="s2">"</span> <span class="k">in
+    </span>start<span class="p">)</span>
+        start
+        <span class="p">;;</span>
+    stop<span class="p">)</span>
+        stop
+        <span class="p">;;</span>
+    restart<span class="p">)</span>
+        stop
+        start
+        <span class="p">;;</span>
+    reload<span class="p">)</span>
+        reload
+        <span class="p">;;</span>
+    <span class="k">*</span><span class="p">)</span>
+        <span class="nb">echo</span> <span class="s2">"Pls choose start|stop|restart|reload"</span>
+<span class="k">esac</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cp nginx.sh /etc/init.d/nginx
+chmod +x /etc/init.d/nginx
+chkconfig --add /etc/init.d/nginx
+chkconfig nginx on
+chkconfig --list nginx</code></pre></figure>
+
+<hr />
+
+<h2 id="section-4">函数</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+
+<span class="k">function </span>Fist_Function<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"This is my first function"</span>
+    <span class="k">return </span>0
+<span class="o">}</span>
+
+Fist_Function</code></pre></figure>
+
+<h3 id="section-5">生产脚本示例</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="c">#Author: wangrubin</span>
+<span class="c">#Email: robinwangrubin@gmail.com</span>
+<span class="c">#Description: This script is for test</span>
+
+<span class="nv">URL</span><span class="o">=</span><span class="nv">$1</span>
+<span class="k">function </span>CHECK_URL<span class="o">()</span> <span class="o">{</span>
+<span class="nv">STATUS_CODE</span><span class="o">=</span><span class="k">$(</span>curl -I --connect-timeout 10 -o /dev/null -s -w %<span class="o">{</span>http_code<span class="o">}</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="nv">$URL</span><span class="k">)</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$STATUS_CODE</span><span class="s2">"</span> -eq 200 <span class="o">]</span>;<span class="k">then
+   </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2"> is Ok"</span>
+<span class="k">else
+   </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2"> is False"</span>
+   <span class="k">return </span>0
+<span class="k">fi</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-ne 1 <span class="o">]</span>;<span class="k">then
+   </span><span class="nb">echo</span> <span class="s2">" Pls input a URL;For example http://www.baidu.com "</span>
+   <span class="nb">exit </span>1
+<span class="k">fi
+
+</span>CHECK_URL <span class="nv">$URL</span></code></pre></figure>
+
+<hr />
+
+<blockquote>
+  <p>break n：n表示跳出循环的层数，省略则跳出整个循环</p>
+</blockquote>
+
+<blockquote>
+  <p>continue n ：n表示退到第n层循环，省略则跳过本次循环，进入下一个循环</p>
+</blockquote>
+
+<blockquote>
+  <p>exit n：退出整个shell脚本，n为退出脚本后的状态返回值</p>
+</blockquote>
+
+<blockquote>
+  <p>return n：退出当前函数，n为函数的返回值</p>
+</blockquote>
+
+<ul>
+  <li>测试脚本</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="k">for</span><span class="o">((</span><span class="nv">i</span><span class="o">=</span>0;i&lt;<span class="o">=</span>5;i++<span class="o">))</span>
+<span class="k">do
+ if</span> <span class="o">[</span> <span class="nv">$i</span> -eq 3 <span class="o">]</span>;<span class="k">then
+    continue</span>
+    <span class="c">#break</span>
+    <span class="c">#exit</span>
+<span class="k">fi
+  </span><span class="nb">echo</span> <span class="nv">$i</span>
+<span class="k">done
+</span><span class="nb">echo</span> <span class="s2">"OK"</span></code></pre></figure>
+
+<hr />
+
+<h2 id="section-6">数组</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@CentOS_6 scripts]# <span class="nv">shuzu</span><span class="o">=(</span>1 2 3<span class="o">)</span>
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${#</span><span class="nv">shuzu</span><span class="p">[@]</span><span class="k">}</span>
+3
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${#</span><span class="nv">shuzu</span><span class="p">[*]</span><span class="k">}</span>
+3
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${</span><span class="nv">shuzu</span><span class="p">[0]</span><span class="k">}</span> 
+1
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${</span><span class="nv">shuzu</span><span class="p">[1]</span><span class="k">}</span>
+2
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${</span><span class="nv">shuzu</span><span class="p">[2]</span><span class="k">}</span>
+3
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${</span><span class="nv">shuzu</span><span class="p">[*]</span><span class="k">}</span>
+1 2 3</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span>root@CentOS_6 scripts]# shuzu[3]<span class="o">=</span>4   <span class="c">#添加数组中的成员</span>
+<span class="o">[</span>root@CentOS_6 scripts]# shuzu[4]<span class="o">=</span>5
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">echo</span> <span class="k">${</span><span class="nv">shuzu</span><span class="p">[*]</span><span class="k">}</span>
+1 2 3 4 5
+<span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">unset </span>shuzu[4]    <span class="c">#删除数组中成员</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="k">function </span>YN<span class="o">(){</span>
+curl -I <span class="nv">$1</span> &amp;&gt;/dev/null
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne 0 <span class="o">]</span>;<span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2"> is bad"</span>
+<span class="k">fi</span>
+<span class="o">}</span>
+<span class="nv">shuzu</span><span class="o">=(</span>http://www.baidu.com http://www.zhaiiker.com http://10.0.0.16<span class="o">)</span>
+<span class="k">while </span><span class="nb">true
+</span><span class="k">do
+  for</span><span class="o">((</span><span class="nv">i</span><span class="o">=</span>0;i&lt;<span class="k">${#</span><span class="nv">shuzu</span><span class="p">[*]</span><span class="k">}</span>;i++<span class="o">))</span>
+    <span class="k">do
+     </span>YN <span class="k">${</span><span class="nv">shuzu</span><span class="p">[i]</span><span class="k">}</span>
+    <span class="k">done
+</span>sleep 10
+<span class="k">done</span></code></pre></figure>
+
+<hr />
+
+<p>end</p>
 
       </article>
       <hr>
