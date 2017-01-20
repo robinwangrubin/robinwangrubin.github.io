@@ -5,9 +5,92 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 19 Jan 2017 10:26:33 +0800</pubDate>
-    <lastBuildDate>Thu, 19 Jan 2017 10:26:33 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Jan 2017 11:37:20 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Jan 2017 11:37:20 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>date</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;显示当前时间&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;2017-01-20&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%Y-%m-%d&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;2017-01-20 11:08:03&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;01/20/17&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%D&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%m/%d/%y&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;jan2017-1118&quot;&gt;20/Jan/2017 11:18&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%d/%b/%Y\ %H:%M&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;显示一分钟之前的时间&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S -d “-1 min”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “-1 min”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “1 minutes ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;显示一天之前的此刻时间&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\  -d “1 day ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S -d “1 day ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “-1 day”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/command/data.html</link>
+        <guid isPermaLink="true">/command/data.html</guid>
+        
+        
+        <category>Command</category>
+        
+      </item>
     
       <item>
         <title>Docker Mesos集群架构</title>
@@ -2861,38 +2944,6 @@ rm -rf /var/lib/apt/lists/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;/cod
         
         
         <category>System</category>
-        
-      </item>
-    
-      <item>
-        <title>Linux speedtest 网络测速</title>
-        <description>&lt;blockquote&gt;
-  &lt;p&gt;wget https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;mv speedtest_cli.py /usr/local/bin/speedtest-cli&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;chmod +x /usr/local/bin/speedtest-cli&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;speedtest-cli&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Sun, 20 Nov 2016 00:00:00 +0800</pubDate>
-        <link>/point/speedtest.html</link>
-        <guid isPermaLink="true">/point/speedtest.html</guid>
-        
-        
-        <category>Point</category>
         
       </item>
     
