@@ -103,12 +103,22 @@
         <ul id="markdown-toc">
   <li><a href="#shell" id="markdown-toc-shell">执行shell脚本的方式</a></li>
   <li><a href="#shell-1" id="markdown-toc-shell-1">shell脚本开发基本规范</a></li>
-  <li><a href="#section" id="markdown-toc-section">变量的命名规则</a></li>
+  <li><a href="#section" id="markdown-toc-section">变量的命名规范</a></li>
   <li><a href="#section-1" id="markdown-toc-section-1">引号</a></li>
   <li><a href="#section-2" id="markdown-toc-section-2">系统特殊变量</a></li>
-  <li><a href="#section-3" id="markdown-toc-section-3">变量的数学运算</a></li>
-  <li><a href="#section-4" id="markdown-toc-section-4">计算实例</a></li>
-  <li><a href="#section-5" id="markdown-toc-section-5">条件判断</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">变量的数学运算</a>    <ul>
+      <li><a href="#section-4" id="markdown-toc-section-4">计算实例</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-5" id="markdown-toc-section-5">文件表达式</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">整数变量表达式</a></li>
+  <li><a href="#section-7" id="markdown-toc-section-7">字符串变量表达式</a></li>
+  <li><a href="#section-8" id="markdown-toc-section-8">条件判断</a>    <ul>
+      <li><a href="#test" id="markdown-toc-test">test</a></li>
+      <li><a href="#xxx-" id="markdown-toc-xxx-">[ xxx ]</a></li>
+      <li><a href="#xxx--xxx-" id="markdown-toc-xxx--xxx-">[[ xxx &amp;&amp; xxx ]]</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="shell">执行shell脚本的方式</h2>
@@ -127,6 +137,8 @@
 
 <p>Note: sourse或.的方式会导出脚本中的环境变量</p>
 
+<hr />
+
 <h2 id="shell-1">shell脚本开发基本规范</h2>
 
 <ul>
@@ -141,7 +153,9 @@
   <li>添加注释！！！</li>
 </ul>
 
-<h2 id="section">变量的命名规则</h2>
+<hr />
+
+<h2 id="section">变量的命名规范</h2>
 
 <ul>
   <li>禁止数字开头</li>
@@ -174,6 +188,8 @@
   <li>$$：当前脚本的进程号</li>
 </ul>
 
+<hr />
+
 <h2 id="section-3">变量的数学运算</h2>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">a</span><span class="o">=</span>10
@@ -192,7 +208,7 @@
 <span class="nb">echo</span> <span class="nv">$c</span>
 300</code></pre></figure>
 
-<h2 id="section-4">计算实例</h2>
+<h3 id="section-4">计算实例</h3>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="k">$((</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="k">))</span>
 1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
@@ -200,8 +216,85 @@
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">"</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10<span class="sb">`</span><span class="s2">="</span><span class="sb">`</span>seq -s <span class="s2">"+"</span> 10|bc<span class="sb">`</span>
 1+2+3+4+5+6+7+8+9+10<span class="o">=</span>55</code></pre></figure>
 
-<h2 id="section-5">条件判断</h2>
+<h2 id="section-5">文件表达式</h2>
 
+<ul>
+  <li>-f file 文件存在 则为真</li>
+  <li>-d directory 目录存在 则为真</li>
+  <li>-s size 文仔存在且大小不为0 则为真</li>
+  <li>-x executable 文件存在且具有可执行权限 则为真</li>
+  <li>-w write</li>
+  <li>-r read</li>
+</ul>
+
+<h2 id="section-6">整数变量表达式</h2>
+
+<ul>
+  <li>-eq 等于</li>
+  <li>-ne 不等于</li>
+  <li>-ge 大于等于</li>
+  <li>-gt 大于</li>
+  <li>-le 小于等于</li>
+  <li>-lt 小于</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> 2 -gt 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -lt 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -eq 3 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -eq 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -ge 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> 2 -le 2 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0</code></pre></figure>
+
+<h2 id="section-7">字符串变量表达式</h2>
+
+<ul>
+  <li>=	等于 ==</li>
+  <li>!= 不等于</li>
+  <li>-n 字符串不为空</li>
+  <li>-z 字符串为空</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> <span class="s2">"abc"</span> <span class="o">==</span> <span class="s2">"abc"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> <span class="s2">"abc"</span> <span class="o">==</span> <span class="s2">"abcd"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0
+<span class="o">[</span> <span class="s2">"abc"</span> !<span class="o">=</span> <span class="s2">"abcd"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>1 <span class="o">||</span> <span class="nb">echo </span>0</code></pre></figure>
+
+<h2 id="section-8">条件判断</h2>
+
+<h3 id="test">test</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">test</span> -f /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> -d /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> ! -d /etc/hosts <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="nb">test</span> -d /etc/ <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1 </code></pre></figure>
+
+<h3 id="xxx-">[ xxx ]</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[</span> -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> ! -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -f /etc/ <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1 
+<span class="o">[</span> -d /etc/ <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -f <span class="s2">"/etc/"</span> -o -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -d <span class="s2">"/etc/"</span> -a -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[</span> -d <span class="s2">"/etc/hosts"</span> -a -f <span class="s2">"/etc/hosts"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<span class="o">[</span> -f /etc/hosts <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+cat /etc/hosts
+<span class="nb">echo</span> <span class="s2">"ok"</span>
+<span class="nb">exit </span>0
+<span class="o">}</span> <span class="o">||</span> <span class="o">{</span>
+<span class="nb">echo</span> <span class="s2">"fail"</span>
+<span class="o">}</span></code></pre></figure>
+
+<h3 id="xxx--xxx-">[[ xxx &amp;&amp; xxx ]]</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="o">[[</span> -d <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">&amp;&amp;</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1
+<span class="o">[[</span> -f <span class="s2">"/etc/"</span> <span class="o">||</span> -f <span class="s2">"/etc/hosts"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo </span>0 <span class="o">||</span> <span class="nb">echo </span>1</code></pre></figure>
+
+<hr />
+
+<p>end</p>
 
       </article>
       <hr>

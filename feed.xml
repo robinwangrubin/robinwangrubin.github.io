@@ -5,123 +5,9 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 20 Jan 2017 14:36:04 +0800</pubDate>
-    <lastBuildDate>Fri, 20 Jan 2017 14:36:04 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Jan 2017 14:51:42 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Jan 2017 14:51:42 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
-    
-      <item>
-        <title>shell基础</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#shell&quot; id=&quot;markdown-toc-shell&quot;&gt;执行shell脚本的方式&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#shell-1&quot; id=&quot;markdown-toc-shell-1&quot;&gt;shell脚本开发基本规范&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;变量的命名规则&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;引号&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;系统特殊变量&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;变量的数学运算&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;计算实例&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;条件判断&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;shell&quot;&gt;执行shell脚本的方式&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;sh /service/scripts/test.sh&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;. /service/scripts/test.sh //需要x权限&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;source /service/scripts/test.sh  //需要x权限&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Note: sourse或.的方式会导出脚本中的环境变量&lt;/p&gt;
-
-&lt;h2 id=&quot;shell-1&quot;&gt;shell脚本开发基本规范&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;脚本第一行指定解释器&lt;/li&gt;
-  &lt;li&gt;脚本开头添加版权信息email等&lt;/li&gt;
-  &lt;li&gt;避免中文&lt;/li&gt;
-  &lt;li&gt;成对的符号一起敲打&lt;/li&gt;
-  &lt;li&gt;中括号格式[ xxx ]&lt;/li&gt;
-  &lt;li&gt;流程语句先写完整语法，再加内容&lt;/li&gt;
-  &lt;li&gt;代码要缩进&lt;/li&gt;
-  &lt;li&gt;脚本添加正确的扩展名&lt;/li&gt;
-  &lt;li&gt;添加注释！！！&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;变量的命名规则&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;禁止数字开头&lt;/li&gt;
-  &lt;li&gt;可使用特殊字符 下划线 _&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;引号&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;单引号：不解释变量&lt;/li&gt;
-  &lt;li&gt;双引号：解释变量，变量赋值时可以是不连续的字符串&lt;/li&gt;
-  &lt;li&gt;无引号：解释变量，变量赋值时必须是连续的字符串&lt;/li&gt;
-  &lt;li&gt;反引号：变量赋值时需要引用命令 等价于$()&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;系统特殊变量&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;$0：表示脚本本身的名字&lt;/li&gt;
-  &lt;li&gt;$1：脚本后面的第一个参数&lt;/li&gt;
-  &lt;li&gt;$2：脚本后面的第二个参数&lt;/li&gt;
-  &lt;li&gt;$3：脚本后面的第三个参数&lt;/li&gt;
-  &lt;li&gt;$9：脚本后面的第九个参数&lt;/li&gt;
-  &lt;li&gt;$(10)：脚本后面第十个参数&lt;/li&gt;
-  &lt;li&gt;$(11)：脚本后面第十一个参数&lt;/li&gt;
-  &lt;li&gt;$#：取传参的个数&lt;/li&gt;
-  &lt;li&gt;$?：上一个命令是否执行成功&lt;/li&gt;
-  &lt;li&gt;$*：将所有传入参数当做一个参数（一行显示）&lt;/li&gt;
-  &lt;li&gt;$@：将所有传入参数当多个参数处理（多行显示）&lt;/li&gt;
-  &lt;li&gt;$$：当前脚本的进程号&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;变量的数学运算&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10
-&lt;span class=&quot;nb&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;a+5
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$b&lt;/span&gt;
-15&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100
-&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;a+200&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$b&lt;/span&gt;
-300&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100
-&lt;span class=&quot;nv&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;200
-&lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;a+b&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$c&lt;/span&gt;
-300&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;计算实例&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq -s &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; 10&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq -s &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; 10&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;
-1+2+3+4+5+6+7+8+9+10&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;55&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq -s &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; 10&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq -s &lt;span class=&quot;s2&quot;&gt;&quot;+&quot;&lt;/span&gt; 10|bc&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-1+2+3+4+5+6+7+8+9+10&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;55&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-5&quot;&gt;条件判断&lt;/h2&gt;
-
-</description>
-        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/shell/shell-1.html</link>
-        <guid isPermaLink="true">/shell/shell-1.html</guid>
-        
-        
-        <category>Shell</category>
-        
-      </item>
     
       <item>
         <title>shell基础</title>
@@ -322,11 +208,94 @@ cat /etc/hosts
 &lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/shell/data.html</link>
-        <guid isPermaLink="true">/shell/data.html</guid>
+        <link>/shell/shell-1.html</link>
+        <guid isPermaLink="true">/shell/shell-1.html</guid>
         
         
         <category>Shell</category>
+        
+      </item>
+    
+      <item>
+        <title>date</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;显示当前时间&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;2017-01-20&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%Y-%m-%d&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;2017-01-20 11:08:03&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;01/20/17&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%D&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%m/%d/%y&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;jan2017-1118&quot;&gt;20/Jan/2017 11:18&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%d/%b/%Y\ %H:%M&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;显示一分钟之前的时间&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S -d “-1 min”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “-1 min”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “1 minutes ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;显示一天之前的时间&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F -d “1 day ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %H:%M:%S -d “1 day ago”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;date +%F\ %T -d “-1 day”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/command/data.html</link>
+        <guid isPermaLink="true">/command/data.html</guid>
+        
+        
+        <category>Command</category>
         
       </item>
     
@@ -644,14 +613,7 @@ systemctl start marathon&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;h3 id=&quot;automated-deployment&quot;&gt;Automated Deployment&lt;/h3&gt;
 
 &lt;blockquote&gt;
-  &lt;table&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;
-        &lt;td&gt;curl -sSL https://shipyard-project.com/deploy&lt;/td&gt;
-        &lt;td&gt;bash -s&lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
+  &lt;p&gt;curl -sSL https://shipyard-project.com/deploy | bash -s&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;manual-deployment&quot;&gt;Manual Deployment&lt;/h3&gt;
