@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 20 Jan 2017 16:52:31 +0800</pubDate>
-    <lastBuildDate>Fri, 20 Jan 2017 16:52:31 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Jan 2017 19:04:17 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Jan 2017 19:04:17 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -644,6 +644,133 @@ cat /etc/hosts
         <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
         <link>/command/data.html</link>
         <guid isPermaLink="true">/command/data.html</guid>
+        
+        
+        <category>Command</category>
+        
+      </item>
+    
+      <item>
+        <title>awk</title>
+        <description>&lt;p&gt;测试数据&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat passwd.txt 
+root x 0 0 root /root /bin/bash
+bin x 1 1 bin /bin /sbin/nologin
+daemon x 2 2 daemon /sbin /sbin/nologin
+adm x 3 4 adm /var/adm /sbin/nologin
+lp x 4 7 lp /var/spool/lpd /sbin/nologin
+sync x 5 0 sync /sbin /bin/sync
+shutdown x 6 0 shutdown /sbin /sbin/shutdown
+halt x 7 0 halt /sbin /sbin/halt
+mail x 8 12 mail /var/spool/mail /sbin/nologin
+uucp x 10 14 uucp /var/spool/uucp /sbin/nologin
+operator x 11 0 operator /root /sbin/nologin
+games x 12 100 games /usr/games /sbin/nologin
+gopher x 13 30 gopher /var/gopher /sbin/nologin
+ftp x 14 50 FTP User /var/ftp /sbin/nologin
+nobody x 99 99 Nobody / /sbin/nologin
+dbus x 81 81 System message bus / /sbin/nologin
+vcsa x 69 69 virtual console memory owner /dev /sbin/nologin
+abrt x 173 173  /etc/abrt /sbin/nologin
+haldaemon x 68 68 HAL daemon / /sbin/nologin
+ntp x 38 38  /etc/ntp /sbin/nologin
+saslauth x 499 76 Saslauthd user /var/empty/saslauth /sbin/nologin
+postfix x 89 89  /var/spool/postfix /sbin/nologin
+sshd x 74 74 Privilege-separated SSH /var/empty/sshd /sbin/nologin
+tcpdump x 72 72  / /sbin/nologin
+nginx x 500 501  /home/nginx /sbin/nologin&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;取指定列&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;取第二列&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;取第三列&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $3}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;取最后一列&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $NF}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;取倒数第二列&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $(NF-1)}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;取指定范围的行的内容&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{if(NR&amp;gt;4&amp;amp;&amp;amp;NR&amp;lt;11) print $0}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;自定义分隔符&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk -F &lt;span class=&quot;s2&quot;&gt;&quot;[/]&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $NF}'&lt;/span&gt; passwd.txt &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;显示行号&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print NR,$NF}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;典型应用&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取主机IP地址&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ifconfig |awk -F &lt;span class=&quot;s1&quot;&gt;'[ :]+'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'NR==2 {print $4}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;批量设置开启启动项&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;chkconfig --list|grep 3:on|egrep -v &lt;span class=&quot;s2&quot;&gt;&quot;crond|network|rsyslog|sshd|sysstat&quot;&lt;/span&gt;|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;chkconfig&quot;,$1,&quot;off&quot;}'&lt;/span&gt;|bash&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看网络连接数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;netstat -nut|grep &lt;span class=&quot;s2&quot;&gt;&quot;ESTABLISHED&quot;&lt;/span&gt;|awk -F &lt;span class=&quot;s1&quot;&gt;'[ :]+'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $(NF-3)}'&lt;/span&gt; |sort|uniq -c&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除Exited的docker容器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/bin/docker ps -a |grep &lt;span class=&quot;s2&quot;&gt;&quot;Exited&quot;&lt;/span&gt;|awk &lt;span class=&quot;s1&quot;&gt;'{print $1}'&lt;/span&gt;|xargs --no-run-if-empty docker rm&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;awk&quot;&gt;awk数组&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'BEGIN{array[1]=&quot;oldboy&quot;;array[2]=&quot;oldgirl&quot;;for(key in array) print key,array[key]}'&lt;/span&gt;
+awk &lt;span class=&quot;s1&quot;&gt;'{array[$1]=$2}END{for(key in array) print key,array[key]}'&lt;/span&gt; /etc/hosts
+netstat -ant|awk &lt;span class=&quot;s1&quot;&gt;'/^tcp/ {S[$NF]++}END{for (k in S) print k,S[k]}'&lt;/span&gt;|sort -nrk2&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;指定列的数值相加&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{a+=$3}END{print a}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;awk-1&quot;&gt;awk过滤关键字&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'/192.168.*/'&lt;/span&gt; test.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;awk-2&quot;&gt;awk条件判断&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{if($1==&quot;192.168.20.238&quot;) print $2}'&lt;/span&gt; test.txt |sort |uniq -c|sort -k1 -nr
+awk &lt;span class=&quot;s1&quot;&gt;'{if($1==&quot;192.168.20.238&quot;) print $2,$3}'&lt;/span&gt; test.txt|awk &lt;span class=&quot;s1&quot;&gt;'{S[$1]+=$2}END{for (k in S) print k,S[k]}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
+        <link>/command/awk.html</link>
+        <guid isPermaLink="true">/command/awk.html</guid>
         
         
         <category>Command</category>
@@ -2499,47 +2626,6 @@ SELECT mean&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2
         <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
         <link>/docker/Docker-Monitor.html</link>
         <guid isPermaLink="true">/docker/Docker-Monitor.html</guid>
-        
-        
-        <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Docker 1.12 Swarm集群实战 第五章</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#elk&quot; id=&quot;markdown-toc-elk&quot;&gt;ELK日志平台&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
-
-&lt;p&gt;现在我们有了docker swarm集群，上面跑了docker币应用，以后还会有更多的应用跑在集群上；&lt;/p&gt;
-
-&lt;p&gt;如何监控每个应用的运行状态呢？&lt;/p&gt;
-
-&lt;p&gt;所以我们需要一个日志平台用来收集分析展示所有的swarm集群上应用的日志;&lt;/p&gt;
-
-&lt;h2 id=&quot;elk&quot;&gt;ELK日志平台&lt;/h2&gt;
-
-&lt;p&gt;在本小节我们使用ELK日志平台，什么是ELK？&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ElasticSearch：存储和索引日志&lt;/li&gt;
-  &lt;li&gt;Logstash：接收，发送，过滤，分隔日志&lt;/li&gt;
-  &lt;li&gt;Kibana：用来索引，展示，分析日志的UI&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我们会在每个swarm节点上使用syslgo协议发送日志到logstash，存储在elasticsearch中；最后使用kibana分析展示日志。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Note: 后续补充&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 24 Dec 2016 00:00:00 +0800</pubDate>
-        <link>/docker/Docker-ELK.html</link>
-        <guid isPermaLink="true">/docker/Docker-ELK.html</guid>
         
         
         <category>Docker</category>
