@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 31 Jan 2017 23:42:18 +0800</pubDate>
-    <lastBuildDate>Tue, 31 Jan 2017 23:42:18 +0800</lastBuildDate>
+    <pubDate>Tue, 31 Jan 2017 23:57:58 +0800</pubDate>
+    <lastBuildDate>Tue, 31 Jan 2017 23:57:58 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -72,6 +72,8 @@
 
 &lt;h3 id=&quot;grammar&quot;&gt;GRAMMAR&lt;/h3&gt;
 
+&lt;hr /&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;Can i order…?&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -94,6 +96,68 @@
 
 &lt;blockquote&gt;
   &lt;p&gt;What is the soup of the day?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This is Li Li. How can i help you?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Hello. Can i order food for delivery?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Yes. What can i bring you to eat?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Have you got pasta?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Yes we do.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I'd like one pasta, please.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;One pasta. What can i bring you to drink?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Can i order two coffees please?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Two coffees, and one pasta. What's your name?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Shen Li.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;What's your address, Mr.Li?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;My address is 7-4-6 West Brooks Street. Apartment 4-0-4.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Thank you, Mr.Li.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How much is it?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It's twelve dollars. Thank you, Mr.Li. See you in thirty minutes.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;hr /&gt;
