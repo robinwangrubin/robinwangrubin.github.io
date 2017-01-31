@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 31 Jan 2017 19:24:58 +0800</pubDate>
-    <lastBuildDate>Tue, 31 Jan 2017 19:24:58 +0800</lastBuildDate>
+    <pubDate>Tue, 31 Jan 2017 23:06:30 +0800</pubDate>
+    <lastBuildDate>Tue, 31 Jan 2017 23:06:30 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -139,6 +139,26 @@
   &lt;/li&gt;
 &lt;/ol&gt;
 
+&lt;blockquote&gt;
+  &lt;p&gt;How many apples?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How much is bread?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How much are eggs?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I'd like to book an encounter&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Can you help me book an encounter?&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;grammar&quot;&gt;GRAMMAR&lt;/h3&gt;
@@ -233,39 +253,63 @@
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is noon / It's 12:00 pm&lt;/p&gt;
+  &lt;p&gt;It is noon / It's 12:00 pm.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is midnight / It's 12:00 am&lt;/p&gt;
+  &lt;p&gt;It is midnight / It's 12:00 am.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is eleven o'clock&lt;/p&gt;
+  &lt;p&gt;It is eleven o'clock.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is ten to nine&lt;/p&gt;
+  &lt;p&gt;It is ten to nine.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is ten past five&lt;/p&gt;
+  &lt;p&gt;It is ten past five.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is half past six&lt;/p&gt;
+  &lt;p&gt;It is half past six.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is a quarter past eight&lt;/p&gt;
+  &lt;p&gt;It is a quarter past eight.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is a quarter to four&lt;/p&gt;
+  &lt;p&gt;It is a quarter to four.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;It is seven 45 pm&lt;/p&gt;
+  &lt;p&gt;It is seven 45 pm.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The sky is bule.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;My pen is black.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;My car is red.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I like green fruit.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The paper is white.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;My country's flag is red.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;hr /&gt;
@@ -348,6 +392,48 @@
 
 &lt;blockquote&gt;
   &lt;p&gt;How can i pay?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Hello, do you have eggs?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Yes we do, How many eggs do you need?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I need ten eggs.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Here you are.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How much are eggs?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;They are six dollars.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Can i pay with pounds?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;No sorry, You can pay with dollars.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Here is six dollars.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Thank you. Have a nice day.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;hr /&gt;
