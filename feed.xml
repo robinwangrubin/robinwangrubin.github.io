@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 23 Mar 2017 11:56:48 +0800</pubDate>
-    <lastBuildDate>Thu, 23 Mar 2017 11:56:48 +0800</lastBuildDate>
+    <pubDate>Thu, 23 Mar 2017 12:05:12 +0800</pubDate>
+    <lastBuildDate>Thu, 23 Mar 2017 12:05:12 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -1270,9 +1270,9 @@ mv /application/zookeeper/conf/zoo_sample.cfg /application/zookeeper/conf/zoo.cf
 &lt;span class=&quot;nv&quot;&gt;syncLimit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5
 &lt;span class=&quot;nv&quot;&gt;dataDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/tmp/zookeeper
 &lt;span class=&quot;nv&quot;&gt;clientPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2181
-server .1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.101:3181:4181
-server .2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.102:3181:4181
-server .3&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.103:3181:4181&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+server.1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.101:3181:4181
+server.2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.102:3181:4181
+server.3&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.103:3181:4181&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /tmp/zookeeper/
 &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1 &amp;gt; /tmp/zookeeper/myid		//master01执行
@@ -1368,7 +1368,7 @@ systemctl start mesos-slave&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
   &lt;p&gt;如果是在自己笔记本上通过虚拟机做实验，需要修改自己笔记本的hosts文件进行主机名解析；生产场景有DNS可忽略&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;添加自己笔记的hosts文件解析&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;添加自己笔记本电脑的hosts文件解析&lt;/code&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;192.168.1.101  mesos-master01
 192.168.1.102  mesos-master02

@@ -209,9 +209,9 @@ mv /application/zookeeper/conf/zoo_sample.cfg /application/zookeeper/conf/zoo.cf
 <span class="nv">syncLimit</span><span class="o">=</span>5
 <span class="nv">dataDir</span><span class="o">=</span>/tmp/zookeeper
 <span class="nv">clientPort</span><span class="o">=</span>2181
-server .1<span class="o">=</span>192.168.1.101:3181:4181
-server .2<span class="o">=</span>192.168.1.102:3181:4181
-server .3<span class="o">=</span>192.168.1.103:3181:4181</code></pre></figure>
+server.1<span class="o">=</span>192.168.1.101:3181:4181
+server.2<span class="o">=</span>192.168.1.102:3181:4181
+server.3<span class="o">=</span>192.168.1.103:3181:4181</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /tmp/zookeeper/
 <span class="nb">echo </span>1 &gt; /tmp/zookeeper/myid		//master01执行
@@ -307,7 +307,7 @@ systemctl start mesos-slave</code></pre></figure>
   <p>如果是在自己笔记本上通过虚拟机做实验，需要修改自己笔记本的hosts文件进行主机名解析；生产场景有DNS可忽略</p>
 </blockquote>
 
-<p><code class="highlighter-rouge">添加自己笔记的hosts文件解析</code></p>
+<p><code class="highlighter-rouge">添加自己笔记本电脑的hosts文件解析</code></p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">192.168.1.101  mesos-master01
 192.168.1.102  mesos-master02
