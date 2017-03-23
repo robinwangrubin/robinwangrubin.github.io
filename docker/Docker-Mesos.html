@@ -8,7 +8,7 @@
 	<title>Docker Mesos集群架构</title>
 	<meta name="description" content="">
 	
-	<link rel="canonical" href="/docker/Docker-Mesos2.html">
+	<link rel="canonical" href="/docker/Docker-Mesos.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -116,6 +116,7 @@
       <li><a href="#mesos-master" id="markdown-toc-mesos-master">启动mesos-master</a></li>
       <li><a href="#mesos-slave" id="markdown-toc-mesos-slave">启动mesos-slave</a></li>
       <li><a href="#mesos-3" id="markdown-toc-mesos-3">验证mesos</a></li>
+      <li><a href="#section-2" id="markdown-toc-section-2">常见异常</a></li>
     </ul>
   </li>
   <li><a href="#marathon" id="markdown-toc-marathon">部署marathon</a>    <ul>
@@ -295,6 +296,24 @@ systemctl start mesos-slave</code></pre></figure>
 <p>mesos-execute –master=$MASTER –name=”cluster-test” –command=”sleep 180”</p>
 
 <p><img src="/pic/docker-mesos/3.png" alt="3" /></p>
+
+<h3 id="section-2">常见异常</h3>
+
+<p><img src="/pic/docker-mesos/6.png" alt="3" /></p>
+
+<p>遇到上面的错误你一定是通过VMware或VirtualBox实验，</p>
+
+<blockquote>
+  <p>如果是在自己笔记本上通过虚拟机做实验，需要修改自己笔记本的hosts文件进行主机名解析；生产场景有DNS可忽略</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">添加自己笔记的hosts文件解析</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">192.168.1.101  mesos-master01
+192.168.1.102  mesos-master02
+192.168.1.103  mesos-master03
+192.168.1.104  mesos-slave01
+192.168.1.105  mesos-slave02</code></pre></figure>
 
 <hr />
 
