@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 23 Mar 2017 11:53:48 +0800</pubDate>
-    <lastBuildDate>Thu, 23 Mar 2017 11:53:48 +0800</lastBuildDate>
+    <pubDate>Thu, 23 Mar 2017 11:56:48 +0800</pubDate>
+    <lastBuildDate>Thu, 23 Mar 2017 11:56:48 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -1360,7 +1360,7 @@ systemctl start mesos-slave&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;section-2&quot;&gt;常见异常&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/6.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/pic/docker-mesos/7.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;遇到上面的错误你一定是通过VMware或VirtualBox实验，&lt;/p&gt;
 
