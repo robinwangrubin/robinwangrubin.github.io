@@ -5,9 +5,95 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 28 Mar 2017 13:43:17 +0800</pubDate>
-    <lastBuildDate>Tue, 28 Mar 2017 13:43:17 +0800</lastBuildDate>
+    <pubDate>Wed, 29 Mar 2017 17:16:30 +0800</pubDate>
+    <lastBuildDate>Wed, 29 Mar 2017 17:16:30 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Nginx-proxy_pass理解</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;需求&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;问题&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#nginx&quot; id=&quot;markdown-toc-nginx&quot;&gt;nginx配置&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;我以为&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;事实是&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;解决方案&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;拿数据说话&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;需求&lt;/h2&gt;
+
+&lt;p&gt;用户访问：www.wangrubin.com/weixin/front/123.ttf 这个文件;&lt;/p&gt;
+
+&lt;p&gt;www.wangrubin.com被解析到了nginx上;&lt;/p&gt;
+
+&lt;p&gt;nginx需要到www.123.com/uploadServer/fonts/123.ttf 取到132.ttf这个文件返回给用户。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;问题&lt;/h2&gt;
+
+&lt;p&gt;www.123.com 做了防盗链配置，http-header中的host字段必须是自己的域名才会接受访问；&lt;/p&gt;
+
+&lt;h2 id=&quot;nginx&quot;&gt;nginx配置&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;location /weixin/front/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                proxy_pass http:///www.123.com/uploadServer/fonts/;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;我以为&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;当用户浏览器访问www.wangrubin.com/weixin/front/123.ttf&lt;/li&gt;
+  &lt;li&gt;流量到nginx上，命中location /weixin/front/&lt;/li&gt;
+  &lt;li&gt;nginx代替用户去访问http:///www.123.com/uploadServer/fonts/123.ttf&lt;/li&gt;
+  &lt;li&gt;www.123.com这台主机看到的请求host是www.123.com；因为nginx完全自主的发起了新的连接&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;事实是&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;当用户浏览器访问www.wangrubin.com/weixin/front/123.ttf&lt;/li&gt;
+  &lt;li&gt;流量到nginx上，命中location /weixin/front/&lt;/li&gt;
+  &lt;li&gt;nginx代替用户去访问http:///www.123.com/uploadServer/fonts/123.ttf&lt;/li&gt;
+  &lt;li&gt;www.123.com这台主机看到的请求host是www.wangrubin.com，不匹配本机server字段，不处理&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;解决方案&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;location /weixin/front/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		proxy_set_header Host www.wangrubin.com;
+                proxy_pass http:///www.123.com/uploadServer/fonts/;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;proxy_pass代理到upstream 需要添加proxy_set_header Host字段很容易理解，因为upstream中配置的IP地址，所以需要传递Host值，但是proxy_pass 代理到一个域名，我本以为是nginx自身为客户端去访问http://www.123.com/uploadServer/fonts/123.ttf，这是按照道理说Host字段应该是www.123.com，然而却不是这样的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;猜测：nginx在reload配置时会将域名解析成IP地址，保存到内存中，这样在高并发访问场景中，无需进行耗时的DNS解析。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;拿数据说话&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;没有手动传Host参数&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/1490778110.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;手动传Host参数&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/20170329170247.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
+        <link>/nginx/Nginx-Upstream.html</link>
+        <guid isPermaLink="true">/nginx/Nginx-Upstream.html</guid>
+        
+        
+        <category>Nginx</category>
+        
+      </item>
     
       <item>
         <title>dmidecode</title>
@@ -1747,333 +1833,6 @@ INFO[0357] controller listening on :8080          &lt;/code&gt;&lt;/pre&gt;&lt;/
         
         
         <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>LNMP环境安装Zabbix3</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#environment&quot; id=&quot;markdown-toc-environment&quot;&gt;Environment&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#downloads-packages&quot; id=&quot;markdown-toc-downloads-packages&quot;&gt;Downloads Packages&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-dependent&quot; id=&quot;markdown-toc-install-dependent&quot;&gt;Install Dependent&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-nginx&quot; id=&quot;markdown-toc-install-nginx&quot;&gt;Install Nginx&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-php&quot; id=&quot;markdown-toc-install-php&quot;&gt;Install PHP&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#modify-config&quot; id=&quot;markdown-toc-modify-config&quot;&gt;Modify config&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#check-config&quot; id=&quot;markdown-toc-check-config&quot;&gt;Check config&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-mysql&quot; id=&quot;markdown-toc-install-mysql&quot;&gt;Install Mysql&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#modify-config-1&quot; id=&quot;markdown-toc-modify-config-1&quot;&gt;Modify config&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#install-zabbix&quot; id=&quot;markdown-toc-install-zabbix&quot;&gt;Install Zabbix&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#initialization&quot; id=&quot;markdown-toc-initialization&quot;&gt;Initialization&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#config-zabbixserver&quot; id=&quot;markdown-toc-config-zabbixserver&quot;&gt;Config zabbix_server&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#config-zabbixagentd&quot; id=&quot;markdown-toc-config-zabbixagentd&quot;&gt;Config zabbix_agentd&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#config-nginx&quot; id=&quot;markdown-toc-config-nginx&quot;&gt;config Nginx&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#start-service&quot; id=&quot;markdown-toc-start-service&quot;&gt;Start service&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#pic&quot; id=&quot;markdown-toc-pic&quot;&gt;Pic&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;environment&quot;&gt;Environment&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;CentOS Linux release 7.2.1511 (Core)&lt;/li&gt;
-  &lt;li&gt;nginx:1.9.15&lt;/li&gt;
-  &lt;li&gt;Mysql:5.5.49&lt;/li&gt;
-  &lt;li&gt;PHP:5.5.35&lt;/li&gt;
-  &lt;li&gt;zabbix:3.2.3&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;downloads-packages&quot;&gt;Downloads Packages&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir /application/tools
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
-wget http://nginx.org/download/nginx-1.9.15.tar.gz
-wget http://cn2.php.net/get/php-5.5.35.tar.gz/from/this/mirror &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; mv mirror php-5.5.35.tar.gz
-wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.49.tar.gz
-wget http://jaist.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.2.3/zabbix-3.2.3.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;install-dependent&quot;&gt;Install Dependent&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;install-nginx&quot;&gt;Install Nginx&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;useradd nginx -s /sbin/nologin -M
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
-tar xf nginx-1.9.15.tar.gz
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;nginx-1.9.15
-./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/nginx-1.9.15 --user&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --group&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --with-http_ssl_module --with-http_stub_status_module
-make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
-ln -s /application/nginx-1.9.15/ /application/nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;install-php&quot;&gt;Install PHP&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
-tar xf php-5.5.35.tar.gz 
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;php-5.5.35
-./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/php-5.5.35 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-config-file-path&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/php-5.5.35/etc &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-bz2 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-curl &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-ftp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-sockets &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---disable-ipv6 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-gd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-jpeg-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-png-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-freetype-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-gd-native-ttf &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-iconv-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-mbstring &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-calendar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-gettext &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-libxml-dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-zlib &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-pdo-mysql&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-mysqli&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-mysql&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mysqlnd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-dom &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-xml &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-fpm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---with-libdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lib64 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
---enable-bcmath
-make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
-ln -s /application/php-5.5.35/ /application/php&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;modify-config&quot;&gt;Modify config&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/php-5.5.35
-cp php.ini-production /application/php/etc/php.ini
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/php/etc/
-cp php-fpm.conf.default php-fpm.conf
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#max_execution_time =.*#max_execution_time = 300#g'&lt;/span&gt; php.ini
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#memory_limit = .*#memory_limit = 128M#g'&lt;/span&gt; php.ini
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#post_max_size = .*#post_max_size = 16M#g'&lt;/span&gt; php.ini            
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#upload_max_filesize = .*#upload_max_filesize = 2M#g'&lt;/span&gt; php.ini             
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#max_input_time = .*#max_input_time = 300#g'&lt;/span&gt; php.ini 
-sed -i &lt;span class=&quot;s1&quot;&gt;'s#date.timezone = .*#date.timezone = PRC#g'&lt;/span&gt; php.ini    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;check-config&quot;&gt;Check config&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;max_execution_time = &quot;&lt;/span&gt; php.ini
-grep &lt;span class=&quot;s2&quot;&gt;&quot;memory_limit = &quot;&lt;/span&gt; php.ini 
-grep &lt;span class=&quot;s2&quot;&gt;&quot;post_max_size =&quot;&lt;/span&gt; php.ini
-grep &lt;span class=&quot;s2&quot;&gt;&quot;upload_max_filesize =&quot;&lt;/span&gt; php.ini 
-grep &lt;span class=&quot;s2&quot;&gt;&quot;max_input_time =&quot;&lt;/span&gt; php.ini 
-grep &lt;span class=&quot;s2&quot;&gt;&quot;date.timezone =&quot;&lt;/span&gt; php.ini&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;install-mysql&quot;&gt;Install Mysql&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/tools/
-tar xf mysql-5.5.49.tar.gz 
-useradd mysql -s /sbin/nologin -M
-mkdir /data/mysql -p
-chown -R mysql.mysql /data/mysql/
-yum install -y cmake gcc&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ncurses-devel
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;mysql-5.5.49
-cmake -DCMAKE_INSTALL_PREFIX&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/mysql5.5.49 -DDEFAULT_CHARSET&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;utf8 -DENABLED_LOCAL_INFILE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DMYSQL_DATADIR&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/data/mysql -DWITH_EXTRA_CHARSETS&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;all -DWITH_READLINE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DWITH_INNOBASE_STORAGE_ENGINE&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -DMYSQL_TCP_PORT&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3306 -DDEFAULT_COLLATION&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;utf8_general_ci
-make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
-ln -s /application/mysql5.5.49/ /application/mysql
-&lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;p /application/mysql/bin/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /usr/bin/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;modify-config-1&quot;&gt;Modify config&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /data/mysql
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/mysql/support-files/
-rm -f /etc/my.cnf
-cp my-medium.cnf /data/mysql/my.cnf
-cp mysql.server /etc/init.d/mysqld
-chmod 755 /etc/init.d/mysqld &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;install-zabbix&quot;&gt;Install Zabbix&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home/mtime/tools/
-tar xf zabbix-3.2.3.tar.gz
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;zabbix-3.2.3
-yum install -y net-snmp-devel mysql-devel
-useradd zabbix -s /sbin/nologin -M
-./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/application/zabbix-3.0.3/ --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2
-make install
-ln -s /application/zabbix-3.0.3/ /application/zabbix&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;initialization&quot;&gt;Initialization&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mysql -e &lt;span class=&quot;s2&quot;&gt;&quot;create database zabbix default charset utf8;&quot;&lt;/span&gt;
-mysql -e &lt;span class=&quot;s2&quot;&gt;&quot;grant all on zabbix.* to zabbix@localhost identified by 'zabbix';&quot;&lt;/span&gt;
-mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/schema.sql
-mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/images.sql
-mysql -uzabbix -pzabbix zabbix &amp;lt;/application/tools/zabbix-3.2.3/database/mysql/data.sql&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;config-zabbixserver&quot;&gt;Config zabbix_server&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt; /application/zabbix/etc/zabbix_server.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
-ListenPort=10051
-LogFile=/tmp/zabbix_server.log
-PidFile=/tmp/zabbix_server.pid
-DBHost=localhost
-DBName=zabbix
-DBUser=zabbix
-DBPassword=zabbix
-DBSocket=/tmp/mysql.sock
-DBPort=3306
-Timeout=4
-LogSlowQueries=3000
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;config-zabbixagentd&quot;&gt;Config zabbix_agentd&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt; /application/zabbix/etc/zabbix_agentd.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
-PidFile=/tmp/zabbix_agentd.pid
-LogFile=/tmp/zabbix_agentd.log
-LogFileSize=0
-EnableRemoteCommands=1
-Server=127.0.0.1,192.168.3.134
-ServerActive=127.0.0.1,192.168.3.134:10051
-Hostname=192.168.3.134
-BufferSend=10
-Timeout=30
-AllowRoot=1
-UnsafeUserParameters=1
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;config-nginx&quot;&gt;config Nginx&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /application/nginx
-mkdir html/zabbix
-cat &amp;gt;conf/nginx.conf&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
-user  nginx;
-worker_processes  1;
-
-#error_log  logs/error.log warning;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-pid        logs/nginx.pid;
-
-
-events {
-    worker_connections  1024;
-}
-
-
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-
-    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
-                      '$status $body_bytes_sent &quot;$http_referer&quot; '
-                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
-
-    access_log  logs/access.log  main;
-
-    sendfile        on;
-    #tcp_nopush     on;
-
-    #keepalive_timeout  0;
-    keepalive_timeout  65;
-
-    #gzip  on;
-    include extra/*.conf;
-
-}
-EOF
-&lt;/span&gt;mkdir conf/extra
-cat &amp;gt;conf/extra/zabbix.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
-server {
-listen 80;
-server_name localhost;
-access_log /var/log/zabbix/nginx_zabbix.log main;
-root html/zabbix;
-
-location / {
-           index index.html index.php index.html;
-        }
-
-location ~ .*\.(php|php5)?$
-            {
-             fastcgi_pass  127.0.0.1:9000;
-             fastcgi_index index.php;
-             include fastcgi.conf;
-           }
-}
-EOF
-&lt;/span&gt;mkdir -p /var/log/zabbix
-&lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;p -a /application/tools/zabbix-3.2.3/frontends/php/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /application/nginx/html/zabbix/
-/application/nginx/sbin/nginx -t&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;start-service&quot;&gt;Start service&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/application/nginx/sbin/nginx&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/application/php/sbin/php-fpm&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/etc/init.d/mysqld start&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/application/zabbix/sbin/zabbix_server&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/application/zabbix/sbin/zabbix_agentd&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;pic&quot;&gt;Pic&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220119.png&quot; alt=&quot;2&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220130.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220140.png&quot; alt=&quot;4&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220148.png&quot; alt=&quot;5&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220158.png&quot; alt=&quot;6&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220339.png&quot; alt=&quot;7&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/zabbix-install/QQ截图20170103220350.png&quot; alt=&quot;8&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 03 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/system/Zabbix-install.html</link>
-        <guid isPermaLink="true">/system/Zabbix-install.html</guid>
-        
-        
-        <category>System</category>
         
       </item>
     
