@@ -5,9 +5,174 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 29 Mar 2017 17:16:30 +0800</pubDate>
-    <lastBuildDate>Wed, 29 Mar 2017 17:16:30 +0800</lastBuildDate>
+    <pubDate>Tue, 11 Apr 2017 16:45:06 +0800</pubDate>
+    <lastBuildDate>Tue, 11 Apr 2017 16:45:06 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Iptables和HAproxy实现端口转发</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;需求：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;问题：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;解决方案：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;模拟测试：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#iptables&quot; id=&quot;markdown-toc-iptables&quot;&gt;Iptables&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;压力测试&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#haproxy&quot; id=&quot;markdown-toc-haproxy&quot;&gt;HAproxy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;推测结论&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;需求：&lt;/h2&gt;
+
+&lt;p&gt;client访问公网IP-A+prot 映射到公网IP-B+port&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;问题：&lt;/h2&gt;
+
+&lt;p&gt;client访问的是A 数据包经过A之后目的变成B B收到数据包处理完毕回包，由于B会将数据包直接回向client；注意：client一开始访问的是A，回包的是B，所以三次握手都无法建立成功。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;解决方案：&lt;/h2&gt;
+
+&lt;p&gt;避免公网B直接给真实client回包；所以除了做DNAT外还需做SNAT&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;模拟测试：&lt;/h2&gt;
+
+&lt;p&gt;访问192.168.1.11:8080 —»202.205.184.149:80（中国教育网IP）&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方案一：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;192.168.1.11上配置iptables 做SNAT+DNAT&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方案二：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;192.168.1.11上配置haproxy实现TCP层反向代理负载均衡（单个realserver节点其实就是变相的SNAT+DNAT）&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方案三：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;192.168.1.11上配置LVS的Full NAT模式(SNAT+DNAT)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方案四：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;192.168.1.11上配置nginx的4层转发(SNAT+DNAT)&lt;/p&gt;
+
+&lt;h2 id=&quot;iptables&quot;&gt;Iptables&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;开启路由转发，关闭系统sys防护（以便后面进行压测）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;ulimit&lt;/span&gt; -n 65535
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1 &amp;gt; /proc/sys/net/ipv4/ip_forward
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#net.ipv4.ip_forward = 0#net.ipv4.ip_forward = 1#g'&lt;/span&gt; /etc/sysctl.conf
+sed -i &lt;span class=&quot;s1&quot;&gt;'s#net.ipv4.tcp_syncookies = 1#net.ipv4.tcp_syncookies = 0#g'&lt;/span&gt; /etc/sysctl.conf
+modprobe ip_tables
+modprobe iptable_filter
+modprobe iptable_nat
+modprobe ip_conntrack
+modprobe ip_conntrack_ftp
+modprobe ip_nat_ftp
+modprobe ipt_state
+sysctl -p&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/etc/init.d/iptables start
+iptables -F
+iptables -X
+iptables -t nat -A PREROUTING -d 192.168.1.11 -p tcp --dport 8888 -j DNAT --to-destination 202.205.184.149:80
+iptables -t nat -A POSTROUTING -d 202.205.184.149/32 -o eth0 -j SNAT --to-source 192.168.1.11
+iptables-save &amp;gt;/etc/sysconfig/iptables
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/init.d/iptables start&quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/rc.local&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/jiaoyu.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;压力测试&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;sed -i ‘s#net.ipv4.tcp_syncookies = 1#net.ipv4.tcp_syncookies = 0#g’ /etc/sysctl.conf&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;压测服务器 iptables 应用服务器都要关闭此选项才能进行高并发测试；否则报错：apr_socket_recv: Connection reset by peer (104)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;为了排除网络因素 因此我们不夸互联网进行测试&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;ulimit&lt;/span&gt; -n 65535
+iptables -t nat -A PREROUTING -d 192.168.1.11 -p tcp --dport 8888 -j DNAT --to-destination 192.168.1.100:80
+iptables -t nat -A POSTROUTING -d 192.168.1.100/32 -o eth0 -j SNAT --to-source 192.168.1.11&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.1.100是我搭建的nginx web服务 提供了一个静态页面&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装压力测试工具并且开始压测&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install httpd-tools -y
+ab -n 100000 -c 10000 http://192.168.1.11:8888/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/iptables01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/iptables02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;haproxy&quot;&gt;HAproxy&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://www.haproxy.org/download/1.7/src/haproxy-1.7.5.tar.gz
+tar xf haproxy-1.7.5.tar.gz 
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;haproxy-1.7.5
+uname -r
+make &lt;span class=&quot;nv&quot;&gt;TARGET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;linux26 &lt;span class=&quot;nv&quot;&gt;PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/haproxy
+make install &lt;span class=&quot;nv&quot;&gt;PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/haproxy
+mkdir /etc/haproxy/conf -p&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat &amp;gt;&amp;gt; /etc/haproxy/conf/haproxy.cfg &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+global  
+        daemon  
+        nbproc 10  
+        pidfile /var/run/haproxy.pid  
+defaults  
+        mode tcp               #默认的模式mode { tcp|http|health }，tcp是4层，http是7层，health只会返回OK  
+        retries 2               #两次连接失败就认为是服务器不可用，也可以通过后面设置  
+        option abortonclose     #当服务器负载很高的时候，自动结束掉当前队列处理比较久的链接  
+        maxconn 65535            #默认的最大连接数  
+        timeout connect 5000ms  #连接超时  
+        timeout client 30000ms  #客户端超时  
+        timeout server 10000ms  #服务器超时  
+        log 127.0.0.1 local0 err #[err warning info debug]  
+listen test1  
+        bind 0.0.0.0:8888  
+        mode tcp  
+        server s1 192.168.1.100:80
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;EOF&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/conf/haproxy.cfg &amp;amp;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/ha01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/ha02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;推测结论&lt;/h2&gt;
+
+&lt;p&gt;HAproxy用来当做NAT设备使用，在高并发场景会消耗大量CPU计算资源，性能远不如iptables&lt;/p&gt;
+
+&lt;p&gt;Iptables做NAT设备使用几乎不消耗CPU和内存资源。&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 11 Apr 2017 00:00:00 +0800</pubDate>
+        <link>/network/Iptables-Haproxy.html</link>
+        <guid isPermaLink="true">/network/Iptables-Haproxy.html</guid>
+        
+        
+        <category>Network</category>
+        
+      </item>
     
       <item>
         <title>Nginx-proxy_pass理解</title>
@@ -1591,245 +1756,6 @@ systemctl start marathon&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
         <pubDate>Mon, 16 Jan 2017 00:00:00 +0800</pubDate>
         <link>/docker/Docker-Mesos.html</link>
         <guid isPermaLink="true">/docker/Docker-Mesos.html</guid>
-        
-        
-        <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Docker Swarm Shipyard</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#reference&quot; id=&quot;markdown-toc-reference&quot;&gt;Reference&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#introduction&quot; id=&quot;markdown-toc-introduction&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#shipyard-deployment&quot; id=&quot;markdown-toc-shipyard-deployment&quot;&gt;Shipyard Deployment&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#automated-deployment&quot; id=&quot;markdown-toc-automated-deployment&quot;&gt;Automated Deployment&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#manual-deployment&quot; id=&quot;markdown-toc-manual-deployment&quot;&gt;Manual Deployment&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#compile-shipyard&quot; id=&quot;markdown-toc-compile-shipyard&quot;&gt;Compile Shipyard&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#go&quot; id=&quot;markdown-toc-go&quot;&gt;go&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#godep&quot; id=&quot;markdown-toc-godep&quot;&gt;godep&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#nvm&quot; id=&quot;markdown-toc-nvm&quot;&gt;nvm&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#nodejs--npm&quot; id=&quot;markdown-toc-nodejs--npm&quot;&gt;nodejs &amp;amp;&amp;amp; npm&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#bower&quot; id=&quot;markdown-toc-bower&quot;&gt;bower&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#git-clone&quot; id=&quot;markdown-toc-git-clone&quot;&gt;git clone&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#modify-indexhtml&quot; id=&quot;markdown-toc-modify-indexhtml&quot;&gt;modify index.html&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://www.shipyard-project.com/docs/&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://github.com/shipyard/shipyard&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-
-&lt;p&gt;Shipard是docker集群的可视化解决方案，shipyard利用内置的swarm组建管理集群，并提供图形化管理界面。可管理容器，镜像，节点，私有仓库等。还提供了用户认证和访问控制。&lt;/p&gt;
-
-&lt;p&gt;Shipyard完全100%利用的&lt;code class=&quot;highlighter-rouge&quot;&gt;Docker Remote API&lt;/code&gt;实现的&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;shipyard-deployment&quot;&gt;Shipyard Deployment&lt;/h2&gt;
-
-&lt;h3 id=&quot;automated-deployment&quot;&gt;Automated Deployment&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;curl -sSL https://shipyard-project.com/deploy | bash -s&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;manual-deployment&quot;&gt;Manual Deployment&lt;/h3&gt;
-
-&lt;p&gt;Datastore&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-rethinkdb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    rethinkdb&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Discovery&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p 4001:4001 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p 7001:7001 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-discovery &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    microbox/etcd -name discovery&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Proxy&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p 2375:2375 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --hostname&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOSTNAME&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-proxy &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v /var/run/docker.sock:/var/run/docker.sock &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;PORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2375 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    shipyard/docker-proxy:latest&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Swarm Manager&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-swarm-manager &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    swarm:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    manage --host tcp://0.0.0.0:3375 etcd://&amp;lt;IP-OF-HOST&amp;gt;:4001&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Swarm Agent&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-swarm-agent &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    swarm:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    join --addr &amp;lt;ip-of-host&amp;gt;:2375 etcd://&amp;lt;ip-of-host&amp;gt;:4001&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Controller&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -ti &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name shipyard-controller &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --link shipyard-rethinkdb:rethinkdb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --link shipyard-swarm-manager:swarm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p 8080:8080 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    shipyard/shipyard:latest &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    server &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -d tcp://swarm:3375&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;compile-shipyard&quot;&gt;Compile Shipyard&lt;/h2&gt;
-
-&lt;h3 id=&quot;go&quot;&gt;go&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz
-tar -C /usr/local/ -xf go1.7.4.linux-amd64.tar.gz
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/usr/local/go/bin
-go version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;godep&quot;&gt;godep&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GOPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/
-go get github.com/tools/godep&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;nvm&quot;&gt;nvm&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
-&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
-nvm --version&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;nodejs--npm&quot;&gt;nodejs &amp;amp;&amp;amp; npm&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install nodejs
-node -v
-npm -v&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;bower&quot;&gt;bower&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;npm install -g bower --registry&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://registry.npm.taobao.org
-bower -v&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;git-clone&quot;&gt;git clone&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git clone https://github.com/shipyard/shipyard.git
-mkdir -p /usr/local/go/src/github.com/shipyard/
-mv shipyard /usr/local/go/src/github.com/shipyard/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;modify-indexhtml&quot;&gt;modify index.html&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;vim shipyard/controller/static/app/login/login.html
-
- 4 &amp;lt;h1 &lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;margin-top: 100px; margin-bottom: 50px; font-family: 'Poiret One', sans-serif; font-size: 72px; color: #ffffff;&quot;&lt;/span&gt;&amp;gt;Mimte-Docker&amp;lt;/h1&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/go/src/github.com/shipyard/shipyard
-make build
-make media&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/go/src/github.com/shipyard/shipyard/controller
-docker build -t shipyard/shipyard:v1 ./
-Sending build context to Docker daemon 38.34 MB
-Step 1 : FROM alpine:latest
- ---&amp;gt; 0766572b4bac
-Step 2 : RUN apk add --update git ca-certificates &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;     rm -rf /var/cache/apk/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
- ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;87b47f8d5d9b
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.4/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.4/community/x86_64/APKINDEX.tar.gz
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing ca-certificates &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20160104-r4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing libssh2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.7.0-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing libcurl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7.51.0-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing expat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.1-r2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;5/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing pcre &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8.38-r1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Installing git &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.8.3-r0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-Executing busybox-1.24.2-r12.trigger
-Executing ca-certificates-20160104-r4.trigger
-OK: 22 MiB &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;17 packages
- ---&amp;gt; b4b0f356c8ac
-Removing intermediate container 87b47f8d5d9b
-Step 3 : ADD static /static
- ---&amp;gt; 311fc8862edb
-Removing intermediate container aba0b170b13a
-Step 4 : ADD controller /bin/controller
- ---&amp;gt; cd104f6babef
-Removing intermediate container dfbaf72eaa7d
-Step 5 : EXPOSE 8080
- ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;da52ef41d74f
- ---&amp;gt; dbab862fb18b
-Removing intermediate container da52ef41d74f
-Step 6 : ENTRYPOINT /bin/controller
- ---&amp;gt; Running &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;b2e3af6bec3d
- ---&amp;gt; 86937d8db64a
-Removing intermediate container b2e3af6bec3d
-Successfully built 86937d8db64a&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker ps
-CONTAINER ID        IMAGE                          COMMAND                  CREATED              STATUS              PORTS                                            NAMES
-4be692396011        shipyard/shipyard:v1           &lt;span class=&quot;s2&quot;&gt;&quot;/bin/controller serv&quot;&lt;/span&gt;   4 seconds ago        Up 2 seconds        0.0.0.0:8080-&amp;gt;8080/tcp                           shipyard-controller
-a3fdabe80a3f        swarm:latest                   &lt;span class=&quot;s2&quot;&gt;&quot;/swarm join --addr 1&quot;&lt;/span&gt;   39 seconds ago       Up 38 seconds       2375/tcp                                         shipyard-swarm-agent
-f42ec4a5c3d7        swarm:latest                   &lt;span class=&quot;s2&quot;&gt;&quot;/swarm manage --host&quot;&lt;/span&gt;   42 seconds ago       Up 40 seconds       2375/tcp                                         shipyard-swarm-manager
-89743f1b4db8        shipyard/docker-proxy:latest   &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/bin/run&quot;&lt;/span&gt;     About a minute ago   Up About a minute   0.0.0.0:2375-&amp;gt;2375/tcp                           shipyard-proxy
-ee353d533403        microbox/etcd                  &lt;span class=&quot;s2&quot;&gt;&quot;/bin/etcd -name disc&quot;&lt;/span&gt;   3 minutes ago        Up 3 minutes        0.0.0.0:4001-&amp;gt;4001/tcp, 0.0.0.0:7001-&amp;gt;7001/tcp   shipyard-discovery
-66e947f0cf31        rethinkdb                      &lt;span class=&quot;s2&quot;&gt;&quot;rethinkdb --bind all&quot;&lt;/span&gt;   4 minutes ago        Up 4 minutes        8080/tcp, 28015/tcp, 29015/tcp                   shipyard-rethinkdb&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;等待程序启动&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@node0 controller]# docker logs 4be692396011
-INFO[0000] shipyard version 3.1.0                       
-INFO[0034] checking database                            
-INFO[0357] created admin user: username: admin password: shipyard 
-INFO[0357] controller listening on :8080          &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;http://192.168.1.130:8080/&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/QQ截图20170105170016.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/docker-shipyard/123.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Wed, 04 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/docker/Docker-Swarm-Shipyard.html</link>
-        <guid isPermaLink="true">/docker/Docker-Swarm-Shipyard.html</guid>
         
         
         <category>Docker</category>
