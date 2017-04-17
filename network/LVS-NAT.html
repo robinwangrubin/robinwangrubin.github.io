@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>LVS 四层负载均衡</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/network/LVS-NAT.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>LVS 四层负载均衡</h1>
+        <p>Apr 17 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">介绍</a></li>
+  <li><a href="#lvs" id="markdown-toc-lvs">LVS工作模式</a></li>
+  <li><a href="#lvs-1" id="markdown-toc-lvs-1">LVS工作原理</a>    <ul>
+      <li><a href="#nat" id="markdown-toc-nat">NAT</a></li>
+      <li><a href="#dr" id="markdown-toc-dr">DR</a></li>
+      <li><a href="#tun" id="markdown-toc-tun">TUN</a></li>
+      <li><a href="#fullnat" id="markdown-toc-fullnat">FULLNAT</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-1" id="markdown-toc-section-1">需求</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">前提</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">模拟测试</a></li>
+</ul>
+
+<h2 id="section">介绍</h2>
+
+<p>Linux虚拟服务器（Linux Virtual Server）</p>
+
+<p>我们使用该软件配置LVS时候，不能直接配置内核中的ipvs，而需要使用ipvs的管理工具ipvsadm进行管理；或者使用keepalived管理。</p>
+
+<p>LVS集群负载均衡器接受服务的所有入站客户端计算机请求，并根据调度算法决定哪个集群节点应该处理回复请求。负载均衡器(简称LB)有时也被称为LVS Director(简称Director)。</p>
+
+<h2 id="lvs">LVS工作模式</h2>
+
+<ul>
+  <li>
+    <p>NAT（Network Address Translation）</p>
+  </li>
+  <li>
+    <p>DR（Direct Routing）</p>
+  </li>
+  <li>
+    <p>TUN（IP Tunneling）</p>
+  </li>
+  <li>
+    <p>FULLNAT（Full Network Address Translation）</p>
+  </li>
+</ul>
+
+<h2 id="lvs-1">LVS工作原理</h2>
+
+<h3 id="nat">NAT</h3>
+
+<ol>
+  <li>
+    <p>NAT技术将请求的报文（通过DNAT方式改写）和响应的报文（通过SNAT方式改写），通过调度器地址重写然后在转发给内部的服务器，报文返回时改写成原来的用户请求的地址。</p>
+  </li>
+  <li>
+    <p>只需要在调度器LB上配置WAN公网IP即可，调度器也要有私有LAN IP和内部RS节点通信。</p>
+  </li>
+  <li>
+    <p>每台内部RS节点的网关地址，必须要配成调度器LB的私有LAN内物理网卡地址（LDIP），这样才能确保数据报文返回时仍然经过调度器LB。</p>
+  </li>
+  <li>
+    <p>由于请求与响应的数据报文都经过调度器LB，因此，网站访问量大时调度器LB有较大瓶颈，一般要求最多10-20台节点。</p>
+  </li>
+  <li>
+    <p>NAT模式支持对IP及端口的转换，即用户请求10.0.1.1:80，可以通过调度器转换到RS节点的10.0.1.2:8080（DR和TUN模式不具备的）。</p>
+  </li>
+  <li>
+    <p>所有NAT内部RS节点只需配置私有LAN IP即可。</p>
+  </li>
+  <li>
+    <p>由于数据包来回都需要经过调度器，因此，要开启内核转发net.ipv4.ip_forward = 1，当然也包括iptables防火墙的forward功能（DR和TUN模式不需要）。</p>
+  </li>
+</ol>
+
+<h3 id="dr">DR</h3>
+
+<ol>
+  <li>
+    <p>通过在调度器LB上修改数据包的目的MAC地址实现转发。注意，源IP地址仍然是CIP，目的IP地址仍然是VIP。</p>
+  </li>
+  <li>
+    <p>请求的报文经过调度器，而RS响应处理后的报文无需经过调度器LB，因此，并发访问量大时使用效率很高（和NAT模式比）。</p>
+  </li>
+  <li>
+    <p>因DR模式是通过MAC地址的改写机制实现的转发，因此，所有RS节点和调度器LB只能在一个局域网LAN中（小缺点）。</p>
+  </li>
+  <li>
+    <p>需要注意RS节点的VIP的绑定（lo:vip/32,lo1:vip/32）和ARP抑制问题。</p>
+  </li>
+  <li>
+    <p>RS节点的默认网关不需要是调度器LB的DIP，而直接是IDC机房分配的上级路由器的IP（这是RS带有外网IP地址的情况），理论讲：只要RS可以出网即可，不是必须要配置外网IP。</p>
+  </li>
+  <li>
+    <p>由于DR模式的调度器仅进行了目的MAC地址的改写，因此，调度器LB无法改变请求的报文的目的端口（和NAT要区别）。</p>
+  </li>
+  <li>
+    <p>总的来说DR模式效率很高，但是配置也较麻烦，因此，访问量不是特别大的公司可以用haproxy/nginx取代之。这符合运维的原则：简单、易用、高效。日1000-2000W PV或并发请求1万以下都可以考虑用haproxy/nginx（LVS NAT模式）</p>
+  </li>
+  <li>
+    <p>直接对外的访问业务，例如：web服务做RS节点，RS最好用公网IP地址。如果不直接对外的业务，例如：MySQL,存储系统RS节点，最好只用内部IP地址。</p>
+  </li>
+</ol>
+
+<h3 id="tun">TUN</h3>
+
+<ol>
+  <li>
+    <p>负载均衡器通过把请求的报文通过IP隧道（ipip隧道，高级班讲这个）的方式（请求的报文不经过原目的地址的改写(包括MAC)，而是直接封装成另外的IP报文）转发至真实服务器，而真实服务器将响应处理后直接返回给客户端用户。</p>
+  </li>
+  <li>
+    <p>由于真实服务器将响应处理后的报文直接返回给客户端用户，因此，最好RS有一个外网IP地址，这样效率才会更高。理论上：只要能出网即可，无需外网IP地址。</p>
+  </li>
+  <li>
+    <p>由于调度器LB只处理入站请求的报文。因此，此集群系统的吞吐量可以提高10倍以上，但隧道模式也会带来一定的系统开销。TUN模式适合LAN/WAN。</p>
+  </li>
+  <li>
+    <p>TUN模式的LAN环境转发不如DR模式效率高，而且还要考虑系统对IP隧道的支持问题。</p>
+  </li>
+  <li>
+    <p>所有的RS服务器都要绑定VIP，抑制ARP，配置复杂。</p>
+  </li>
+  <li>
+    <p>LAN环境一般多采用DR模式，WAN环境可以用TUN模式，但是当前在WAN环境下，请求转发更多的被haproxy/nginx/DNS调度等代理取代。因此，TUN模式在国内公司实际应用的已经很少。跨机房应用要么拉光纤成局域网，要么DNS调度，底层数据还得同步。</p>
+  </li>
+  <li>
+    <p>直接对外的访问业务，例如：web服务做RS节点，最好用公网IP地址。不直接对外的业务，例如：MySQL,存储系统RS节点，最好用内部IP地址。</p>
+  </li>
+</ol>
+
+<h3 id="fullnat">FULLNAT</h3>
+
+<blockquote>
+  <p>数据包经过LVS时；同时更改DIP+PORT 和 SIP+PORT</p>
+</blockquote>
+
+<h2 id="section-1">需求</h2>
+
+<ul>
+  <li>使用lvs实现 client访问公网IPA+prot 映射到内网的real server的IPB+port上</li>
+  <li>Real server 可以看到client的公网IP地址</li>
+</ul>
+
+<p><code class="highlighter-rouge">LVS本是用来做负载均衡，但在单real server节点的时候，相当于实现了NAT功能</code></p>
+
+<h2 id="section-2">前提</h2>
+
+<blockquote>
+  <p>lvs有一个内网IP 和 后端real server在同一网段</p>
+</blockquote>
+
+<blockquote>
+  <p>后端的real server 需要将网关指向lvs的内网IP</p>
+</blockquote>
+
+<blockquote>
+  <p>lvs上配置了公网VIP用户可以访问到。（即路由可达）</p>
+</blockquote>
+
+<h2 id="section-3">模拟测试</h2>
+
+<p><code class="highlighter-rouge">安装LVS</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">modprobe ip_vs
+yum install ipvsadm -y	<span class="c">#安装IPVS的管理模块，真正实现负载的是工作在内核空间的IPVS</span>
+lsmod |grep ip_vs	<span class="c">#有输出则代表内核支持lvs，基本都支持lvs</span>
+<span class="nb">ulimit</span> -n 65535
+sed -i <span class="s1">'s#net.ipv4.ip_forward = 0#net.ipv4.ip_forward = 1#g'</span> /etc/sysctl.conf		<span class="c">#开启内核转发</span>
+sysctl -p	<span class="c">#使配置生效</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">配置转发策略</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">ipvsadm -C		<span class="c">#清空所有规则</span>
+ipvsadm -A -t 128.24.170.256:7000 -s rr		<span class="c">#添加VIP+PORT 负载策略：轮询</span>
+ipvsadm -a -t 128.24.170.256:7000  -r 192.168.1.12:7000 -m	<span class="c">#VIP+PORT ----&gt; RIP+PORT 负载模式：NAT</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">保存配置</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">service ipvsadm save</code></pre></figure>
+
+<p><code class="highlighter-rouge">开机启动</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">chkconfig ipvsadm on</code></pre></figure>
+
+<p><code class="highlighter-rouge">重启</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">service ipvsadm restart
+/etc/init.d/ipvsadm restart</code></pre></figure>
+
+<hr />
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
