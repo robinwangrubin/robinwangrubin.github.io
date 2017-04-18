@@ -5,9 +5,67 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 17 Apr 2017 18:59:04 +0800</pubDate>
-    <lastBuildDate>Mon, 17 Apr 2017 18:59:04 +0800</lastBuildDate>
+    <pubDate>Tue, 18 Apr 2017 16:30:25 +0800</pubDate>
+    <lastBuildDate>Tue, 18 Apr 2017 16:30:25 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Learning to think in English</title>
+        <description>&lt;h2 id=&quot;do-you-think-in-english&quot;&gt;Do you think in English?&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Article by: Simon Buckland, WSE International&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;For example, when someone asks you a question in English, do you immediately think to yourself in English “Mmmh, how shall i answer this question?” Or do you mentally translate the question into your own language, find an answer in your own language, and then mentally translate the answer into English before speaking?&lt;/p&gt;
+
+&lt;p&gt;It took me quite a long time to write that question - and it will take you quite a long time to do it. if you look at the picture, you'll see exactly what happens when you go “the long way around 'instead of the direct route'”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/English/1.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I'v used  Chinese as an example, Because Chinese people do often translate mentally into Chinese before speaking in English. and to make it look really complicated for people who can't read Chinese!&lt;/p&gt;
+
+&lt;p&gt;Here are some things for you to notice:&lt;/p&gt;
+
+&lt;p&gt;There are five steps, compared with only one step if you think in english. Obviously, this is going to take time.&lt;/p&gt;
+
+&lt;p&gt;When you translate into your own language you might make a mistake, or you might not find anything which is exactly like what you heard in English.&lt;/p&gt;
+
+&lt;p&gt;Then, when you come up with the answer in your own language it may be something that you don't know how to say in English.&lt;/p&gt;
+
+&lt;p&gt;With all these steps, you'll take even more time to think the right answer. Meanwhile the other person is sitting or standing there waiting for you to speak, Or maybe they're not even waiting anymore - maybe they've got bored with waiting, and they're already gone away!&lt;/p&gt;
+
+&lt;p&gt;So i think it's obvious that you need to start thinking in English as soon as possible. The next question is: how long do you need to study English before you start thinking in English? Six months? One year? Two years? Ten years?&lt;/p&gt;
+
+&lt;p&gt;The answer may surprise you: you can start thinking in English right from the beginning, even if you started studying only a coupleof weeks ago. How is this possible? The answer depends on understanding one or two things about how the brain works.&lt;/p&gt;
+
+&lt;p&gt;There is an area in the human brain called, Wernicks's Area, witch is generallyassociatede with processing and understanding language. This area of brain is right next to the parts of the brain associated with visual images and memory.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/English/2.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Take a look at this picture - which world do you first look at? Of course, it's the world in your own language - excuse me if yours is missing. Because the brain links the picture of the dog with the word 'dog' in your native language. But it is possible to use this aspect of the brain to help you think in English - by thinking of a picture in English, or related to English. When you speak English.&lt;/p&gt;
+
+&lt;p&gt;Think about speaking English for a moment - What pictures come into your mind? Maybe it's famous places in English-speaking countries like Towe Bridge in London or the Statue of Liberty in New York. Or maybe the picture that comes into your mind is your local Wall Street Center - or a teacher or a Personal Tutor. It doesn't matter - if you try to keep these images in your mind when you speak, it will help you to think in English. Try it and see.&lt;/p&gt;
+
+&lt;p&gt;And here's another idea for you to try, But first a question: Have you ever seen someone walking down the street, Talking to himself? Probably you thought 'poor man'; 'He's sick'; 'He needs to be in the hospital' - or something like that.&lt;/p&gt;
+
+&lt;p&gt;Well, if people like that are crazy. so are most of us: we almost all talk to ourselves. The only difference is that us 'normal' people don't talk to ourselves out loud; we just do it inside our own heads, where no one can hear us.&lt;/p&gt;
+
+&lt;p&gt;So when you 'talk to yourself', What language do you do it in? Obviously, in your own language, So why not try talking to yourself in English, Ask yourself some simple questions like: “How are you today?” or “Did you have a nice weekend?” or perhaps, if you're thinking about some decision in your life, talk about that in English - “So shall i take that job? will i be happy there?” or “Do i really like Maria? I think so, Maybe i'll ask her to go out to dinner with me” etc.etc.&lt;/p&gt;
+
+&lt;p&gt;See how long you can keep up this 'mental conversation' in English: five minutes? Ten? Half an hour? more? You'll be surprised how much it will help you if you can talk yourself in English. After all, when you talk to yourself you know someone islistening!&lt;/p&gt;
+
+&lt;p&gt;And when you're alone - but not when you are on the street or a train - try speaking out loud too. That will help you confidence in speaking as well.&lt;/p&gt;
+
+&lt;p&gt;So, what do you think about this. Do you often think in English? What is it like for you? Please post your thoughts and experiences here - and thanks for reading.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 18 Apr 2017 00:00:00 +0800</pubDate>
+        <link>/point/Learning-to-think-in-English.html</link>
+        <guid isPermaLink="true">/point/Learning-to-think-in-English.html</guid>
+        
+        
+        <category>Point</category>
+        
+      </item>
     
       <item>
         <title>LVS 四层负载均衡</title>
@@ -1539,133 +1597,6 @@ cat /etc/hosts
         <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
         <link>/command/data.html</link>
         <guid isPermaLink="true">/command/data.html</guid>
-        
-        
-        <category>Command</category>
-        
-      </item>
-    
-      <item>
-        <title>awk</title>
-        <description>&lt;p&gt;测试数据&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat passwd.txt 
-root x 0 0 root /root /bin/bash
-bin x 1 1 bin /bin /sbin/nologin
-daemon x 2 2 daemon /sbin /sbin/nologin
-adm x 3 4 adm /var/adm /sbin/nologin
-lp x 4 7 lp /var/spool/lpd /sbin/nologin
-sync x 5 0 sync /sbin /bin/sync
-shutdown x 6 0 shutdown /sbin /sbin/shutdown
-halt x 7 0 halt /sbin /sbin/halt
-mail x 8 12 mail /var/spool/mail /sbin/nologin
-uucp x 10 14 uucp /var/spool/uucp /sbin/nologin
-operator x 11 0 operator /root /sbin/nologin
-games x 12 100 games /usr/games /sbin/nologin
-gopher x 13 30 gopher /var/gopher /sbin/nologin
-ftp x 14 50 FTP User /var/ftp /sbin/nologin
-nobody x 99 99 Nobody / /sbin/nologin
-dbus x 81 81 System message bus / /sbin/nologin
-vcsa x 69 69 virtual console memory owner /dev /sbin/nologin
-abrt x 173 173  /etc/abrt /sbin/nologin
-haldaemon x 68 68 HAL daemon / /sbin/nologin
-ntp x 38 38  /etc/ntp /sbin/nologin
-saslauth x 499 76 Saslauthd user /var/empty/saslauth /sbin/nologin
-postfix x 89 89  /var/spool/postfix /sbin/nologin
-sshd x 74 74 Privilege-separated SSH /var/empty/sshd /sbin/nologin
-tcpdump x 72 72  / /sbin/nologin
-nginx x 500 501  /home/nginx /sbin/nologin&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;取指定列&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;取第二列&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;取第三列&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $3}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;取最后一列&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $NF}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;取倒数第二列&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print $(NF-1)}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;取指定范围的行的内容&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{if(NR&amp;gt;4&amp;amp;&amp;amp;NR&amp;lt;11) print $0}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;自定义分隔符&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk -F &lt;span class=&quot;s2&quot;&gt;&quot;[/]&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $NF}'&lt;/span&gt; passwd.txt &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;显示行号&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{print NR,$NF}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;典型应用&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取主机IP地址&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ifconfig |awk -F &lt;span class=&quot;s1&quot;&gt;'[ :]+'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'NR==2 {print $4}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;批量设置开启启动项&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;chkconfig --list|grep 3:on|egrep -v &lt;span class=&quot;s2&quot;&gt;&quot;crond|network|rsyslog|sshd|sysstat&quot;&lt;/span&gt;|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;chkconfig&quot;,$1,&quot;off&quot;}'&lt;/span&gt;|bash&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看网络连接数&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;netstat -nut|grep &lt;span class=&quot;s2&quot;&gt;&quot;ESTABLISHED&quot;&lt;/span&gt;|awk -F &lt;span class=&quot;s1&quot;&gt;'[ :]+'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $(NF-3)}'&lt;/span&gt; |sort|uniq -c&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;删除Exited的docker容器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/bin/docker ps -a |grep &lt;span class=&quot;s2&quot;&gt;&quot;Exited&quot;&lt;/span&gt;|awk &lt;span class=&quot;s1&quot;&gt;'{print $1}'&lt;/span&gt;|xargs --no-run-if-empty docker rm&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;awk&quot;&gt;awk数组&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'BEGIN{array[1]=&quot;oldboy&quot;;array[2]=&quot;oldgirl&quot;;for(key in array) print key,array[key]}'&lt;/span&gt;
-awk &lt;span class=&quot;s1&quot;&gt;'{array[$1]=$2}END{for(key in array) print key,array[key]}'&lt;/span&gt; /etc/hosts
-netstat -ant|awk &lt;span class=&quot;s1&quot;&gt;'/^tcp/ {S[$NF]++}END{for (k in S) print k,S[k]}'&lt;/span&gt;|sort -nrk2&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-5&quot;&gt;指定列的数值相加&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{a+=$3}END{print a}'&lt;/span&gt; passwd.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;awk-1&quot;&gt;awk过滤关键字&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'/192.168.*/'&lt;/span&gt; test.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;awk-2&quot;&gt;awk条件判断&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;awk &lt;span class=&quot;s1&quot;&gt;'{if($1==&quot;192.168.20.238&quot;) print $2}'&lt;/span&gt; test.txt |sort |uniq -c|sort -k1 -nr
-awk &lt;span class=&quot;s1&quot;&gt;'{if($1==&quot;192.168.20.238&quot;) print $2,$3}'&lt;/span&gt; test.txt|awk &lt;span class=&quot;s1&quot;&gt;'{S[$1]+=$2}END{for (k in S) print k,S[k]}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-</description>
-        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/command/awk.html</link>
-        <guid isPermaLink="true">/command/awk.html</guid>
         
         
         <category>Command</category>
