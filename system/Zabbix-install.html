@@ -240,12 +240,12 @@ ln -s /application/mysql5.5.49/ /application/mysql
 
 <h3 id="modify-config-1">Modify config</h3>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /data/mysql
-<span class="nb">cd</span> /application/mysql/support-files/
-rm -f /etc/my.cnf
-cp my-medium.cnf /data/mysql/my.cnf
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd</span> /application/mysql/support-files/
+cp my-medium.cnf /etc/my.cnf
 cp mysql.server /etc/init.d/mysqld
-chmod 755 /etc/init.d/mysqld </code></pre></figure>
+chmod 755 /etc/init.d/mysqld
+<span class="nb">cd</span> /application/mysql/scripts/
+./mysql_install_db --user<span class="o">=</span>mysql --basedir<span class="o">=</span>/application/mysql/ --datadir<span class="o">=</span>/data/mysql/ </code></pre></figure>
 
 <hr />
 
