@@ -3,10 +3,10 @@
   <channel>
     <title>Robin's Personal Website</title>
     <description></description>
-    <link>/</link>
-    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 16 May 2017 22:41:06 +0800</pubDate>
-    <lastBuildDate>Tue, 16 May 2017 22:41:06 +0800</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 16 May 2017 22:48:34 +0800</pubDate>
+    <lastBuildDate>Tue, 16 May 2017 22:48:34 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -89,8 +89,8 @@ parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quo
 
 </description>
         <pubDate>Tue, 25 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/python/python-web.html</link>
-        <guid isPermaLink="true">/python/python-web.html</guid>
+        <link>http://localhost:4000/python/python-web.html</link>
+        <guid isPermaLink="true">http://localhost:4000/python/python-web.html</guid>
         
         
         <category>Python</category>
@@ -107,7 +107,7 @@ parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quo
 
 &lt;p&gt;It took me quite a long time to write that question - and it will take you quite a long time to do it. if you look at the picture, you'll see exactly what happens when you go “the long way around 'instead of the direct route'”.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/English/1.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/English/1.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I'v used  Chinese as an example, Because Chinese people do often translate mentally into Chinese before speaking in English. and to make it look really complicated for people who can't read Chinese!&lt;/p&gt;
 
@@ -127,7 +127,7 @@ parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quo
 
 &lt;p&gt;There is an area in the human brain called, Wernicks's Area, witch is generallyassociatede with processing and understanding language. This area of brain is right next to the parts of the brain associated with visual images and memory.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/English/2.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/English/2.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Take a look at this picture - which world do you first look at? Of course, it's the world in your own language - excuse me if yours is missing. Because the brain links the picture of the dog with the word 'dog' in your native language. But it is possible to use this aspect of the brain to help you think in English - by thinking of a picture in English, or related to English. When you speak English.&lt;/p&gt;
 
@@ -147,8 +147,8 @@ parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quo
 
 </description>
         <pubDate>Tue, 18 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/point/Learning-to-think-in-English.html</link>
-        <guid isPermaLink="true">/point/Learning-to-think-in-English.html</guid>
+        <link>http://localhost:4000/point/Learning-to-think-in-English.html</link>
+        <guid isPermaLink="true">http://localhost:4000/point/Learning-to-think-in-English.html</guid>
         
         
         <category>Point</category>
@@ -345,8 +345,8 @@ ipvsadm -a -t 128.24.170.256:7000  -r 192.168.1.12:7000 -m	&lt;span class=&quot;
 
 </description>
         <pubDate>Mon, 17 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/network/LVS-NAT.html</link>
-        <guid isPermaLink="true">/network/LVS-NAT.html</guid>
+        <link>http://localhost:4000/network/LVS-NAT.html</link>
+        <guid isPermaLink="true">http://localhost:4000/network/LVS-NAT.html</guid>
         
         
         <category>Network</category>
@@ -435,7 +435,7 @@ iptables -t nat -A POSTROUTING -d 202.205.184.149/32 -o eth0 -j SNAT --to-source
 iptables-save &amp;gt;/etc/sysconfig/iptables
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/init.d/iptables start&quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/rc.local&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/jiaoyu.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/iptables-HAproxy/jiaoyu.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;section-4&quot;&gt;压力测试&lt;/h3&gt;
 
@@ -460,9 +460,9 @@ iptables -t nat -A POSTROUTING -d 192.168.1.100/32 -o eth0 -j SNAT --to-source 1
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum install httpd-tools -y
 ab -n 100000 -c 10000 http://192.168.1.11:8888/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/iptables01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/iptables-HAproxy/iptables01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/iptables02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/iptables-HAproxy/iptables02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;haproxy&quot;&gt;HAproxy&lt;/h2&gt;
 
@@ -498,9 +498,9 @@ listen test1
   &lt;p&gt;/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/conf/haproxy.cfg &amp;amp;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/ha01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/iptables-HAproxy/ha01.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/iptables-HAproxy/ha02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/iptables-HAproxy/ha02.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;section-5&quot;&gt;推测结论&lt;/h2&gt;
 
@@ -510,8 +510,8 @@ listen test1
 
 </description>
         <pubDate>Tue, 11 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/network/Iptables-Haproxy.html</link>
-        <guid isPermaLink="true">/network/Iptables-Haproxy.html</guid>
+        <link>http://localhost:4000/network/Iptables-Haproxy.html</link>
+        <guid isPermaLink="true">http://localhost:4000/network/Iptables-Haproxy.html</guid>
         
         
         <category>Network</category>
@@ -585,19 +585,19 @@ listen test1
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;没有手动传Host参数&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/1490778110.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/nginx-proxx_pass/1490778110.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;手动传Host参数&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/20170329170247.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/nginx-proxx_pass/20170329170247.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/nginx/Nginx-Upstream.html</link>
-        <guid isPermaLink="true">/nginx/Nginx-Upstream.html</guid>
+        <link>http://localhost:4000/nginx/Nginx-Upstream.html</link>
+        <guid isPermaLink="true">http://localhost:4000/nginx/Nginx-Upstream.html</guid>
         
         
         <category>Nginx</category>
@@ -660,8 +660,8 @@ listen test1
 
 </description>
         <pubDate>Tue, 28 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/command/dmidecode.html</link>
-        <guid isPermaLink="true">/command/dmidecode.html</guid>
+        <link>http://localhost:4000/command/dmidecode.html</link>
+        <guid isPermaLink="true">http://localhost:4000/command/dmidecode.html</guid>
         
         
         <category>Command</category>
@@ -696,7 +696,7 @@ listen test1
 
 &lt;p&gt;期间只有一个原则：一次只能移到一个盘子且大盘子不能在小盘子上面，求移动的步骤和移动的次数.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/pic/python/HanoiTower/1026866-20161016022859889-2055402664.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/pic/python/HanoiTower/1026866-20161016022859889-2055402664.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;section-2&quot;&gt;归纳法求解&lt;/h2&gt;
 
@@ -809,8 +809,8 @@ B ------&amp;gt; C&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
         <pubDate>Fri, 10 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/python/HanoiTower.html</link>
-        <guid isPermaLink="true">/python/HanoiTower.html</guid>
+        <link>http://localhost:4000/python/HanoiTower.html</link>
+        <guid isPermaLink="true">http://localhost:4000/python/HanoiTower.html</guid>
         
         
         <category>Python</category>
@@ -1042,8 +1042,8 @@ B ------&amp;gt; C&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
         <pubDate>Sat, 04 Feb 2017 00:00:00 +0800</pubDate>
-        <link>/command/Tcpdump.html</link>
-        <guid isPermaLink="true">/command/Tcpdump.html</guid>
+        <link>http://localhost:4000/command/Tcpdump.html</link>
+        <guid isPermaLink="true">http://localhost:4000/command/Tcpdump.html</guid>
         
         
         <category>Command</category>
@@ -1382,8 +1382,8 @@ curl -I &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &amp;amp;&amp;gt;/dev/n
 &lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/shell/shell-2.html</link>
-        <guid isPermaLink="true">/shell/shell-2.html</guid>
+        <link>http://localhost:4000/shell/shell-2.html</link>
+        <guid isPermaLink="true">http://localhost:4000/shell/shell-2.html</guid>
         
         
         <category>Shell</category>
@@ -1600,8 +1600,8 @@ cat /etc/hosts
 &lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/shell/shell-1.html</link>
-        <guid isPermaLink="true">/shell/shell-1.html</guid>
+        <link>http://localhost:4000/shell/shell-1.html</link>
+        <guid isPermaLink="true">http://localhost:4000/shell/shell-1.html</guid>
         
         
         <category>Shell</category>
