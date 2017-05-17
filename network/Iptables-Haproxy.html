@@ -8,8 +8,8 @@
 	<title>Iptables和HAproxy实现端口转发</title>
 	<meta name="description" content="">
 	
-	<link rel="canonical" href="http://localhost:4000/network/Iptables-Haproxy.html">
-	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="http://localhost:4000/feed.xml" />
+	<link rel="canonical" href="/network/Iptables-Haproxy.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
     
@@ -180,7 +180,7 @@ iptables -t nat -A POSTROUTING -d 202.205.184.149/32 -o eth0 -j SNAT --to-source
 iptables-save &gt;/etc/sysconfig/iptables
 <span class="nb">echo</span> <span class="s2">"/etc/init.d/iptables start"</span> &gt;&gt; /etc/rc.local</code></pre></figure>
 
-<p><img src="http://localhost:4000/pic/iptables-HAproxy/jiaoyu.png" alt="1" /></p>
+<p><img src="/pic/iptables-HAproxy/jiaoyu.png" alt="1" /></p>
 
 <h3 id="section-4">压力测试</h3>
 
@@ -205,9 +205,9 @@ iptables -t nat -A POSTROUTING -d 192.168.1.100/32 -o eth0 -j SNAT --to-source 1
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">yum install httpd-tools -y
 ab -n 100000 -c 10000 http://192.168.1.11:8888/</code></pre></figure>
 
-<p><img src="http://localhost:4000/pic/iptables-HAproxy/iptables01.png" alt="1" /></p>
+<p><img src="/pic/iptables-HAproxy/iptables01.png" alt="1" /></p>
 
-<p><img src="http://localhost:4000/pic/iptables-HAproxy/iptables02.png" alt="1" /></p>
+<p><img src="/pic/iptables-HAproxy/iptables02.png" alt="1" /></p>
 
 <h2 id="haproxy">HAproxy</h2>
 
@@ -243,9 +243,9 @@ listen test1
   <p>/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/conf/haproxy.cfg &amp;</p>
 </blockquote>
 
-<p><img src="http://localhost:4000/pic/iptables-HAproxy/ha01.png" alt="1" /></p>
+<p><img src="/pic/iptables-HAproxy/ha01.png" alt="1" /></p>
 
-<p><img src="http://localhost:4000/pic/iptables-HAproxy/ha02.png" alt="1" /></p>
+<p><img src="/pic/iptables-HAproxy/ha02.png" alt="1" /></p>
 
 <h2 id="section-5">推测结论</h2>
 

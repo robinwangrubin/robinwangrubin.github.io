@@ -8,8 +8,8 @@
 	<title>Docker Mesos集群架构</title>
 	<meta name="description" content="">
 	
-	<link rel="canonical" href="http://localhost:4000/docker/Docker-Mesos.html">
-	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="http://localhost:4000/feed.xml" />
+	<link rel="canonical" href="/docker/Docker-Mesos.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
     
@@ -287,19 +287,19 @@ systemctl start mesos-slave</code></pre></figure>
 
 <p>http://192.168.1.101:5050</p>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/1.png" alt="1" /></p>
+<p><img src="/pic/docker-mesos/1.png" alt="1" /></p>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/2.png" alt="2" /></p>
+<p><img src="/pic/docker-mesos/2.png" alt="2" /></p>
 
 <p>MASTER=$(mesos-resolve `cat /etc/mesos/zk`)</p>
 
 <p>mesos-execute –master=$MASTER –name=”cluster-test” –command=”sleep 180”</p>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/3.png" alt="3" /></p>
+<p><img src="/pic/docker-mesos/3.png" alt="3" /></p>
 
 <h3 id="section-2">常见异常</h3>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/7.png" alt="3" /></p>
+<p><img src="/pic/docker-mesos/7.png" alt="3" /></p>
 
 <p>遇到上面的错误你一定是通过VMware或VirtualBox实验，</p>
 
@@ -333,11 +333,11 @@ systemctl start marathon</code></pre></figure>
 
 <h3 id="marathon-2">验证marathon</h3>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/4.png" alt="4" /></p>
+<p><img src="/pic/docker-mesos/4.png" alt="4" /></p>
 
 <p>http://192.168.1.101:8080</p>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/5.png" alt="5" /></p>
+<p><img src="/pic/docker-mesos/5.png" alt="5" /></p>
 
 <hr />
 
@@ -370,7 +370,7 @@ systemctl start marathon</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">curl -X POST http://192.168.1.101:8080/v2/apps -d @/root/nginx.json -H <span class="s2">"Content-type: application/json"</span></code></pre></figure>
 
-<p><img src="http://localhost:4000/pic/docker-mesos/6.png" alt="6" /></p>
+<p><img src="/pic/docker-mesos/6.png" alt="6" /></p>
 
 <hr />
 
