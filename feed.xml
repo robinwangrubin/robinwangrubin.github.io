@@ -5,40 +5,210 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 19 May 2017 18:35:14 +0800</pubDate>
-    <lastBuildDate>Fri, 19 May 2017 18:35:14 +0800</lastBuildDate>
+    <pubDate>Fri, 19 May 2017 19:50:15 +0800</pubDate>
+    <lastBuildDate>Fri, 19 May 2017 19:50:15 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
         <title>Docker -- 日志系统FKLEK</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#elk&quot; id=&quot;markdown-toc-elk&quot;&gt;ELK日志平台&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#fklek&quot; id=&quot;markdown-toc-fklek&quot;&gt;FKLEK系统介绍&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;实验环境准备&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;系统环境准备&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#zookeeper&quot; id=&quot;markdown-toc-zookeeper&quot;&gt;搭建zookeeper集群&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kafka&quot; id=&quot;markdown-toc-kafka&quot;&gt;部署kafka集群&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
-
-&lt;p&gt;现在我们有了docker swarm集群，上面跑了docker币应用，以后还会有更多的应用跑在集群上；&lt;/p&gt;
-
-&lt;p&gt;如何监控每个应用的运行状态呢？&lt;/p&gt;
-
-&lt;p&gt;所以我们需要一个日志平台用来收集分析展示所有的swarm集群上应用的日志;&lt;/p&gt;
-
-&lt;h2 id=&quot;elk&quot;&gt;ELK日志平台&lt;/h2&gt;
-
-&lt;p&gt;在本小节我们使用ELK日志平台，什么是ELK？&lt;/p&gt;
+&lt;h2 id=&quot;fklek&quot;&gt;FKLEK系统介绍&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;ElasticSearch：存储和索引日志&lt;/li&gt;
+  &lt;li&gt;Fluentd: 专业的容器日志收集工具&lt;/li&gt;
+  &lt;li&gt;Kafka：高吞吐异步消息队列&lt;/li&gt;
   &lt;li&gt;Logstash：接收，发送，过滤，分隔日志&lt;/li&gt;
+  &lt;li&gt;ElasticSearch：存储和索引日志&lt;/li&gt;
   &lt;li&gt;Kibana：用来索引，展示，分析日志的UI&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;我们会在每个swarm节点上使用syslgo协议发送日志到logstash，存储在elasticsearch中；最后使用kibana分析展示日志。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;所有swarm节点运行Fluentd，用于接受该节点上所有容器的日志并转发到kafka上。&lt;/li&gt;
+  &lt;li&gt;Kafka临时存储所有容器的日志；用于被Logstash消费&lt;/li&gt;
+  &lt;li&gt;Logstash消费kafka的日志，最终转存到ElasticSearch上。&lt;/li&gt;
+  &lt;li&gt;ElasticSearch永久存储日志的数据库&lt;/li&gt;
+  &lt;li&gt;Kibana从ElasticSearch中抽取数据页面展示&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Docker ==&amp;gt; Fluentd ==&amp;gt; Kafka ==&amp;gt; Logstash ==&amp;gt; ElasticSearch ==&amp;gt; Kibana&lt;/p&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt;Note: 后续补充&lt;/p&gt;
+&lt;h2 id=&quot;section&quot;&gt;实验环境准备&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;系统要求：CentOS-7.2&lt;/li&gt;
+  &lt;li&gt;内核要求：3.10.0-327.el7.x86_64&lt;/li&gt;
+  &lt;li&gt;Docker版本：17.03.1-ce&lt;/li&gt;
+  &lt;li&gt;JAVA环境：JDK_1.8&lt;/li&gt;
+  &lt;li&gt;Zookeeper版本：zookeeper-3.4.6&lt;/li&gt;
+  &lt;li&gt;kafka版本： 2.11-0.10.0.1&lt;/li&gt;
+  &lt;li&gt;elasticsearch版本：2.4&lt;/li&gt;
+  &lt;li&gt;logstash版本：2.4&lt;/li&gt;
+  &lt;li&gt;kibana版本：4.6&lt;/li&gt;
+  &lt;li&gt;fluentd版本：任意&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;IP地址和应用安装对应表&lt;/p&gt;
+
+&lt;p&gt;192.168.1.250 ===== kafka01 Fluentd Kibana
+192.168.1.251 ===== kafka02 Fluentd Logstash
+192.168.1.252 ===== kafka03 Fluentd ElasticSearch&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;系统环境准备&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;主机名解析&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所有节点：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.1.250   kafka01
+192.168.1.251   kafka02
+192.168.1.252   kafka03&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;JAVA_1.8环境部署&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;tar xf jdk-8u11-linux-x64.tar.gz -C /usr/local/
+cat &amp;gt;&amp;gt; /etc/profile &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_11
+export CLASSPATH=.:\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;kafka集群依赖于zookeeper，所以我们先搭建zookeeper集群&lt;/p&gt;
+
+&lt;h2 id=&quot;zookeeper&quot;&gt;搭建zookeeper集群&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装zookeeper&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+tar xf zookeeper-3.4.6.tar.gz -C /usr/local/
+ln -s /usr/local/zookeeper-3.4.6/ /usr/local/zookeeper
+mv /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置zookeeper&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;三台配置都如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /usr/local/zookeeper/conf/zoo.cfg 
+&lt;span class=&quot;nv&quot;&gt;tickTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000
+&lt;span class=&quot;nv&quot;&gt;initLimit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10
+&lt;span class=&quot;nv&quot;&gt;syncLimit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5
+&lt;span class=&quot;nv&quot;&gt;dataDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/tmp/zookeeper
+&lt;span class=&quot;nv&quot;&gt;clientPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2181
+server.1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.250:3181:4181
+server.2&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.251:3181:4181
+server.3&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.252:3181:4181&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /tmp/zookeeper/
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1 &amp;gt; /tmp/zookeeper/myid		//kafka01执行
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;2 &amp;gt; /tmp/zookeeper/myid		//kafka02执行
+&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;3 &amp;gt; /tmp/zookeeper/myid		//kafka03执行&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动zookeeper集群&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/local/zookeeper/bin/zkServer.sh start /usr/local/zookeeper/conf/zoo.cfg&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;验证zookeeper集群状态&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/local/zookeeper/bin/zkServer.sh status /usr/local/zookeeper/conf/zoo.cfg&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;kafka&quot;&gt;部署kafka集群&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装kafka&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/0.10.0.1/kafka_2.11-0.10.0.1.tgz
+tar xf kafka_2.11-0.10.0.1.tgz -C /usr/local/
+ln -s /usr/local/kafka_2.11-0.10.0.1/ /usr/local/kafka
+mkdir -p /var/log/kafka/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置kafka&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat /usr/local/kafka/config/server.properties
+broker.id&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1			//每台kafka都要设置独一无二broker ID号
+&lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9092			//监听端口号；推荐三天机器都设置成一样的
+host.name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.250		//每台kafka设置成自己的IP地址
+advertised.host.name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.250		//每台kafka设置成自己的IP地址
+zookeeper.connect&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.1.250:2181,192.168.1.251:2181,192.168.1.252:2181	//zookeeper地址；三台机器都设置成一样
+log.dirs&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/log/kafka
+num.network.threads&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3
+num.io.threads&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8
+socket.send.buffer.bytes&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;102400
+socket.receive.buffer.bytes&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;102400
+socket.request.max.bytes&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;104857600
+num.partitions&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+num.recovery.threads.per.data.dir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+log.retention.hours&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;168
+log.segment.bytes&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1073741824
+log.retention.check.interval.ms&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;300000
+zookeeper.connection.timeout.ms&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6000
+delete.topic.enable&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动kafka集群&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;nohup /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties &amp;amp;&amp;gt;&amp;gt;/var/log/kafka/kafka-server.log  &amp;amp;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;验证kafka集群&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;创建一个topic&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/kafka/bin/kafka-topics.sh -zookeeper 192.168.1.250:2181,192.168.1.251:2181,192.168.1.252:2181 -topic wangrubintest -replication-factor 2 -partitions 3 -create&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;查看topic列表&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/kafka/bin/kafka-topics.sh -zookeeper 192.168.1.250:2181,192.168.1.251:2181,192.168.1.252:2181 -list&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;创建测试生产者&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/kafka/bin/kafka-console-producer.sh -broker-list 192.168.1.250:9092,192.168.1.251:9092,192.168.1.252:9092 -topic wangrubintest&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;创建测试消费者&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/kafka/bin/kafka-console-consumer.sh --zookeeper 192.168.1.250:2181,192.168.1.251:2181,192.168.1.252:2181 --topic wangrubintest&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;未完待续……&lt;/p&gt;
 
 </description>
         <pubDate>Fri, 19 May 2017 00:00:00 +0800</pubDate>
