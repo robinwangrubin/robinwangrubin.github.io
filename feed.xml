@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 22 May 2017 11:33:27 +0800</pubDate>
-    <lastBuildDate>Mon, 22 May 2017 11:33:27 +0800</lastBuildDate>
+    <pubDate>Mon, 22 May 2017 11:38:04 +0800</pubDate>
+    <lastBuildDate>Mon, 22 May 2017 11:38:04 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -64,11 +64,11 @@
 
 &lt;p&gt;IP地址和应用安装对应表&lt;/p&gt;
 
-&lt;p&gt;192.168.1.250 ===== kafka01 Fluentd Kibana&lt;/p&gt;
+&lt;p&gt;192.168.1.250 ===== kafka01 Fluentd(Container) Kibana(Container)&lt;/p&gt;
 
-&lt;p&gt;192.168.1.251 ===== kafka02 Fluentd ElasticSearch&lt;/p&gt;
+&lt;p&gt;192.168.1.251 ===== kafka02 Fluentd(Container) ElasticSearch(Container)&lt;/p&gt;
 
-&lt;p&gt;192.168.1.252 ===== kafka03 Fluentd Logstash&lt;/p&gt;
+&lt;p&gt;192.168.1.252 ===== kafka03 Fluentd(Container) Logstash(Container)&lt;/p&gt;
 
 &lt;hr /&gt;
 
