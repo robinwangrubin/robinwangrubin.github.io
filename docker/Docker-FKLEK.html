@@ -104,14 +104,20 @@
   <li><a href="#fklek" id="markdown-toc-fklek">FKLEK系统介绍</a></li>
   <li><a href="#section" id="markdown-toc-section">实验环境准备</a></li>
   <li><a href="#section-1" id="markdown-toc-section-1">系统环境准备</a></li>
-  <li><a href="#zookeeper" id="markdown-toc-zookeeper">搭建zookeeper集群</a></li>
+  <li><a href="#zookeeper" id="markdown-toc-zookeeper">部署zookeeper集群</a></li>
   <li><a href="#kafka" id="markdown-toc-kafka">部署kafka集群</a></li>
+  <li><a href="#fluentd" id="markdown-toc-fluentd">部署Fluentd收集日志</a></li>
+  <li><a href="#elasticsearch" id="markdown-toc-elasticsearch">部署elasticsearch</a></li>
+  <li><a href="#logstash" id="markdown-toc-logstash">部署logstash</a></li>
+  <li><a href="#kibana" id="markdown-toc-kibana">部署kibana</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">环境检查</a></li>
+  <li><a href="#nginx" id="markdown-toc-nginx">部署nginx测试</a></li>
 </ul>
 
 <h2 id="fklek">FKLEK系统介绍</h2>
 
 <ul>
-  <li>Fluentd: 专业的容器日志收集工具</li>
+  <li>Fluentd: 专业的集中化容器日志收集工具</li>
   <li>Kafka：高吞吐异步消息队列</li>
   <li>Logstash：接收，发送，过滤，分隔日志</li>
   <li>ElasticSearch：存储和索引日志</li>
@@ -119,7 +125,7 @@
 </ul>
 
 <ol>
-  <li>所有swarm节点运行Fluentd，用于接受该节点上所有容器的日志并转发到kafka上。</li>
+  <li>Fluentd将所有容器的日志并转发到kafka上。</li>
   <li>Kafka临时存储所有容器的日志；用于被Logstash消费</li>
   <li>Logstash消费kafka的日志，最终转存到ElasticSearch上。</li>
   <li>ElasticSearch永久存储日志的数据库</li>
@@ -149,9 +155,9 @@
 
 <p>192.168.1.250 ===== kafka01 Fluentd Kibana</p>
 
-<p>192.168.1.251 ===== kafka02 Fluentd Logstash</p>
+<p>192.168.1.251 ===== kafka02 Fluentd ElasticSearch</p>
 
-<p>192.168.1.252 ===== kafka03 Fluentd ElasticSearch</p>
+<p>192.168.1.252 ===== kafka03 Fluentd Logstash</p>
 
 <hr />
 
@@ -168,7 +174,8 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 192.168.1.250   kafka01
 192.168.1.251   kafka02
-192.168.1.252   kafka03</code></pre></figure>
+192.168.1.252   kafka03
+192.168.1.250 192.168.1.251 192.168.1.252 fluentd.test.com	<span class="c">#利用DNS轮询伪造fluentd集群</span></code></pre></figure>
 
 <ul>
   <li>JAVA_1.8环境部署</li>
@@ -186,7 +193,7 @@ EOF
 
 <p>kafka集群依赖于zookeeper，所以我们先搭建zookeeper集群</p>
 
-<h2 id="zookeeper">搭建zookeeper集群</h2>
+<h2 id="zookeeper">部署zookeeper集群</h2>
 
 <ul>
   <li>安装zookeeper</li>
@@ -299,7 +306,177 @@ delete.topic.enable<span class="o">=</span><span class="nb">true</span></code></
 
 <hr />
 
-<p>未完待续……</p>
+<h2 id="fluentd">部署Fluentd收集日志</h2>
+
+<ul>
+  <li>编写Dockerfile文件</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir fluentd <span class="o">&amp;&amp;</span> <span class="nb">cd </span>fluentd
+vim Dockerfile
+FROM fluent/fluentd:onbuild
+MAINTAINER YOUR_NAME &lt;...@...&gt;
+USER root
+RUN apk add --update --virtual .build-deps <span class="se">\</span>
+        sudo build-base ruby-dev <span class="se">\</span>
+
+ <span class="c"># cutomize following instruction as you wish</span>
+ <span class="o">&amp;&amp;</span> sudo -u fluent gem install <span class="se">\</span>
+        fluent-plugin-elasticsearch <span class="se">\</span>
+        fluent-plugin-kafka <span class="se">\</span>
+
+ <span class="o">&amp;&amp;</span> sudo -u fluent gem sources --clear-all <span class="se">\</span>
+ <span class="o">&amp;&amp;</span> apk del .build-deps <span class="se">\</span>
+ <span class="o">&amp;&amp;</span> rm -rf /var/cache/apk/<span class="k">*</span> <span class="se">\</span>
+           /home/fluent/.gem/ruby/2.3.0/cache/<span class="k">*</span>.gem
+EXPOSE 24284</code></pre></figure>
+
+<ul>
+  <li>编写fluent配置文件</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">vim fluent.conf
+&lt;<span class="nb">source</span>&gt;
+  @type forward
+  port 24224
+  <span class="nb">bind </span>0.0.0.0
+&lt;/source&gt;
+
+&lt;match <span class="k">*</span>.<span class="k">**</span>&gt;
+  @type kafka_buffered		//该字段表示output给kafka
+
+  <span class="c"># list of seed brokers</span>
+  brokers 192.168.1.250:9092,192.168.1.251:9092,192.168.1.252:9092		//kafka集群
+
+  <span class="c"># buffer settings</span>
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/td
+  flush_interval 3s
+
+  <span class="c"># topic settings</span>
+  default_topic wangrubintest		//kafka上的topic
+
+  <span class="c"># data type settings</span>
+  output_data_type json
+  compression_codec gzip
+
+  <span class="c"># producer settings</span>
+  max_send_retries 1
+  required_acks -1
+&lt;/match&gt;</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir plugins
+mkdir -p /var/log/td-agent/buffer/td</code></pre></figure>
+
+<ul>
+  <li>构建Docker镜像</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd </span>fluentd/
+docker build -t 10.0.0.39:5000/fluentd:v10 .</code></pre></figure>
+
+<ul>
+  <li>启动fluent</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run -d -p 24224:24224/tcp -p 24224:24224/udp --rm --name fluentd 10.0.0.39:5000/fluentd:v10</code></pre></figure>
+
+<hr />
+
+<h2 id="elasticsearch">部署elasticsearch</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run -d --rm -p 9200:9200 --name elasticsearch hub.c.163.com/library/elasticsearch:2.4</code></pre></figure>
+
+<hr />
+
+<h2 id="logstash">部署logstash</h2>
+
+<ul>
+  <li>准备logstash.conf配置文件</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /root/logstash <span class="o">&amp;&amp;</span> vim /root/logstash/logstash.conf
+<span class="c">#</span>
+
+input <span class="o">{</span>    
+    kafka <span class="o">{</span>    
+        zk_connect <span class="o">=</span>&gt; <span class="s2">"192.168.1.250:2181,192.168.1.251:2181,192.168.1.252:2181"</span>
+        group_id <span class="o">=</span>&gt; <span class="s2">"es"</span>    
+        topic_id <span class="o">=</span>&gt; <span class="s2">"wangrubintest"</span>
+        codec <span class="o">=</span>&gt; plain
+        reset_beginning <span class="o">=</span>&gt; <span class="nb">false</span> <span class="c"># boolean (optional)， default: false</span>
+        consumer_threads <span class="o">=</span>&gt; 5  <span class="c"># number (optional)， default: 1</span>
+        decorate_events <span class="o">=</span>&gt; <span class="nb">false</span> <span class="c"># boolean (optional)， default: false</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+output <span class="o">{</span>
+     elasticsearch <span class="o">{</span>         
+        hosts <span class="o">=</span>&gt; <span class="o">[</span><span class="s2">"192.168.1.251:9200"</span><span class="o">]</span>
+         index <span class="o">=</span>&gt; <span class="s2">"logstash-%{+YYYY.MM.dd}"</span>
+        workers <span class="o">=</span>&gt; 5
+        flush_size <span class="o">=</span>&gt; 3840
+        idle_flush_time <span class="o">=</span>&gt; 10
+        template_overwrite <span class="o">=</span>&gt; <span class="nb">true</span>
+    <span class="o">}</span>
+    stdout<span class="o">{</span>
+        codec <span class="o">=</span>&gt; rubydebug
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<ul>
+  <li>启动logstash</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run -d --rm -v /root/logstash/:/config-dir/ logstash:2.4 -f /config-dir/logstash.conf</code></pre></figure>
+
+<hr />
+
+<h2 id="kibana">部署kibana</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">ocker run -d --rm --name kibana -e <span class="nv">ELASTICSEARCH_URL</span><span class="o">=</span>http://192.168.1.251:9200 -p 5601:5601 hub.c.163.com/library/kibana:4.6</code></pre></figure>
+
+<hr />
+
+<h2 id="section-2">环境检查</h2>
+
+<blockquote>
+  <p>http://192.168.1.250:5601/status</p>
+</blockquote>
+
+<p><img src="/pic/FKLEK/1.png" alt="1" /></p>
+
+<hr />
+
+<h2 id="nginx">部署nginx测试</h2>
+
+<ul>
+  <li>下载镜像</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker pull 10.0.0.39:5000/nginx:v1.12</code></pre></figure>
+
+<ul>
+  <li>启动镜像</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run -d -p 80:80 --rm --log-driver<span class="o">=</span>fluentd --log-opt fluentd-address<span class="o">=</span>fluentd.test.com:24224 --log-opt <span class="nv">tag</span><span class="o">=</span>nginx_access --name nginx 10.0.0.39:5000/nginx:v1.12</code></pre></figure>
+
+<ul>
+  <li>访问nginx并去kibana观察日志</li>
+</ul>
+
+<p><img src="/pic/FKLEK/4.png" alt="1" /></p>
+
+<p><img src="/pic/FKLEK/2.png" alt="1" /></p>
+
+<p><img src="/pic/FKLEK/3.png" alt="1" /></p>
+
+<hr />
+
+<p>Docker ==&gt; Fluentd ==&gt; Kafka ==&gt; Logstash ==&gt; ElasticSearch ==&gt; Kibana 测试完毕</p>
+
+<p>end</p>
 
 
       </article>
