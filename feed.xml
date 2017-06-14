@@ -5,9 +5,419 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 06 Jun 2017 10:24:53 +0800</pubDate>
-    <lastBuildDate>Tue, 06 Jun 2017 10:24:53 +0800</lastBuildDate>
+    <pubDate>Wed, 14 Jun 2017 13:49:46 +0800</pubDate>
+    <lastBuildDate>Wed, 14 Jun 2017 13:49:46 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>KVM学习笔记</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;实验环境准备&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;系统优化&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm&quot; id=&quot;markdown-toc-kvm&quot;&gt;kvm环境验证&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm-1&quot; id=&quot;markdown-toc-kvm-1&quot;&gt;安装kvm&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;准备系统镜像&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm-2&quot; id=&quot;markdown-toc-kvm-2&quot;&gt;启动kvm服务&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm-3&quot; id=&quot;markdown-toc-kvm-3&quot;&gt;KVM网络模式&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#bridge&quot; id=&quot;markdown-toc-bridge&quot;&gt;Bridge模式&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#nat&quot; id=&quot;markdown-toc-nat&quot;&gt;NAT模式&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm-4&quot; id=&quot;markdown-toc-kvm-4&quot;&gt;kvm创建磁盘文件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#kvm-5&quot; id=&quot;markdown-toc-kvm-5&quot;&gt;kvm创建虚拟机&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#virsh&quot; id=&quot;markdown-toc-virsh&quot;&gt;virsh基础命令&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vnc&quot; id=&quot;markdown-toc-vnc&quot;&gt;VNC远程连接虚拟机&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#windows&quot; id=&quot;markdown-toc-windows&quot;&gt;windows客户端安装&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#vm&quot; id=&quot;markdown-toc-vm&quot;&gt;vm虚拟机系统优化&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#vmnginx&quot; id=&quot;markdown-toc-vmnginx&quot;&gt;vm安装nginx&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#clone&quot; id=&quot;markdown-toc-clone&quot;&gt;虚拟机clone&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#virshclone&quot; id=&quot;markdown-toc-virshclone&quot;&gt;virsh直接clone&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;配置文件+磁盘文件&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;时区问题&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;快照&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-6&quot; id=&quot;markdown-toc-section-6&quot;&gt;测试&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;实验环境准备&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;系统版本：CentOS-7.2&lt;/li&gt;
+  &lt;li&gt;系统内核：3.10.0-327.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;系统优化&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sed -i &lt;span class=&quot;s1&quot;&gt;'s/SELINUX=.*/SELINUX=disabled/g'&lt;/span&gt; /etc/selinux/config
+setenforce 0
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e  &lt;span class=&quot;s2&quot;&gt;&quot;* soft nofile 102400&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;* hard nofile 102400&quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/security/limits.conf
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service
+sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/selinux/config
+systemctl restart network
+yum install wget -y
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum makecache
+yum install vim lrzsz net-tools.x86_64 -y&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;kvm&quot;&gt;kvm环境验证&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# lsmod |grep kvm
+kvm_intel             162153  3 
+kvm                   525259  1 kvm_intel&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# grep -E &lt;span class=&quot;s2&quot;&gt;&quot;svm|vmx&quot;&lt;/span&gt; /proc/cpuinfo
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 popcnt aes lahf_lm ida arat dtherm tpr_shadow vnmi flexpriority ept vpid
+......&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/2.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;kvm-1&quot;&gt;安装kvm&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;yum -y install qemu-kvm qemu-kvm-tools  libvirt virt-install libvirt-python acpid&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;准备系统镜像&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir -p /home/iso
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home/iso/
+wget https://mirrors.tuna.tsinghua.edu.cn/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;kvm-2&quot;&gt;启动kvm服务&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl start acpid.service
+systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;acpid.service
+systemctl start libvirtd.service
+systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;libvirtd.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;kvm-3&quot;&gt;KVM网络模式&lt;/h2&gt;
+
+&lt;h3 id=&quot;bridge&quot;&gt;Bridge模式&lt;/h3&gt;
+
+&lt;p&gt;在bridged模式下，虚拟出来的操作系统就像是局域网中的一台独立的主机;&lt;/p&gt;
+
+&lt;p&gt;它可以访问网内任何一台机器。同时，由于这个虚拟系统是局域网中的一个独立的主机系统，那么就可以手工配置它的TCP/IP配置信息，以实现通过局域网的网关或路由器访问互联网;&lt;/p&gt;
+
+&lt;p&gt;使用bridged模式的虚拟系统和宿主机器的关系，就像连接在同一个Hub上的两台电脑。想让它们相互通讯，你就需要为虚拟系统配置IP地址和子网掩码，否则就无法通信;&lt;/p&gt;
+
+&lt;p&gt;这种方式最简单，直接将虚拟网卡桥接到一个物理网卡上面，和linux下一个网卡绑定两个不同地址类似，实际上是将网卡设置为混杂模式，从而达到侦听多个IP的能力;&lt;/p&gt;
+
+&lt;p&gt;在此种模式下，虚拟机内部的网卡（例如linux下的eth0)直接连到了物理网卡所在的网络上，可以想象为虚拟机和host机处于对等的地位，在网络关系上是平等的，没有谁在谁后面的问题。使用这种方式很简单，前提是你可以得到1个以上的IP地址。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt;  /etc/sysconfig/network-scripts/
+cp ifcfg-em1 ifcfg-br0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-em1
+&lt;span class=&quot;nv&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Ethernet
+&lt;span class=&quot;nv&quot;&gt;BOOTPROTO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;static
+&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;em1
+&lt;span class=&quot;nv&quot;&gt;DEVICE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;em1
+&lt;span class=&quot;nv&quot;&gt;ONBOOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;yes
+&lt;span class=&quot;nv&quot;&gt;IPADDR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;123.126.176.207
+&lt;span class=&quot;nv&quot;&gt;NETMASK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;255.255.255.0
+&lt;span class=&quot;nv&quot;&gt;GATEWAY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;123.126.176.165
+&lt;span class=&quot;nv&quot;&gt;DNS1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;114.114.114.114
+&lt;span class=&quot;nv&quot;&gt;BRIDGE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;br0&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-br0 
+&lt;span class=&quot;nv&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Bridge
+&lt;span class=&quot;nv&quot;&gt;BOOTPROTO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;static
+&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;em1
+&lt;span class=&quot;nv&quot;&gt;DEVICE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;br0
+&lt;span class=&quot;nv&quot;&gt;ONBOOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;yes
+&lt;span class=&quot;nv&quot;&gt;IPADDR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;123.126.176.207
+&lt;span class=&quot;nv&quot;&gt;NETMASK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;255.255.255.0
+&lt;span class=&quot;nv&quot;&gt;GATEWAY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;123.126.176.165
+&lt;span class=&quot;nv&quot;&gt;DNS1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;114.114.114.114&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;systemctl restart network&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# brctl show
+bridge name     bridge id               STP enabled     interfaces
+br0             8000.842b2b6dd23c       no              em1
+virbr0          8000.52540028ef19       yes             virbr0-nic&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;nat&quot;&gt;NAT模式&lt;/h3&gt;
+
+&lt;p&gt;使用NAT模式，就是让虚拟系统借助NAT(网络地址转换)功能，通过宿主机器所在的网络来访问公网；&lt;/p&gt;
+
+&lt;p&gt;也就是说，使用NAT模式可以实现在虚拟系统里访问互联网。很显然，如果你只有一个外网地址，此种方式很合适。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;virsh net-undefine default&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    &amp;lt;network&amp;gt;  
+      &amp;lt;name&amp;gt;default&amp;lt;/name&amp;gt;  
+      &amp;lt;uuid&amp;gt;dc69ff61-6445-4376-b940-8714a3922bf7&amp;lt;/uuid&amp;gt;  
+      &amp;lt;forward &lt;span class=&quot;nv&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'nat'&lt;/span&gt;/&amp;gt;  
+      &amp;lt;bridge &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'virbr0'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;stp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'on'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'0'&lt;/span&gt; /&amp;gt;  
+      &amp;lt;mac &lt;span class=&quot;nv&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'52:54:00:81:14:18'&lt;/span&gt;/&amp;gt;  
+      &amp;lt;ip &lt;span class=&quot;nv&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.122.1'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;netmask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'255.255.255.0'&lt;/span&gt;&amp;gt;  
+        &amp;lt;dhcp&amp;gt;  
+          &amp;lt;range &lt;span class=&quot;nv&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.122.2'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.122.254'&lt;/span&gt; /&amp;gt;  
+          &amp;lt;host &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'00:25:90:eb:4b:bb'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'guest1'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.5.13'&lt;/span&gt; /&amp;gt;  
+          &amp;lt;host &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'00:25:90:eb:34:2c'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'guest2'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.7.206'&lt;/span&gt; /&amp;gt;  
+          &amp;lt;host &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'00:25:90:eb:e5:de'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'guest3'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.7.207'&lt;/span&gt; /&amp;gt;  
+          &amp;lt;host &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'00:25:90:eb:7e:11'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'guest4'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.7.208'&lt;/span&gt; /&amp;gt;  
+          &amp;lt;host &lt;span class=&quot;nv&quot;&gt;mac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'00:25:90:eb:b2:11'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'guest5'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'192.168.7.209'&lt;/span&gt; /&amp;gt;  
+        &amp;lt;/dhcp&amp;gt;  
+      &amp;lt;/ip&amp;gt;  
+    &amp;lt;/network&amp;gt;  &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;kvm-4&quot;&gt;kvm创建磁盘文件&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir /home/kvm_images
+qemu-img create -f raw /home/kvm_images/centos7-1.raw 20G
+qemu-img create -f raw /home/kvm_images/windows2008-1.raw 100G&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;qemu-img info /home/kvm_images/windows2008-1.raw&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;kvm-5&quot;&gt;kvm创建虚拟机&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;virt-install --virt-type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;kvm --name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;centos7-1 --memory&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2048 --cdrom&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/iso/CentOS-7-x86_64-Minimal-1611.iso --disk &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/kvm_images/centos7-1.img --network &lt;span class=&quot;nv&quot;&gt;network&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;default --vnc --vncport&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;12345 --vnclisten&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0.0.0 --noautoconsole --os-type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;linux --os-variant&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rhel6&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;virt-install --virt-type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;kvm --name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;windows-2008-1 --memory&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4096 --cdrom&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/iso/Windows_Server_2008_R2.iso --disk &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/kvm_images/windows2008-1.raw --network &lt;span class=&quot;nv&quot;&gt;network&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;default --vnc --vncport&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10000 --vnclisten&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0.0.0 --noautoconsole --os-type&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;windows --os-variant&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;win2k8&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;–name指定虚拟机名称&lt;/li&gt;
+  &lt;li&gt;–memory分配内存大小。&lt;/li&gt;
+  &lt;li&gt;–vcpus分配CPU核心数，最大与实体机CPU核心数相同&lt;/li&gt;
+  &lt;li&gt;–disk指定虚拟机镜像，size指定分配大小单位为G。&lt;/li&gt;
+  &lt;li&gt;–network网络类型，此处用的是默认，一般用的应该是bridge桥接。&lt;/li&gt;
+  &lt;li&gt;–accelerate加速&lt;/li&gt;
+  &lt;li&gt;–cdrom指定安装镜像iso&lt;/li&gt;
+  &lt;li&gt;–vnc启用VNC远程管理，一般安装系统都要启用。&lt;/li&gt;
+  &lt;li&gt;–vncport指定VNC监控端口，默认端口为5900，端口不能重复。&lt;/li&gt;
+  &lt;li&gt;–vnclisten指定VNC绑定IP，默认绑定127.0.0.1，这里改为0.0.0.0。&lt;/li&gt;
+  &lt;li&gt;–os-type=linux,windows&lt;/li&gt;
+  &lt;li&gt;–os-variant=rhel6&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;virsh&quot;&gt;virsh基础命令&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;virt-install 生成kvm虚拟机&lt;/li&gt;
+  &lt;li&gt;virsh list 查看在运行的虚拟机&lt;/li&gt;
+  &lt;li&gt;virsh list –all 查看所有虚拟机&lt;/li&gt;
+  &lt;li&gt;virsh dumpxml vm-name 查看kvm虚拟机配置文件&lt;/li&gt;
+  &lt;li&gt;virsh start vm-name 启动kvm虚拟机&lt;/li&gt;
+  &lt;li&gt;virsh shutdown vm-name 正常关机&lt;/li&gt;
+  &lt;li&gt;virsh destroy vm-name 非正常关机（相当于物理机直接拔掉电源）&lt;/li&gt;
+  &lt;li&gt;virsh undefine vm-name 删除vm的配置文件&lt;/li&gt;
+  &lt;li&gt;virsh define file-name.xml 根据配置文件定义虚拟机&lt;/li&gt;
+  &lt;li&gt;virsh suspend vm-name 挂起，终止&lt;/li&gt;
+  &lt;li&gt;virsh resumed vm-name 恢复挂起状态&lt;/li&gt;
+  &lt;li&gt;virsh autostart vm-name 开机自启动vm&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;vnc&quot;&gt;VNC远程连接虚拟机&lt;/h2&gt;
+
+&lt;h3 id=&quot;windows&quot;&gt;windows客户端安装&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;https://www.realvnc.com/download/file/vnc.files/VNC-6.1.1-Windows.exe&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;通过vnc连接 IP+port（12345）进行安装系统：&lt;/p&gt;
+
+&lt;h3 id=&quot;vm&quot;&gt;vm虚拟机系统优化&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sed -i &lt;span class=&quot;s1&quot;&gt;'s/SELINUX=.*/SELINUX=disabled/g'&lt;/span&gt; /etc/selinux/config
+setenforce 0
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e  &lt;span class=&quot;s2&quot;&gt;&quot;* soft nofile 102400&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;* hard nofile 102400&quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/security/limits.conf
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service
+sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/selinux/config
+systemctl restart network
+yum install wget -y
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum makecache
+yum install vim lrzsz net-tools.x86_64 -y&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;vmnginx&quot;&gt;vm安装nginx&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://nginx.org/download/nginx-1.12.0.tar.gz
+yum install gcc -y
+yum install openssl-devel pcre-devel -y
+tar xf nginx-1.12.0.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;nginx-1.12.0
+./configure --prefix&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/nginx-1.12.0 --user&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --group&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx --with-http_ssl_module --with-http_stub_status_module
+make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+ln -s /usr/local/nginx-1.12.0/ /etc/nginx
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;h1&amp;gt;This is work-node01 &amp;lt;/h1&amp;gt;&quot;&lt;/span&gt; &amp;gt; /usr/local/nginx-1.12.0/html/index.html 
+/usr/local/nginx-1.12.0/sbin/nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;clone&quot;&gt;虚拟机clone&lt;/h2&gt;
+
+&lt;h3 id=&quot;virshclone&quot;&gt;virsh直接clone&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;virsh shutdown centos7-1
+virt-clone -o centos7-1 -n centos7-2 -f /home/kvm_images/centos7-2.raw
+virsh edit centos7-2
+修改VNC端口&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/nginx-1.12.0/sbin/nginx
+hostnamectl &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;-hostname worker-node02
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;h1&amp;gt;This is work-node02 &amp;lt;/h1&amp;gt;&quot;&lt;/span&gt; &amp;gt; /usr/local/nginx-1.12.0/html/index.html 
+/usr/local/nginx-1.12.0/sbin/nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;配置文件+磁盘文件&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;virsh shutdown centos7-1
+virsh dumpxml centos7-1 &amp;gt; /etc/libvirt/qemu/centos7-3.xml
+cp /home/kvm_images/centos7-1.img /home/kvm_images/centos7-3.img
+vim /etc/libvirt/qemu/centos7-3.xml&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;diff /etc/libvirt/qemu/centos7-1.xml /etc/libvirt/qemu/centos7-3.xml&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&amp;lt;   &amp;lt;name&amp;gt;centos7-1&amp;lt;/name&amp;gt;
+&amp;lt;   &amp;lt;uuid&amp;gt;51e8a434-3aca-4664-a4df-25c42226a9ed&amp;lt;/uuid&amp;gt;
+---
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;   &lt;/span&gt;&amp;lt;name&amp;gt;centos7-3&amp;lt;/name&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;   &lt;/span&gt;&amp;lt;uuid&amp;gt;51e8a434-3aca-4664-a4df-25c42226a900&amp;lt;/uuid&amp;gt;
+25c25
+&amp;lt;       &amp;lt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/home/kvm_images/centos7-1.img'&lt;/span&gt;/&amp;gt;
+---
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;       &lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/home/kvm_images/centos7-3.img'&lt;/span&gt;/&amp;gt;
+74c74
+&amp;lt;       &amp;lt;mac &lt;span class=&quot;nv&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'52:54:00:2e:ef:7f'&lt;/span&gt;/&amp;gt;
+---
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;       &lt;/span&gt;&amp;lt;mac &lt;span class=&quot;nv&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'52:54:00:2e:ef:7a'&lt;/span&gt;/&amp;gt;
+94c94
+&amp;lt;     &amp;lt;graphics &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'vnc'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'12345'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;autoport&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'no'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'0.0.0.0'&lt;/span&gt;&amp;gt;
+---
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;     &lt;/span&gt;&amp;lt;graphics &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'vnc'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'12347'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;autoport&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'no'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'0.0.0.0'&lt;/span&gt;&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;virsh define /etc/libvirt/qemu/centos7-3.xml
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost qemu]# virsh list --all
+ Id    Name                           State
+----------------------------------------------------
+ 12    centos7-2                      running
+ -     centos7-1                      shut off
+ -     centos7-3                      shut off
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost qemu]# virsh start centos7-3
+Domain centos7-3 started&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;vnc 连接虚拟机 更改IP地址&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;/usr/local/nginx-1.12.0/sbin/nginx
+hostnamectl &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;-hostname worker-node03
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;h1&amp;gt;This is work-node03 &amp;lt;/h1&amp;gt;&quot;&lt;/span&gt; &amp;gt; /usr/local/nginx-1.12.0/html/index.html
+/usr/local/nginx-1.12.0/sbin/nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;时区问题&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;TZ='Asia/Shanghai'; export TZ&quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;快照&lt;/h2&gt;
+
+&lt;p&gt;kvm虚拟机默认使用raw格式的镜像格式，性能最好，速度最快;&lt;/p&gt;
+
+&lt;p&gt;它的缺点就是不支持一些新的功能，如支持镜像,zlib磁盘压缩,AES加密等。&lt;/p&gt;
+
+&lt;p&gt;要使用镜像功能，磁盘格式必须为qcow2。下面开始kvm虚拟机快照备份的过程。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# qemu-img info /home/kvm_images/centos7-3.img 
+image: /home/kvm_images/centos7-3.img
+file format: raw
+virtual size: 20G &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;21474836480 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+disk size: 2.1G
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh shutdown centos7-3
+Domain centos7-3 is being shutdown
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# qemu-img convert -f raw -O qcow2 /home/kvm_images/centos7-3.img /home/kvm_images/centos7-3.qcow2
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# qemu-img info /home/kvm_images/centos7-3.qcow2 
+image: /home/kvm_images/centos7-3.qcow2
+file format: qcow2
+virtual size: 20G &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;21474836480 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+disk size: 2.0G
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    lazy refcounts: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+	
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh snapshot-create centos7-3 
+Domain snapshot 1497367511 created
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh snapshot-list centos7-3
+ Name                 Creation Time             State
+------------------------------------------------------------
+ 1497367511           2017-06-13 23:25:11 +0800 shutoff
+ 
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh snapshot-current centos7-3|head
+&amp;lt;domainsnapshot&amp;gt;
+  &amp;lt;name&amp;gt;1497367511&amp;lt;/name&amp;gt;
+  &amp;lt;state&amp;gt;shutoff&amp;lt;/state&amp;gt;
+  &amp;lt;creationTime&amp;gt;1497367511&amp;lt;/creationTime&amp;gt;
+  &amp;lt;memory &lt;span class=&quot;nv&quot;&gt;snapshot&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'no'&lt;/span&gt;/&amp;gt;
+  &amp;lt;disks&amp;gt;
+    &amp;lt;disk &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'vda'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;snapshot&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'internal'&lt;/span&gt;/&amp;gt;
+    &amp;lt;disk &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hda'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;snapshot&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'no'&lt;/span&gt;/&amp;gt;
+  &amp;lt;/disks&amp;gt;
+  &amp;lt;domain &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'kvm'&lt;/span&gt;&amp;gt;
+  
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh snapshot-create centos7-3 
+Domain snapshot 1497367618 created
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# ll /var/lib/libvirt/qemu/snapshot/centos7-3/
+total 16
+-rw------- 1 root root 4310 Jun 13 23:26 1497367511.xml
+-rw------- 1 root root 4361 Jun 13 23:26 1497367618.xml
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@localhost ~]# virsh snapshot-delete centos7-3 1497367618
+Domain snapshot 1497367618 deleted&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/10.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/11.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/12.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/13.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;测试&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/kvm/9.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 14 Jun 2017 00:00:00 +0800</pubDate>
+        <link>/kvm/KVM.html</link>
+        <guid isPermaLink="true">/kvm/KVM.html</guid>
+        
+        
+        <category>Kvm</category>
+        
+      </item>
     
       <item>
         <title>Docker -- 日志系统FKLEK</title>
@@ -1437,346 +1847,6 @@ B ------&amp;gt; C&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
         
         
         <category>Command</category>
-        
-      </item>
-    
-      <item>
-        <title>shell循环语句</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#if&quot; id=&quot;markdown-toc-if&quot;&gt;IF循环&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;生产脚本示例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#for&quot; id=&quot;markdown-toc-for&quot;&gt;FOR循环&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;生产脚本示例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#while&quot; id=&quot;markdown-toc-while&quot;&gt;WHILE循环&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;生产脚本示例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#case&quot; id=&quot;markdown-toc-case&quot;&gt;CASE语句&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;生产脚本示例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;函数&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;生产脚本示例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-6&quot; id=&quot;markdown-toc-section-6&quot;&gt;数组&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;if&quot;&gt;IF循环&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/hosts &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ture&quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;else
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;fail&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/hosts &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/hosts is ture&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/sysconfig/network-scripts/ifcfg-eth0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ifcfg-eth0 is ture&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;all fail&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section&quot;&gt;生产脚本示例&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;STATUS_CODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;curl -I --connect-timeout 10 -o /dev/null -s -w %&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;http_code&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; wangrubin.com&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$STATUS_CODE&lt;/span&gt; -eq 200 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is Ok&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is Fail&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;for&quot;&gt;FOR循环&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;n &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq 10&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;do
-   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&amp;lt;&lt;span class=&quot;nv&quot;&gt;$num&lt;/span&gt;;i+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;do
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section-1&quot;&gt;生产脚本示例&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Author: wangrubin&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Email: robinwangrubin@gmail.com&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Description: This script is for test&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;ERROR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;test.ShowSeatCacheException&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/var/test_20*/logs/catalina.out&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;TATAL_NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
-&lt;span class=&quot;nv&quot;&gt;DATE_TIME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date &lt;span class=&quot;s2&quot;&gt;&quot;+%F %H:%M&quot;&lt;/span&gt; -d &lt;span class=&quot;s2&quot;&gt;&quot;1 minute ago&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;FILE &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FILEPATHS&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;;
-&lt;span class=&quot;k&quot;&gt;do
-          &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DATE_TIME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; |grep &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ERROR&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; |wc -l&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-          &lt;span class=&quot;nv&quot;&gt;TATAL_NUM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;TATAL_NUM+NUM&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;done
-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TATAL_NUM&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;n &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;1..255&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;do
- &lt;/span&gt;ping -c 2 -W 2 10.0.0.&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &amp;amp;&amp;gt;/dev/null
- &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.0.0.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is active&quot;&lt;/span&gt;
- &lt;span class=&quot;k&quot;&gt;else
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.0.0.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is shutdown&quot;&lt;/span&gt;
- &lt;span class=&quot;k&quot;&gt;fi
-done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;while&quot;&gt;WHILE循环&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20 &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;do
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
-  &lt;span class=&quot;nb&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;int+1
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;do
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; :
-&lt;span class=&quot;k&quot;&gt;do
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;123
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section-2&quot;&gt;生产脚本示例&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line
-&lt;span class=&quot;k&quot;&gt;do
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; &amp;lt; /etc/passwd&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;case&quot;&gt;CASE语句&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt; -t 5 -p &lt;span class=&quot;s2&quot;&gt;&quot;Pls input a number less 10: &quot;&lt;/span&gt; n
-&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in
-&lt;/span&gt;1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;The num you put is 1&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-2&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;The num you put is 2&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;3-9]&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;The num you put is &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;The num you put must be a number and the volue must be less 9&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;;
-&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section-3&quot;&gt;生产脚本示例&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#chkconfig:2345 54 65&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#description: Stop/Start/Reload Nginx scripts&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;ACTION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
-. /etc/init.d/functions
-&lt;span class=&quot;nv&quot;&gt;nginx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/application/nginx/sbin/nginx&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;prog&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nginx&quot;&lt;/span&gt;
-start&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /var/lock/subsys/&lt;span class=&quot;nv&quot;&gt;$prog&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-      &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is runing&quot;&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;0
-    &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;    
-    &lt;span class=&quot;nv&quot;&gt;$nginx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;RETVAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-       &lt;/span&gt;touch /var/lock/subsys/&lt;span class=&quot;nv&quot;&gt;$prog&lt;/span&gt;
-       action &lt;span class=&quot;s2&quot;&gt;&quot;Starting nginx&quot;&lt;/span&gt; /bin/true
-    &lt;span class=&quot;k&quot;&gt;else
-       &lt;/span&gt;action &lt;span class=&quot;s2&quot;&gt;&quot;Starting nginx&quot;&lt;/span&gt; /bin/false
-    &lt;span class=&quot;k&quot;&gt;fi
-    return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-stop&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ! -f /var/lock/subsys/&lt;span class=&quot;nv&quot;&gt;$prog&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-       &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nginx is stopped&quot;&lt;/span&gt;      
-       &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;0 
-    &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$nginx&lt;/span&gt; -s stop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;RETVAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-       &lt;/span&gt;rm -f /var/lock/subsys/&lt;span class=&quot;nv&quot;&gt;$prog&lt;/span&gt;
-       action &lt;span class=&quot;s2&quot;&gt;&quot;Stopping nginx&quot;&lt;/span&gt; /bin/true
-    &lt;span class=&quot;k&quot;&gt;else
-       &lt;/span&gt;action &lt;span class=&quot;s2&quot;&gt;&quot;Stopping nginx&quot;&lt;/span&gt; /bin/false
-    &lt;span class=&quot;k&quot;&gt;fi
-    return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-reload&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$nginx&lt;/span&gt; -s reload &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;RETVAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-       &lt;/span&gt;action &lt;span class=&quot;s2&quot;&gt;&quot;Reloading nginx&quot;&lt;/span&gt; /bin/true
-    &lt;span class=&quot;k&quot;&gt;else
-       &lt;/span&gt;action &lt;span class=&quot;s2&quot;&gt;&quot;Reloading nginx&quot;&lt;/span&gt; /bin/false
-    &lt;span class=&quot;k&quot;&gt;fi
-    return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$RETVAL&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ACTION&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in
-    &lt;/span&gt;start&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        start
-        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-    stop&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        stop
-        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-    restart&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        stop
-        start
-        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-    reload&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        reload
-        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Pls choose start|stop|restart|reload&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cp nginx.sh /etc/init.d/nginx
-chmod +x /etc/init.d/nginx
-chkconfig --add /etc/init.d/nginx
-chkconfig nginx on
-chkconfig --list nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;函数&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;Fist_Function&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;This is my first function&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;0
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-Fist_Function&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;section-5&quot;&gt;生产脚本示例&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Author: wangrubin&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Email: robinwangrubin@gmail.com&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#Description: This script is for test&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;CHECK_URL&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;STATUS_CODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;curl -I --connect-timeout 10 -o /dev/null -s -w %&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;http_code&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$URL&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$STATUS_CODE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; -eq 200 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is Ok&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else
-   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is False&quot;&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;0
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$# &lt;/span&gt;-ne 1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot; Pls input a URL;For example http://www.baidu.com &quot;&lt;/span&gt;
-   &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
-&lt;span class=&quot;k&quot;&gt;fi
-
-&lt;/span&gt;CHECK_URL &lt;span class=&quot;nv&quot;&gt;$URL&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;break n：n表示跳出循环的层数，省略则跳出整个循环&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;continue n ：n表示退到第n层循环，省略则跳过本次循环，进入下一个循环&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;exit n：退出整个shell脚本，n为退出脚本后的状态返回值&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;return n：退出当前函数，n为函数的返回值&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;测试脚本&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0;i&amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5;i++&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;do
- if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; -eq 3 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    continue&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;#break&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;#exit&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;done
-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;OK&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-6&quot;&gt;数组&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;1 2 3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-3
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[*]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-3
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[0]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; 
-1
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[1]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-2
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[2]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-3
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[*]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-1 2 3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# shuzu[3]&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4   &lt;span class=&quot;c&quot;&gt;#添加数组中的成员&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# shuzu[4]&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[*]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-1 2 3 4 5
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@CentOS_6 scripts]# &lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;shuzu[4]    &lt;span class=&quot;c&quot;&gt;#删除数组中成员&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;YN&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
-curl -I &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &amp;amp;&amp;gt;/dev/null
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; -ne 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is bad&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;http://www.baidu.com http://www.zhaiiker.com http://10.0.0.16&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;do
-  for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0;i&amp;lt;&lt;span class=&quot;k&quot;&gt;${#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[*]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;;i++&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;do
-     &lt;/span&gt;YN &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;shuzu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[i]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;done
-&lt;/span&gt;sleep 10
-&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-</description>
-        <pubDate>Fri, 20 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/shell/shell-2.html</link>
-        <guid isPermaLink="true">/shell/shell-2.html</guid>
-        
-        
-        <category>Shell</category>
         
       </item>
     
