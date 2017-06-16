@@ -5,9 +5,59 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 14 Jun 2017 13:49:46 +0800</pubDate>
-    <lastBuildDate>Wed, 14 Jun 2017 13:49:46 +0800</lastBuildDate>
+    <pubDate>Fri, 16 Jun 2017 16:45:33 +0800</pubDate>
+    <lastBuildDate>Fri, 16 Jun 2017 16:45:33 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>带宽测试工具--iperf</title>
+        <description>&lt;h2 id=&quot;iperf&quot;&gt;安装iperf&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Tar包安装&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://downloads.es.net/pub/iperf/iperf-3.0.6.tar.gz
+tar xf iperf-3.0.6.tar.gz 
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;iperf-3.0.6
+./configure 
+make
+make install&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Docker容器形式安装&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker pull moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;测试网络带宽&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;iperf3 -u -c 192.168.1.251 -p 5201 -b 1000M -t 60&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -it -p 5201:5201/tcp -p 5201:5201/udp moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --name iperf &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==kafka02'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --publish 5201:5201/tcp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --publish 5201:5201/udp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 16 Jun 2017 00:00:00 +0800</pubDate>
+        <link>/network/iperf.html</link>
+        <guid isPermaLink="true">/network/iperf.html</guid>
+        
+        
+        <category>Network</category>
+        
+      </item>
     
       <item>
         <title>KVM学习笔记</title>
@@ -1614,239 +1664,6 @@ B ------&amp;gt; C&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
         
         
         <category>Python</category>
-        
-      </item>
-    
-      <item>
-        <title>Tcpdump</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;二层抓包&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;三层抓包&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;四层抓包&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;常用抓包示例&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;二层抓包&lt;/h2&gt;
-
-&lt;p&gt;抓源MAC地址为 00:0C:29:37:77:1D 的数据帧&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ether src 00:0C:29:37:77:1D&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓目的MAC地址为 00:0C:29:37:77:1D 的数据帧&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ether dst 00:0C:29:37:77:1D&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓源MAC地址或者目的MAC为 00:0C:29:37:77:1D 的数据帧&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ether host 00:0C:29:37:77:1D&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取以太网广播流量&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ether broadcast&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取以太网多播流量&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn multicast&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取与定义的protocol协议相同的数据帧&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ether proto 0800&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据vlan-id抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn vlan vlan 10 and vlan 20 and vlan 30&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓与定义的MAC的地址不相同的数据帧&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ! ether host 00:0C:29:37:77:1D&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;三层Pv4广播流量，目的ip为192.168.1.255（C类广播地址）对应的二层以太网帧MAC地址为ff:ff:ff:ff:ff:ff&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ARP目的MAC为ff:ff:ff:ff:ff:ff&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;但凡IPv4多播流量，以太网帧目的MAC以01:00:5e开头，以01:00:5e开头的目的MAC地址都被视为以太网多播帧&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;但凡IPv6多播流量，以太网帧目的MAC以33:33开头，以33:33打头的目的MAC地址都被视为以太网多播帧&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;以太网类型是指以太网帧帧头的ETHER-TYPE字段，用来表示以太网帧帧头所封装的高层协议流量的协议类型。0x0800 0x86dd 0x0806 分别表示IPv4 IPv6 以及ARP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;三层抓包&lt;/h2&gt;
-
-&lt;p&gt;根据目的IP地址抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn dst host 114.114.114.114&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据源IP地址抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn src host 114.114.114.114&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据指定IP地址抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn host 114.114.114.114&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据源网段抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn src net 192.168.1.0/24&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据目的网段抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn dst net 192.168.1.0/24&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据网段抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn net 192.168.1.0/24&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取ICMP流量&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn ip proto 1&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取ICMP request的报文&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn icmp [icmptype]==icmp-echo&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn icmp[icmptype]==8&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取ICMP reply的报文&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn icmp [icmptype]==icmp-echoreply&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取ICMP流量但PING包除外&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn icmp [icmptype] != icmp-echo and icmp [icmptype] !=icmp-echoreply&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;四层抓包&lt;/h2&gt;
-
-&lt;p&gt;根据源端口抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn src port 22&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据目的端口抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn dst port 22&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据端口号抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn port 22&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据源端口范围抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn tcp src portrange 1-1024&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据目的端口范围抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn tcp dst portrange 1-1024&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据端口范围抓包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn tcp portrange 1-1024&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取tcp连接中SYN为1或FIN为1的数据包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn “tcp [tcpflags] &amp;amp; (tcp-syn | tcp-fin) !=0”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;抓取所有RST为1的tcp包&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nn  “tcp [tcpflags] &amp;amp; (tcp-rst) !=0”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SYN //建立连接&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FIN //拆除连接&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ACK //确认连接&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RST //立刻拆除连接&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PSH //将数据提交给后端应用程序处理&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x00 =0 //抓取所有标记位都置为1的tcp流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x01 =1 //抓取FIN位为1，ACK为0的TCP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x03 =3 //抓取FIN和FIN位同时置为1的TCP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x05 =5 //抓取RST和FIN位同时置为1的TCP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x06 =6 //抓取SYN和RST位同时置为1的TCP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp[13] &amp;amp; 0x08 =8 //抓取PSH位置为1，但ACK为0的TCP流量&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;常用抓包示例&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tcpdump -i eth0 -nnv host www.baidu.com -c 1000 -w /home/baidu.cap&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 04 Feb 2017 00:00:00 +0800</pubDate>
-        <link>/command/Tcpdump.html</link>
-        <guid isPermaLink="true">/command/Tcpdump.html</guid>
-        
-        
-        <category>Command</category>
         
       </item>
     
