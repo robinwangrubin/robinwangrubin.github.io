@@ -104,18 +104,18 @@
   <li><a href="#section" id="markdown-toc-section">实验环境准备</a></li>
   <li><a href="#section-1" id="markdown-toc-section-1">系统优化</a></li>
   <li><a href="#kvm" id="markdown-toc-kvm">kvm环境验证</a></li>
-  <li><a href="#kvm-1" id="markdown-toc-kvm-1">安装kvm</a>    <ul>
+  <li><a href="#kvm-1" id="markdown-toc-kvm-1">安装kvm</a></li>
+  <li><a href="#kvm-2" id="markdown-toc-kvm-2">启动kvm服务</a>    <ul>
       <li><a href="#section-2" id="markdown-toc-section-2">准备系统镜像</a></li>
     </ul>
   </li>
-  <li><a href="#kvm-2" id="markdown-toc-kvm-2">启动kvm服务</a></li>
-  <li><a href="#kvm-3" id="markdown-toc-kvm-3">KVM网络模式</a>    <ul>
+  <li><a href="#kvm-3" id="markdown-toc-kvm-3">kvm创建磁盘文件</a></li>
+  <li><a href="#kvm-4" id="markdown-toc-kvm-4">kvm创建虚拟机</a></li>
+  <li><a href="#kvm-5" id="markdown-toc-kvm-5">KVM网络模式</a>    <ul>
       <li><a href="#bridge" id="markdown-toc-bridge">Bridge模式</a></li>
       <li><a href="#nat" id="markdown-toc-nat">NAT模式</a></li>
     </ul>
   </li>
-  <li><a href="#kvm-4" id="markdown-toc-kvm-4">kvm创建磁盘文件</a></li>
-  <li><a href="#kvm-5" id="markdown-toc-kvm-5">kvm创建虚拟机</a></li>
   <li><a href="#virsh" id="markdown-toc-virsh">virsh基础命令</a></li>
   <li><a href="#vnc" id="markdown-toc-vnc">VNC远程连接虚拟机</a>    <ul>
       <li><a href="#windows" id="markdown-toc-windows">windows客户端安装</a></li>
@@ -155,7 +155,8 @@ yum install wget -y
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 yum makecache
-yum install vim lrzsz net-tools.x86_64 -y</code></pre></figure>
+yum install vim lrzsz net-tools ntpdate -y
+<span class="nb">echo</span> <span class="s2">"*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &gt;/dev/null 2&gt;&amp;1"</span> &gt;&gt;/var/spool/cron/root</code></pre></figure>
 
 <hr />
 
@@ -175,13 +176,7 @@ flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov 
 
 <h2 id="kvm-1">安装kvm</h2>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">yum -y install qemu-kvm qemu-kvm-tools  libvirt virt-install libvirt-python acpid</code></pre></figure>
-
-<h3 id="section-2">准备系统镜像</h3>
-
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /home/iso
-<span class="nb">cd</span> /home/iso/
-wget https://mirrors.tuna.tsinghua.edu.cn/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso</code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">yum -y install qemu-kvm libvirt virt-install libvirt-python acpid</code></pre></figure>
 
 <h2 id="kvm-2">启动kvm服务</h2>
 
@@ -190,9 +185,56 @@ systemctl <span class="nb">enable </span>acpid.service
 systemctl start libvirtd.service
 systemctl <span class="nb">enable </span>libvirtd.service</code></pre></figure>
 
+<h3 id="section-2">准备系统镜像</h3>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /home/iso
+<span class="nb">cd</span> /home/iso/
+wget http://mirrors.163.com/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso</code></pre></figure>
+
 <hr />
 
-<h2 id="kvm-3">KVM网络模式</h2>
+<h2 id="kvm-3">kvm创建磁盘文件</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir /home/kvm_images
+qemu-img create -f raw /home/kvm_images/centos7-1.raw 20G
+qemu-img create -f raw /home/kvm_images/windows2008-1.raw 100G</code></pre></figure>
+
+<blockquote>
+  <p>qemu-img info /home/kvm_images/windows2008-1.raw</p>
+</blockquote>
+
+<h2 id="kvm-4">kvm创建虚拟机</h2>
+
+<ul>
+  <li>Linux</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">virt-install --virt-type<span class="o">=</span>kvm --name<span class="o">=</span>centos7-1 --vcpus<span class="o">=</span>8 --memory<span class="o">=</span>4096 --cdrom<span class="o">=</span>/home/iso/CentOS-7-x86_64-Minimal-1611.iso --disk <span class="nv">path</span><span class="o">=</span>/home/kvm_images/centos7-1.img --network <span class="nv">network</span><span class="o">=</span>default --vnc --vnclisten<span class="o">=</span>0.0.0.0 --vncport<span class="o">=</span>12345 --noautoconsole --accelerate --os-type<span class="o">=</span>linux --os-variant<span class="o">=</span>rhel6</code></pre></figure>
+
+<ul>
+  <li>Windows</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">virt-install --virt-type<span class="o">=</span>kvm --name<span class="o">=</span>windows-2008-1 --vcpus<span class="o">=</span>16 --memory<span class="o">=</span>4096 --cdrom<span class="o">=</span>/home/iso/Windows_Server_2008_R2.iso --disk <span class="nv">path</span><span class="o">=</span>/home/kvm_images/windows2008-1.raw --network <span class="nv">network</span><span class="o">=</span>default --vnc --vnclisten<span class="o">=</span>0.0.0.0 --vncport<span class="o">=</span>12346 --noautoconsole --accelerate --os-type<span class="o">=</span>windows --os-variant<span class="o">=</span>win2k8</code></pre></figure>
+
+<ul>
+  <li>–name指定虚拟机名称</li>
+  <li>–memory分配内存大小。</li>
+  <li>–vcpus分配CPU核心数，最大与实体机CPU核心数相同</li>
+  <li>–disk指定虚拟机镜像，size指定分配大小单位为G。</li>
+  <li>–network网络类型，此处用的是默认，一般用的应该是bridge桥接。</li>
+  <li>–accelerate加速</li>
+  <li>–cdrom指定安装镜像iso</li>
+  <li>–vnc启用VNC远程管理，一般安装系统都要启用。</li>
+  <li>–vncport指定VNC监控端口，默认端口为5900，端口不能重复。</li>
+  <li>–vnclisten指定VNC绑定IP，默认绑定127.0.0.1，这里改为0.0.0.0。</li>
+  <li>–os-type=linux,windows</li>
+  <li>–os-variant=rhel6</li>
+</ul>
+
+<hr />
+
+<h2 id="kvm-5">KVM网络模式</h2>
 
 <h3 id="bridge">Bridge模式</h3>
 
@@ -266,39 +308,6 @@ virbr0          8000.52540028ef19       yes             virbr0-nic</code></pre><
         &lt;/dhcp&gt;  
       &lt;/ip&gt;  
     &lt;/network&gt;  </code></pre></figure>
-
-<hr />
-
-<h2 id="kvm-4">kvm创建磁盘文件</h2>
-
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir /home/kvm_images
-qemu-img create -f raw /home/kvm_images/centos7-1.raw 20G
-qemu-img create -f raw /home/kvm_images/windows2008-1.raw 100G</code></pre></figure>
-
-<blockquote>
-  <p>qemu-img info /home/kvm_images/windows2008-1.raw</p>
-</blockquote>
-
-<h2 id="kvm-5">kvm创建虚拟机</h2>
-
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">virt-install --virt-type<span class="o">=</span>kvm --name<span class="o">=</span>centos7-1 --memory<span class="o">=</span>2048 --cdrom<span class="o">=</span>/home/iso/CentOS-7-x86_64-Minimal-1611.iso --disk <span class="nv">path</span><span class="o">=</span>/home/kvm_images/centos7-1.img --network <span class="nv">network</span><span class="o">=</span>default --vnc --vncport<span class="o">=</span>12345 --vnclisten<span class="o">=</span>0.0.0.0 --noautoconsole --os-type<span class="o">=</span>linux --os-variant<span class="o">=</span>rhel6</code></pre></figure>
-
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">virt-install --virt-type<span class="o">=</span>kvm --name<span class="o">=</span>windows-2008-1 --memory<span class="o">=</span>4096 --cdrom<span class="o">=</span>/home/iso/Windows_Server_2008_R2.iso --disk <span class="nv">path</span><span class="o">=</span>/home/kvm_images/windows2008-1.raw --network <span class="nv">network</span><span class="o">=</span>default --vnc --vncport<span class="o">=</span>10000 --vnclisten<span class="o">=</span>0.0.0.0 --noautoconsole --os-type<span class="o">=</span>windows --os-variant<span class="o">=</span>win2k8</code></pre></figure>
-
-<ul>
-  <li>–name指定虚拟机名称</li>
-  <li>–memory分配内存大小。</li>
-  <li>–vcpus分配CPU核心数，最大与实体机CPU核心数相同</li>
-  <li>–disk指定虚拟机镜像，size指定分配大小单位为G。</li>
-  <li>–network网络类型，此处用的是默认，一般用的应该是bridge桥接。</li>
-  <li>–accelerate加速</li>
-  <li>–cdrom指定安装镜像iso</li>
-  <li>–vnc启用VNC远程管理，一般安装系统都要启用。</li>
-  <li>–vncport指定VNC监控端口，默认端口为5900，端口不能重复。</li>
-  <li>–vnclisten指定VNC绑定IP，默认绑定127.0.0.1，这里改为0.0.0.0。</li>
-  <li>–os-type=linux,windows</li>
-  <li>–os-variant=rhel6</li>
-</ul>
 
 <hr />
 
