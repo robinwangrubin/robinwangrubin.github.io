@@ -5,9 +5,194 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 24 Jul 2017 13:24:18 +0800</pubDate>
-    <lastBuildDate>Mon, 24 Jul 2017 13:24:18 +0800</lastBuildDate>
+    <pubDate>Mon, 24 Jul 2017 18:47:23 +0800</pubDate>
+    <lastBuildDate>Mon, 24 Jul 2017 18:47:23 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Harbor-docker企业级仓库</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#harbor&quot; id=&quot;markdown-toc-harbor&quot;&gt;Harbor简介&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;下载安装&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;部署要求&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;harbor&quot;&gt;Harbor简介&lt;/h2&gt;
+
+&lt;p&gt;Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源Docker Distribution。&lt;/p&gt;
+
+&lt;p&gt;作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。&lt;/p&gt;
+
+&lt;p&gt;Harbor支持安装在多个Registry节点的镜像资源复制，镜像全部保存在私有Registry中， 确保数据和知识产权在公司内部网络中管控。&lt;/p&gt;
+
+&lt;p&gt;另外，Harbor也提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;基于角色的访问控制 - 用户与Docker镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。&lt;/li&gt;
+  &lt;li&gt;镜像复制 - 镜像可以在多个Registry实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。&lt;/li&gt;
+  &lt;li&gt;图形化用户界面 - 用户可以通过浏览器来浏览，检索当前Docker镜像仓库，管理项目和命名空间。&lt;/li&gt;
+  &lt;li&gt;AD/LDAP 支持 - Harbor可以集成企业内部已有的AD/LDAP，用于鉴权认证管理。&lt;/li&gt;
+  &lt;li&gt;审计管理 - 所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。&lt;/li&gt;
+  &lt;li&gt;国际化 - 已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。&lt;/li&gt;
+  &lt;li&gt;RESTful API - RESTful API 提供给管理员对于Harbor更多的操控, 使得与其它管理软件集成变得更容易。&lt;/li&gt;
+  &lt;li&gt;部署简单 - 提供在线和离线两种安装工具， 也可以安装到vSphere平台(OVA方式)虚拟设备。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;项目地址&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://github.com/vmware/harbor/tree/master/docs&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;下载安装&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://github.com/vmware/harbor/releases&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;部署要求&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;python2.7或更高版本&lt;/li&gt;
+  &lt;li&gt;安装docker1.12或更高版本&lt;/li&gt;
+  &lt;li&gt;安装docker-compose&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装docker-compose&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -L https://get.daocloud.io/docker/compose/releases/download/1.12.0/docker-compose-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;uname -s&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;uname -m&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &amp;gt; /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;下载安装包&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://github.com/vmware/harbor/releases/download/v1.1.2/harbor-online-installer-v1.1.2.tgz
+tar xf harbor-online-installer-v1.1.2.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置harbor.cfg&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#必选配置&lt;/span&gt;
+
+hostname：用来访问web的地址IP或域名可加端口号；
+ui_url_protocol：仓库被访问的时候使用的协议；
+db_password：设置一个DB的强类型密码
+max_job_workers：最大job数量，默认是3，主要用来跑从库同步任务的。
+customize_crt：默认是on
+ssl_cert: ssl证书的位置；前提是设置了https的协议
+ssl_cert_key: sslkey的位置；前提设置了https的协议
+secretkey_path：用于密文同步镜像的key
+
+&lt;span class=&quot;c&quot;&gt;#可选配置：仅在第一次启动时生效；后续的启动会自动忽略这些配置；推荐后期直接在web页面上配置即可。&lt;/span&gt;
+
+Email settings:用于用户重置密码时发送邮件。
+harbor_admin_password：默认的web登录密码。
+auth_mode：认证模式：本地数据库认证或LDAP认证。
+ldap_url：ldap的配置
+project_creation_restriction：是否允许普通用户创建项目；默认任何人都可以创建，可设置adminonly，只有admin可以创建。
+verify_remote_cert： harbor同步时是否验证对端的证书。&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动Harbor&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;./install.sh&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&quot;/pic/harbor/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
+        <link>/docker/harbor.html</link>
+        <guid isPermaLink="true">/docker/harbor.html</guid>
+        
+        
+        <category>Docker</category>
+        
+      </item>
+    
+      <item>
+        <title>shadow代理</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;下载shadow二进制文件&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;编写配置文件&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat shadow.json 
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;addr&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;:8080&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;dial_timeout&quot;&lt;/span&gt;: 30000,
+  &lt;span class=&quot;s2&quot;&gt;&quot;read_timeout&quot;&lt;/span&gt;: 120000,
+  &lt;span class=&quot;s2&quot;&gt;&quot;proxy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;192.168.1.2:8080&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;verbose&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;addr：监听的IP地址和端口号&lt;/li&gt;
+  &lt;li&gt;dial_timeout：连接超时时间&lt;/li&gt;
+  &lt;li&gt;read_timeout：传送数据超时时间&lt;/li&gt;
+  &lt;li&gt;proxy：二级代理ip和端口号&lt;/li&gt;
+  &lt;li&gt;verbose：打印日志&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;supervisorshadow&quot;&gt;利用supervisor管理shadow&lt;/h3&gt;
+
+&lt;p&gt;cat shadow.ini&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:shadow]
+&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/mtime/shadow -c /home/mtime/shadow.json
+autostart &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;autorestart &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;startsecs &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 3
+startretries &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 3
+stopwaitsecs &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 5
+user &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; root
+redirect_stderr &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;stdout_logfile &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/mtime/logs/supervisor/shadow.log
+stdout_logfile_maxbytes &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 500MB
+stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;supervisorctl reload&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;supervisorctl status&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
+        <link>/network/shadow.html</link>
+        <guid isPermaLink="true">/network/shadow.html</guid>
+        
+        
+        <category>Network</category>
+        
+      </item>
     
       <item>
         <title>dns代理-overture</title>
@@ -132,6 +317,10 @@ Usage of ./overture-linux-amd64:
   &lt;li&gt;-p：指定进程数；默认当前cpu的核心数&lt;/li&gt;
   &lt;li&gt;-v：debug日志模式&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;nohup /overture/overture-linux-amd64 -c /overture/config.json -l /overture/overture.log &amp;amp;&amp;gt;/dev/null &amp;amp;&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;hr /&gt;
 
@@ -1512,156 +1701,6 @@ listen test1
         
         
         <category>Network</category>
-        
-      </item>
-    
-      <item>
-        <title>Nginx-proxy_pass理解</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;需求&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;问题&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#nginx&quot; id=&quot;markdown-toc-nginx&quot;&gt;nginx配置&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;我以为&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;事实是&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;解决方案&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;拿数据说话&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;需求&lt;/h2&gt;
-
-&lt;p&gt;用户访问：www.wangrubin.com/weixin/front/123.ttf 这个文件;&lt;/p&gt;
-
-&lt;p&gt;www.wangrubin.com被解析到了nginx上;&lt;/p&gt;
-
-&lt;p&gt;nginx需要到www.123.com/uploadServer/fonts/123.ttf 取到132.ttf这个文件返回给用户。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;问题&lt;/h2&gt;
-
-&lt;p&gt;www.123.com 做了防盗链配置，http-header中的host字段必须是自己的域名才会接受访问；&lt;/p&gt;
-
-&lt;h2 id=&quot;nginx&quot;&gt;nginx配置&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;location /weixin/front/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                proxy_pass http:///www.123.com/uploadServer/fonts/;
-        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;我以为&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;当用户浏览器访问www.wangrubin.com/weixin/front/123.ttf&lt;/li&gt;
-  &lt;li&gt;流量到nginx上，命中location /weixin/front/&lt;/li&gt;
-  &lt;li&gt;nginx代替用户去访问http:///www.123.com/uploadServer/fonts/123.ttf&lt;/li&gt;
-  &lt;li&gt;www.123.com这台主机看到的请求host是www.123.com；因为nginx完全自主的发起了新的连接&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;事实是&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;当用户浏览器访问www.wangrubin.com/weixin/front/123.ttf&lt;/li&gt;
-  &lt;li&gt;流量到nginx上，命中location /weixin/front/&lt;/li&gt;
-  &lt;li&gt;nginx代替用户去访问http:///www.123.com/uploadServer/fonts/123.ttf&lt;/li&gt;
-  &lt;li&gt;www.123.com这台主机看到的请求host是www.wangrubin.com，不匹配本机server字段，不处理&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;解决方案&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;location /weixin/front/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		proxy_set_header Host www.wangrubin.com;
-                proxy_pass http:///www.123.com/uploadServer/fonts/;
-        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;proxy_pass代理到upstream 需要添加proxy_set_header Host字段很容易理解，因为upstream中配置的IP地址，所以需要传递Host值，但是proxy_pass 代理到一个域名，我本以为是nginx自身为客户端去访问http://www.123.com/uploadServer/fonts/123.ttf，这是按照道理说Host字段应该是www.123.com，然而却不是这样的。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;猜测：nginx在reload配置时会将域名解析成IP地址，保存到内存中，这样在高并发访问场景中，无需进行耗时的DNS解析。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;section-5&quot;&gt;拿数据说话&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;没有手动传Host参数&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/1490778110.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;手动传Host参数&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/nginx-proxx_pass/20170329170247.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-</description>
-        <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/nginx/Nginx-Upstream.html</link>
-        <guid isPermaLink="true">/nginx/Nginx-Upstream.html</guid>
-        
-        
-        <category>Nginx</category>
-        
-      </item>
-    
-      <item>
-        <title>dmidecode</title>
-        <description>&lt;h3 id=&quot;bios&quot;&gt;查看BIOS信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 0&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section&quot;&gt;查看系统信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 1&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;u&quot;&gt;查看服务器u数电源数&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 3&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;cpu&quot;&gt;查看cpu信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 4 |grep Version&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 7&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section-1&quot;&gt;查看服务器物理接口信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 8&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section-2&quot;&gt;查看最大支持内存&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 16&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section-3&quot;&gt;查看内存详细信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 17&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section-4&quot;&gt;查看服务器电源信息&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;dmidecode -t 39&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</description>
-        <pubDate>Tue, 28 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/command/dmidecode.html</link>
-        <guid isPermaLink="true">/command/dmidecode.html</guid>
-        
-        
-        <category>Command</category>
         
       </item>
     
