@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>dns代理-overture</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/network/overture.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>dns代理-overture</h1>
+        <p>Jul 24 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">为什么需要这个代理工具？</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">解决方案</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">安装配置</a></li>
+  <li><a href="#overture" id="markdown-toc-overture">启动overture</a></li>
+</ul>
+
+<h2 id="section">为什么需要这个代理工具？</h2>
+
+<ol>
+  <li>假设我们有一个域名是www.abc.com;这个一名在公网DNS上有A记录，但是在内网DNS上没有；</li>
+  <li>我们的笔记本指向了内网DNS，此时，当我们解析www.abc.com时，内网DNS将无法解析；</li>
+  <li>根据DNS解析原理；此时无法解析是正常的；因为内网dns上配置了abc.com权威综；当权威dns没有此A记录；是不会发生递归或迭代查询的。</li>
+  <li>最终需要实现：优先返回内网dns记录；内网dns没有A记录；则去公网DNS查询一遍。</li>
+</ol>
+
+<h2 id="section-1">解决方案</h2>
+
+<ul>
+  <li>
+    <p>使用overture代理所有的dns请求；优先找主DNS解析；主DNS无法解析；找备DNS解析；</p>
+  </li>
+  <li>
+    <p>项目源码</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>https://github.com/shawn1m/overture</p>
+</blockquote>
+
+<h2 id="section-2">安装配置</h2>
+
+<ul>
+  <li>下载overture</li>
+</ul>
+
+<p>https://github.com/shawn1m/overture/releases</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir overture <span class="o">&amp;&amp;</span> <span class="nb">cd </span>overture
+wget https://github.com/shawn1m/overture/releases/download/1.3.5.2/overture-linux-amd64.zip
+unzip overture-linux-amd64.zip
+cp ip_network_sample ip_network_sample.bak
+<span class="nb">echo</span> <span class="s2">"0.0.0.0/0"</span> &gt; ip_network_sample</code></pre></figure>
+
+<ul>
+  <li>overture返回主DNS的结果给客户端需要满足两个两件：主DNS给overture返回了一条A记录；此A记录匹配ip_network_sample这个文件中的网段。</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">cat config.json
+<span class="o">{</span>
+  <span class="s2">"BindAddress"</span>: <span class="s2">":53"</span>,
+  <span class="s2">"PrimaryDNS"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"Name"</span>: <span class="s2">"dns-master"</span>,
+      <span class="s2">"Address"</span>: <span class="s2">"192.168.1.1:53"</span>,
+      <span class="s2">"Protocol"</span>: <span class="s2">"udp"</span>,
+      <span class="s2">"SOCKS5Address"</span>: <span class="s2">""</span>,
+      <span class="s2">"Timeout"</span>: 5,
+      <span class="s2">"EDNSClientSubnet"</span>: <span class="o">{</span>
+        <span class="s2">"Policy"</span>: <span class="s2">"disable"</span>,
+        <span class="s2">"ExternalIP"</span>: <span class="s2">""</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"AlternativeDNS"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"Name"</span>: <span class="s2">"dns-salve"</span>,
+      <span class="s2">"Address"</span>: <span class="s2">"114.114.114.114:53"</span>,
+      <span class="s2">"Protocol"</span>: <span class="s2">"udp"</span>,
+      <span class="s2">"SOCKS5Address"</span>: <span class="s2">""</span>,
+      <span class="s2">"Timeout"</span>: 5,
+      <span class="s2">"EDNSClientSubnet"</span>: <span class="o">{</span>
+        <span class="s2">"Policy"</span>: <span class="s2">"disable"</span>,
+        <span class="s2">"ExternalIP"</span>: <span class="s2">""</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"OnlyPrimaryDNS"</span>: <span class="nb">false</span>,
+  <span class="s2">"RedirectIPv6Record"</span>: <span class="nb">true</span>,
+  <span class="s2">"IPNetworkFile"</span>: <span class="s2">"./ip_network_sample"</span>,
+  <span class="s2">"DomainFile"</span>: <span class="s2">"./domain_sample"</span>,
+  <span class="s2">"DomainBase64Decode"</span>: <span class="nb">true</span>,
+  <span class="s2">"HostsFile"</span>: <span class="s2">"./hosts_sample"</span>,
+  <span class="s2">"MinimumTTL"</span>: 3600,
+  <span class="s2">"CacheSize"</span> : 500,
+  <span class="s2">"RejectQtype"</span>: <span class="o">[</span>255]
+<span class="o">}</span></code></pre></figure>
+
+<ul>
+  <li>BindAddress：监听的ip地址和端口号，默认同时监听TCP和UDP端口。</li>
+  <li>PrimaryDNS：主dns</li>
+  <li>Name：dns标志</li>
+  <li>Address：dns的ip和端口号</li>
+  <li>Protocol：使用的协议</li>
+  <li>SOCKS5Address：转发dns请求到socket5代理</li>
+  <li>Timeout：代理到后端的超时时间</li>
+  <li>EDNSClientSubnet：智能dns解析，根据客户端的IP地址做判断而不是客户端指定的dns的ip地址；可参考 https://tools.ietf.org/html/rfc7871</li>
+  <li>MinimumTTL：overture缓存解析记录的时长</li>
+  <li>CacheSize：overture缓存大小</li>
+  <li>RejectQtype：拒绝指定类型的DNS请求：可参考 https://en.wikipedia.org/wiki/List_of_DNS_record_types</li>
+</ul>
+
+<h2 id="overture">启动overture</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">./overture-linux-amd64 --help
+Usage of ./overture-linux-amd64:
+  -c string
+        config file path <span class="o">(</span>default <span class="s2">"./config.json"</span><span class="o">)</span>
+  -l string
+        log file path <span class="o">(</span>default <span class="s2">"./overture.log"</span><span class="o">)</span>
+  -p int
+        number of processor to use <span class="o">(</span>default 24<span class="o">)</span>
+  -v    verbose mode</code></pre></figure>
+
+<ul>
+  <li>-c：指定配置文件路径；默认当前启动路径的下的config.json文件</li>
+  <li>-l：指定日志路径和日志文件；默认当前启动路径下的overture.log</li>
+  <li>-p：指定进程数；默认当前cpu的核心数</li>
+  <li>-v：debug日志模式</li>
+</ul>
+
+<hr />
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>

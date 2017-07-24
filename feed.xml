@@ -5,9 +5,147 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 25 Jun 2017 12:01:29 +0800</pubDate>
-    <lastBuildDate>Sun, 25 Jun 2017 12:01:29 +0800</lastBuildDate>
+    <pubDate>Mon, 24 Jul 2017 13:24:18 +0800</pubDate>
+    <lastBuildDate>Mon, 24 Jul 2017 13:24:18 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>dns代理-overture</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;为什么需要这个代理工具？&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;解决方案&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;安装配置&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#overture&quot; id=&quot;markdown-toc-overture&quot;&gt;启动overture&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;为什么需要这个代理工具？&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;假设我们有一个域名是www.abc.com;这个一名在公网DNS上有A记录，但是在内网DNS上没有；&lt;/li&gt;
+  &lt;li&gt;我们的笔记本指向了内网DNS，此时，当我们解析www.abc.com时，内网DNS将无法解析；&lt;/li&gt;
+  &lt;li&gt;根据DNS解析原理；此时无法解析是正常的；因为内网dns上配置了abc.com权威综；当权威dns没有此A记录；是不会发生递归或迭代查询的。&lt;/li&gt;
+  &lt;li&gt;最终需要实现：优先返回内网dns记录；内网dns没有A记录；则去公网DNS查询一遍。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;解决方案&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用overture代理所有的dns请求；优先找主DNS解析；主DNS无法解析；找备DNS解析；&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;项目源码&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://github.com/shawn1m/overture&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;安装配置&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;下载overture&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;https://github.com/shawn1m/overture/releases&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir overture &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;overture
+wget https://github.com/shawn1m/overture/releases/download/1.3.5.2/overture-linux-amd64.zip
+unzip overture-linux-amd64.zip
+cp ip_network_sample ip_network_sample.bak
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0/0&quot;&lt;/span&gt; &amp;gt; ip_network_sample&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;overture返回主DNS的结果给客户端需要满足两个两件：主DNS给overture返回了一条A记录；此A记录匹配ip_network_sample这个文件中的网段。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat config.json
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;BindAddress&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;:53&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;PrimaryDNS&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;dns-master&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;192.168.1.1:53&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Protocol&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;SOCKS5Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Timeout&quot;&lt;/span&gt;: 5,
+      &lt;span class=&quot;s2&quot;&gt;&quot;EDNSClientSubnet&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;Policy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;disable&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;ExternalIP&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;AlternativeDNS&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;dns-salve&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;114.114.114.114:53&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Protocol&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;SOCKS5Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;,
+      &lt;span class=&quot;s2&quot;&gt;&quot;Timeout&quot;&lt;/span&gt;: 5,
+      &lt;span class=&quot;s2&quot;&gt;&quot;EDNSClientSubnet&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;Policy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;disable&quot;&lt;/span&gt;,
+        &lt;span class=&quot;s2&quot;&gt;&quot;ExternalIP&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;OnlyPrimaryDNS&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;RedirectIPv6Record&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;IPNetworkFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./ip_network_sample&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;DomainFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./domain_sample&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;DomainBase64Decode&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;HostsFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./hosts_sample&quot;&lt;/span&gt;,
+  &lt;span class=&quot;s2&quot;&gt;&quot;MinimumTTL&quot;&lt;/span&gt;: 3600,
+  &lt;span class=&quot;s2&quot;&gt;&quot;CacheSize&quot;&lt;/span&gt; : 500,
+  &lt;span class=&quot;s2&quot;&gt;&quot;RejectQtype&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;255]
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;BindAddress：监听的ip地址和端口号，默认同时监听TCP和UDP端口。&lt;/li&gt;
+  &lt;li&gt;PrimaryDNS：主dns&lt;/li&gt;
+  &lt;li&gt;Name：dns标志&lt;/li&gt;
+  &lt;li&gt;Address：dns的ip和端口号&lt;/li&gt;
+  &lt;li&gt;Protocol：使用的协议&lt;/li&gt;
+  &lt;li&gt;SOCKS5Address：转发dns请求到socket5代理&lt;/li&gt;
+  &lt;li&gt;Timeout：代理到后端的超时时间&lt;/li&gt;
+  &lt;li&gt;EDNSClientSubnet：智能dns解析，根据客户端的IP地址做判断而不是客户端指定的dns的ip地址；可参考 https://tools.ietf.org/html/rfc7871&lt;/li&gt;
+  &lt;li&gt;MinimumTTL：overture缓存解析记录的时长&lt;/li&gt;
+  &lt;li&gt;CacheSize：overture缓存大小&lt;/li&gt;
+  &lt;li&gt;RejectQtype：拒绝指定类型的DNS请求：可参考 https://en.wikipedia.org/wiki/List_of_DNS_record_types&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;overture&quot;&gt;启动overture&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;./overture-linux-amd64 --help
+Usage of ./overture-linux-amd64:
+  -c string
+        config file path &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default &lt;span class=&quot;s2&quot;&gt;&quot;./config.json&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  -l string
+        log file path &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default &lt;span class=&quot;s2&quot;&gt;&quot;./overture.log&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  -p int
+        number of processor to use &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default 24&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  -v    verbose mode&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;-c：指定配置文件路径；默认当前启动路径的下的config.json文件&lt;/li&gt;
+  &lt;li&gt;-l：指定日志路径和日志文件；默认当前启动路径下的overture.log&lt;/li&gt;
+  &lt;li&gt;-p：指定进程数；默认当前cpu的核心数&lt;/li&gt;
+  &lt;li&gt;-v：debug日志模式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
+        <link>/network/overture.html</link>
+        <guid isPermaLink="true">/network/overture.html</guid>
+        
+        
+        <category>Network</category>
+        
+      </item>
     
       <item>
         <title>带宽测试工具--iperf</title>
@@ -1524,155 +1662,6 @@ listen test1
         
         
         <category>Command</category>
-        
-      </item>
-    
-      <item>
-        <title>递归算法--HanoiTower</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;起源&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;抽象成数学问题&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;归纳法求解&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;归纳总结&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-4&quot; id=&quot;markdown-toc-section-4&quot;&gt;递归算法分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-5&quot; id=&quot;markdown-toc-section-5&quot;&gt;调用方法的栈机制&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#pythond&quot; id=&quot;markdown-toc-pythond&quot;&gt;Pythond代码&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;起源&lt;/h2&gt;
-
-&lt;p&gt;汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。&lt;/p&gt;
-
-&lt;p&gt;大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。&lt;/p&gt;
-
-&lt;p&gt;大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。&lt;/p&gt;
-
-&lt;p&gt;并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;抽象成数学问题&lt;/h2&gt;
-
-&lt;p&gt;如下图所示，从左到右有A、B、C三根柱子，其中A柱子上面有从小叠到大的n个圆盘，现要求将A柱子上的圆盘移到C柱子上去.&lt;/p&gt;
-
-&lt;p&gt;期间只有一个原则：一次只能移到一个盘子且大盘子不能在小盘子上面，求移动的步骤和移动的次数.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/python/HanoiTower/1026866-20161016022859889-2055402664.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;归纳法求解&lt;/h2&gt;
-
-&lt;p&gt;n = 1&lt;/p&gt;
-
-&lt;p&gt;第1次  1号盘  A —-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;n = 2&lt;/p&gt;
-
-&lt;p&gt;第1次  1号盘  A—-&amp;gt;B&lt;/p&gt;
-
-&lt;p&gt;第2次  2号盘  A—-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;第3次  1号盘  B—-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;n = 3&lt;/p&gt;
-
-&lt;p&gt;第1次  1号盘  A—-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;第2次  2号盘  A—-&amp;gt;B&lt;/p&gt;
-
-&lt;p&gt;第3次  1号盘  C—-&amp;gt;B&lt;/p&gt;
-
-&lt;p&gt;第4次  3号盘  A—-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;第5次  1号盘  B—-&amp;gt;A&lt;/p&gt;
-
-&lt;p&gt;第6次  2号盘  B—-&amp;gt;C&lt;/p&gt;
-
-&lt;p&gt;第7次  1号盘  A—-&amp;gt;C&lt;/p&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;归纳总结&lt;/h2&gt;
-
-&lt;p&gt;1个圆盘的次数 2的1次方减1&lt;/p&gt;
-
-&lt;p&gt;2个圆盘的次数 2的2次方减1&lt;/p&gt;
-
-&lt;p&gt;3个圆盘的次数 2的3次方减1&lt;/p&gt;
-
-&lt;p&gt;n个圆盘的次数 2的n次方减1&lt;/p&gt;
-
-&lt;h2 id=&quot;section-4&quot;&gt;递归算法分析&lt;/h2&gt;
-
-&lt;p&gt;我们在利用计算机求汉诺塔问题时，必不可少的一步是对整个实现求解进行算法分析。到目前为止，求解汉诺塔问题最简单的算法还是同过递归来求，至于是什么是递归，递归实现的机制是什么，我们说的简单点就是自己是一个方法或者说是函数，但是在自己这个函数里有调用自己这个函数的语句，而这个调用怎么才能调用结束呢？这里还必须有一个结束点，或者具体的说是在调用到某一次后函数能返回一个确定的值，接着倒数第二个就能返回一个确定的值，一直到第一次调用的这个函数能返回一个确定的值。&lt;/p&gt;
-
-&lt;p&gt;实现这个算法可以简单分为三个步骤：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;把n-1个盘子由 A 移到 B；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;把第n个盘子由 A 移到 C；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;把n-1个盘子由 B 移到 C；&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;从这里入手，在加上上面数学问题解法的分析，我们不难发现，移到的步数必定为奇数步：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;中间的一步是把最大的一个盘子由A移到C上去；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;中间一步之上可以看成把A上n-1个盘子通过借助辅助塔（C塔）移到了B上，&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;中间一步之下可以看成把B上n-1个盘子通过借助辅助塔（A塔）移到了C上；&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-5&quot;&gt;调用方法的栈机制&lt;/h2&gt;
-
-&lt;p&gt;特点：先进后出&lt;/p&gt;
-
-&lt;p&gt;从主线程开始调用方法（函数）进行不停的压栈和出栈操作，函数的调用就是将函数压如栈中，函数的结束就是函数出栈的过程，这样就保证了方法调用的顺序流，即当函数出现多层嵌套时，需要从外到内一层层把函数压入栈中，最后栈顶的函数先执行结束（最内层的函数先执行结束）后出栈，再倒数第二层的函数执行结束出栈，到最后，第一个进栈的函数调用结束后从栈中弹出回到主线程，并且结束。&lt;/p&gt;
-
-&lt;h2 id=&quot;pythond&quot;&gt;Pythond代码&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;def HanoiTower&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;n,source,Buffer,destination&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-    &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;n &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 1:
-        print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;,&lt;span class=&quot;s1&quot;&gt;'------&amp;gt;'&lt;/span&gt;,destination&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return
-    &lt;/span&gt;HanoiTower&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;n-1,source,destination,Buffer&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    HanoiTower&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1,source,Buffer,destination&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    HanoiTower&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;n-1,Buffer,source,destination&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-HanoiTower&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4,&lt;span class=&quot;s1&quot;&gt;'A'&lt;/span&gt;,&lt;span class=&quot;s1&quot;&gt;'B'&lt;/span&gt;,&lt;span class=&quot;s1&quot;&gt;'C'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;A ------&amp;gt; B
-A ------&amp;gt; C
-B ------&amp;gt; C
-A ------&amp;gt; B
-C ------&amp;gt; A
-C ------&amp;gt; B
-A ------&amp;gt; B
-A ------&amp;gt; C
-B ------&amp;gt; C
-B ------&amp;gt; A
-C ------&amp;gt; A
-B ------&amp;gt; C
-A ------&amp;gt; B
-A ------&amp;gt; C
-B ------&amp;gt; C&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Fri, 10 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/python/HanoiTower.html</link>
-        <guid isPermaLink="true">/python/HanoiTower.html</guid>
-        
-        
-        <category>Python</category>
         
       </item>
     
