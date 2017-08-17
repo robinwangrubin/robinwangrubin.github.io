@@ -263,7 +263,7 @@ dockerd &amp;</code></pre></figure>
 </ul>
 
 <blockquote>
-  <p>docker run -name myfirst_docker -it ubuntu:14.04 /bin/bash</p>
+  <p>docker run –name myfirst_docker -it ubuntu:14.04 /bin/bash</p>
 </blockquote>
 
 <ul>
@@ -276,7 +276,7 @@ dockerd &amp;</code></pre></figure>
 
 <p>-d:后台启动</p>
 
-<p>-name：定义容器名称</p>
+<p>–name：定义容器名称</p>
 
 <p>-i：打开容器的标准输入</p>
 
@@ -379,7 +379,22 @@ dockerd &amp;</code></pre></figure>
 </blockquote>
 
 <ul>
-  <li>删除正在运行的容器</li>
+  <li>批量删除所有已退出状态的容器</li>
+</ul>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>docker ps -q –filter status=”exited”</td>
+        <td>xargs docker rm</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<ul>
+  <li>强制删除正在运行的容器</li>
 </ul>
 
 <blockquote>
@@ -387,19 +402,26 @@ dockerd &amp;</code></pre></figure>
 </blockquote>
 
 <ul>
-  <li>删除所有容器和镜像</li>
+  <li>停止所有容器</li>
 </ul>
 
 <blockquote>
   <p>docker kill $(docker ps -q)</p>
 </blockquote>
 
-<blockquote>
-  <p>docker rm $(docker ps -a -q)</p>
-</blockquote>
+<ul>
+  <li>批量删除没有被使用的镜像</li>
+</ul>
 
 <blockquote>
-  <p>docker rmi $(docker images -q -a)</p>
+  <table>
+    <tbody>
+      <tr>
+        <td>docker images -q -f dangling=true</td>
+        <td>xargs docker rmi</td>
+      </tr>
+    </tbody>
+  </table>
 </blockquote>
 
 <ul>

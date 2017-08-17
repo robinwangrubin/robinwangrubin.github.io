@@ -105,6 +105,7 @@
   <li><a href="#section-1" id="markdown-toc-section-1">解决方案</a></li>
   <li><a href="#section-2" id="markdown-toc-section-2">安装配置</a></li>
   <li><a href="#overture" id="markdown-toc-overture">启动overture</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">编写启动脚本</a></li>
 </ul>
 
 <h2 id="section">为什么需要这个代理工具？</h2>
@@ -222,9 +223,47 @@ Usage of ./overture-linux-amd64:
   <li>-v：debug日志模式</li>
 </ul>
 
-<blockquote>
-  <p>nohup /overture/overture-linux-amd64 -c /overture/config.json -l /overture/overture.log &amp;&gt;/dev/null &amp;</p>
-</blockquote>
+<h2 id="section-3">编写启动脚本</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash   </span>
+<span class="nb">set</span> -e   
+<span class="nv">TOOLS_NAME</span><span class="o">=</span><span class="s2">"overture-linux-amd64"</span>
+<span class="nv">TOOLS_PATH</span><span class="o">=</span><span class="s2">"/home/mtime/overture"</span>
+<span class="nv">TOOLS_SERVER_NAME</span><span class="o">=</span><span class="s2">"Overture Server"</span> 
+<span class="nv">DESCRIPTION</span><span class="o">=</span><span class="s2">"Pls use /etc/init.d/overture start|stop|restart"</span>
+<span class="nv">PIDFILE</span><span class="o">=</span><span class="s2">"/home/mtime/overture/overture.pid"</span>
+
+<span class="k">if</span> <span class="o">[</span> ! -x <span class="nv">$DAEMON</span> <span class="o">]</span>;<span class="k">then
+    </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mNOT Find </span><span class="k">${</span><span class="nv">TOOLS_PATH</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">TOOLS_NAME</span><span class="k">}</span><span class="se">\0</span><span class="s2">33[0m"</span>
+    <span class="nb">exit </span>1
+<span class="k">fi   
+
+case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in 
+  </span>start<span class="p">)</span>   
+         <span class="k">if</span> <span class="o">[</span> -f <span class="nv">$PIDFILE</span> <span class="o">]</span>;<span class="k">then
+            </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Started.</span><span class="se">\0</span><span class="s2">33[0m"</span>
+            <span class="nb">exit </span>0
+         <span class="k">fi
+         </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTARTTING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+         nohup <span class="k">${</span><span class="nv">TOOLS_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TOOLS_NAME</span><span class="k">}</span> -c <span class="k">${</span><span class="nv">TOOLS_PATH</span><span class="k">}</span>/config.json -l <span class="k">${</span><span class="nv">TOOLS_PATH</span><span class="k">}</span>/overture.log &amp;&gt;/dev/null &amp;  
+         touch <span class="nv">$PIDFILE</span>
+         <span class="p">;;</span>   
+   stop<span class="p">)</span> 
+         <span class="k">if</span> <span class="o">[</span> ! -f <span class="nv">$PIDFILE</span> <span class="o">]</span>;<span class="k">then
+            </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Stopped.</span><span class="se">\0</span><span class="s2">33[0m"</span>
+            <span class="nb">exit </span>0
+         <span class="k">fi
+         </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTOPPING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+         <span class="nb">kill</span> -9 <span class="sb">`</span>pidof <span class="k">${</span><span class="nv">TOOLS_NAME</span><span class="k">}</span><span class="sb">`</span> &amp;&gt; /dev/null   
+         rm -f <span class="nv">$PIDFILE</span>
+         <span class="p">;;</span>   
+   restart<span class="p">)</span>   
+         <span class="nv">$0</span> stop <span class="o">&amp;&amp;</span> sleep 1 <span class="o">&amp;&amp;</span> <span class="nv">$0</span> start   
+         <span class="p">;;</span>   
+   <span class="k">*</span><span class="p">)</span>   
+         <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[31mUsage: </span><span class="nv">$DESCRIPTION</span><span class="se">\0</span><span class="s2">33[0m"</span>
+         <span class="nb">exit </span>1   
+<span class="k">esac</span>   </code></pre></figure>
 
 <hr />
 

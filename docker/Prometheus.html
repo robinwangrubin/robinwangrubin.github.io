@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Prometheus-容器监控</title>
+	<meta name="description" content="">
+	
+	<link rel="canonical" href="/docker/Prometheus.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Prometheus-容器监控</h1>
+        <p>Jul 27 2017</p>
+      </header>
+      <hr>
+      <article>
+        <ul id="markdown-toc">
+  <li><a href="#prometheus" id="markdown-toc-prometheus">什么是Prometheus</a></li>
+  <li><a href="#section" id="markdown-toc-section">主要特点</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">相关组件</a></li>
+  <li><a href="#prometheus-1" id="markdown-toc-prometheus-1">prometheus架构</a></li>
+  <li><a href="#prometheus-2" id="markdown-toc-prometheus-2">prometheus部署</a></li>
+</ul>
+
+<blockquote>
+  <p>首先-什么是 TSDB (Time Series Database):</p>
+</blockquote>
+
+<p>我们可以简单的理解为.一个优化后用来处理时间序列数据的软件,并且数据中的数组是由时间进行索引的.</p>
+
+<blockquote>
+  <p>时间序列数据库的特点:</p>
+</blockquote>
+
+<ul>
+  <li>大部分时间都是写入操作</li>
+  <li>写入操作几乎是顺序添加;大多数时候数据到达后都以时间排序.</li>
+  <li>写操作很少写入很久之前的数据,也很少更新数据.大多数情况在数据被采集到数秒或者数分钟后就会被写入数据库.</li>
+  <li>删除操作一般为区块删除,选定开始的历史时间并指定后续的区块.很少单独删除某个时间或者分开的随机时间的数据.</li>
+  <li>数据一般远远超过内存大小,所以缓存基本无用.系统一般是 IO 密集型</li>
+  <li>读操作是十分典型的升序或者降序的顺序读,</li>
+  <li>高并发的读操作十分常见.</li>
+</ul>
+
+<blockquote>
+  <p>常见的时间序列数据库:</p>
+</blockquote>
+
+<ul>
+  <li>influxDB	https://influxdata.com/</li>
+  <li>RRDtool	http://oss.oetiker.ch/rrdtool/</li>
+  <li>Graphite	http://graphite.readthedocs.org/en/latest/</li>
+  <li>OpenTSDB	http://opentsdb.net/</li>
+  <li>Kdb+	http://kx.com/</li>
+  <li>Druid	http://druid.io/</li>
+  <li>KairosDB	http://kairosdb.github.io/</li>
+  <li>Prometheus	https://prometheus.io/</li>
+</ul>
+
+<h2 id="prometheus">什么是Prometheus</h2>
+
+<p>Prometheus是由 SoundCloud 开发的开源监控报警系统和时序列数据库(TSDB)，可以看作是Google内部监控系统Borgmon的一个（非官方）实现。</p>
+
+<p>并且保持独立于任何公司,Prometheus 在2016加入 CNCF ( Cloud Native Computing Foundation ), 作为在 kubernetes 之后的第二个由基金会主持的项目.</p>
+
+<p>为什么选择Prometheus而不是其它TSDB实现（如InfluxDB）?</p>
+
+<p>主要是因为Prometheus的核心功能，查询语言PromQL，它更像一种可编程计算器，而不是其那么像SQL，也意味着PromQL可以近乎无限之组合出各种查询结果</p>
+
+<h2 id="section">主要特点</h2>
+
+<ol>
+  <li>多维数据模型（时序列数据由metric名和一组key/value组成）</li>
+  <li>在多维度上灵活的查询语言(PromQl)</li>
+  <li>不依赖分布式存储，单主节点工作.</li>
+  <li>通过基于HTTP的pull方式采集时序数据</li>
+  <li>可以通过中间网关进行时序列数据推送(pushing)</li>
+  <li>目标服务器可以通过发现服务或者静态配置实现</li>
+  <li>多种可视化和仪表盘支持</li>
+</ol>
+
+<h2 id="section-1">相关组件</h2>
+
+<p>Prometheus生态系统由多个组件组成，其中许多是可选的：</p>
+
+<ul>
+  <li>Prometheus server</li>
+</ul>
+
+<p>主要负责数据采集和存储，提供PromQL查询语言的支持</p>
+
+<ul>
+  <li>客户端sdk</li>
+</ul>
+
+<p>官方提供的客户端类库有go、java、scala、python、ruby，其他还有很多第三方开发的类库，支持nodejs、php、erlang等</p>
+
+<ul>
+  <li>Push Gateway</li>
+</ul>
+
+<p>支持临时性Job主动推送指标的中间网关</p>
+
+<ul>
+  <li>PromDash</li>
+</ul>
+
+<p>使用rails开发的dashboard，用于可视化指标数据；目前普遍用Grafana代替</p>
+
+<ul>
+  <li>exporters</li>
+</ul>
+
+<p>支持其他数据源的指标导入到Prometheus，支持数据库、硬件、消息中间件、存储系统、http服务器、jmx等</p>
+
+<ul>
+  <li>alertmanager</li>
+</ul>
+
+<p>实验性的报警管理端(alartmanager,单独进行报警汇总,分发,屏蔽等 )</p>
+
+<p>promethues 的各个组件基本都是用 golang 编写,对编译和部署十分友好.并且没有特殊依赖.基本都是独立工作.</p>
+
+<h2 id="prometheus-1">prometheus架构</h2>
+
+<hr />
+
+<p><img src="/pic/prometheus/1.svg" alt="1" /></p>
+
+<p>Prometheus的基本原理是通过HTTP协议周期性抓取被监控组件的状态，任意组件只要提供对应的HTTP接口就可以接入监控。不需要任何SDK或者其他的集成过程。这样做非常适合做虚拟化环境监控系统，</p>
+
+<p>比如VM、Docker、Kubernetes等。输出被监控组件信息的HTTP接口被叫做exporter 。目前互联网公司常用的组件大部分都有exporter可以直接使用，比如Varnish、Haproxy、Nginx、MySQL、Linux系统信息(包括磁盘、内存、CPU、网络等等)。</p>
+
+<blockquote>
+  <p>Prometheus服务过程大概是这样：</p>
+</blockquote>
+
+<ol>
+  <li>
+    <p>Prometheus Daemon负责定时去目标上抓取metrics(指标)数据，每个抓取目标需要暴露一个http服务的接口给它定时抓取。Prometheus支持通过配置文件、文本文件、Zookeeper、Consul、DNS SRV Lookup等方式指定抓取目标。Prometheus采用PULL的方式进行监控，即服务器可以直接通过目标PULL数据或者间接地通过中间网关来Push数据。</p>
+  </li>
+  <li>
+    <p>Prometheus在本地存储抓取的所有数据，并通过一定规则进行清理和整理数据，并把得到的结果存储到新的时间序列中。</p>
+  </li>
+  <li>
+    <p>Prometheus通过PromQL和其他API可视化地展示收集的数据。Prometheus支持很多方式的图表可视化，例如Grafana、自带的Promdash以及自身提供的模版引擎等等。Prometheus还提供HTTP API的查询方式，自定义所需要的输出。</p>
+  </li>
+  <li>
+    <p>PushGateway支持Client主动推送metrics到PushGateway，而Prometheus只是定时去Gateway上抓取数据。</p>
+  </li>
+  <li>
+    <p>Alertmanager是独立于Prometheus的一个组件，可以支持Prometheus的查询语句，提供十分灵活的报警方式。</p>
+  </li>
+</ol>
+
+<h2 id="prometheus-2">prometheus部署</h2>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run <span class="se">\</span>
+	-p 9090:9090 <span class="se">\</span>
+	-v /tmp/prometheus.yml:/etc/prometheus/prometheus.yml <span class="se">\</span>
+	-v /home/mtime/prometheus-docker/data：/prometheus/data <span class="se">\</span>
+	prom/prometheus</code></pre></figure>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
