@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>nginx部署脚本</title>
-	<meta name="description" content="Install">
+	<title>lvs_tun_vip.sh</title>
+	<meta name="description" content="#!/bin/bash     VIP=210.14.134.8case "$1" in  start)  echo -e "\033[32mStart vip......\033[0m"modprobe ipip  /sbin/ifconfig tunl0 $VIP netmask 255.255.255.25...">
 	
-	<link rel="canonical" href="/shell/nginx.html">
+	<link rel="canonical" href="/shell/lvs-tun.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -95,89 +95,41 @@
 
     <div class="post-area post">
       <header>
-        <h1>nginx部署脚本</h1>
+        <h1>lvs_tun_vip.sh</h1>
         <p>Sep 7 2017</p>
       </header>
       <hr>
       <article>
-        <h2 id="install">Install</h2>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>yum install -y openssl openssl-devel
-yum install -y zlib zlib-devel
-yum install -y pcre pcre-devel
-useradd nginx -M -s /sbin/nologin
-wget https://nginx.org/download/nginx-1.12.1.tar.gz
-tar xf nginx-1.12.1.tar.gz  &amp;&amp; cd nginx-1.12.1
-./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module
-make &amp;&amp; make install
-ln -s /usr/local/nginx-1.12.1 /usr/local/nginx
-</code></pre>
-</div>
-
-<hr />
-
-<h2 id="start-script">Start script</h2>
-
-<p>vim /etc/init.d/nginx</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash   </span>
-<span class="nb">set</span> -e   
-<span class="nv">TOOLS_SERVER_NAME</span><span class="o">=</span><span class="s2">"Nginx Server"</span> 
-<span class="nv">TOOLS_CMD</span><span class="o">=</span><span class="s2">"/usr/local/nginx/sbin/nginx"</span>
-<span class="nv">DESCRIPTION</span><span class="o">=</span><span class="s2">"Pls use /etc/init.d/nginx start|stop|restart|reload"</span>
-<span class="nv">LOCK_FILE</span><span class="o">=</span><span class="s2">"/usr/local/nginx/logs/nginx.lock"</span>
-
-<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in 
-  </span>start<span class="p">)</span>   
-        <span class="k">if</span> <span class="o">[</span> -f <span class="nv">$LOCK_FILE</span> <span class="o">]</span>;<span class="k">then
-           </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Started.</span><span class="se">\0</span><span class="s2">33[0m"</span>
-           <span class="nb">exit </span>0
-        <span class="k">fi
-        </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTARTTING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nv">$TOOLS_CMD</span> &amp;&gt;/dev/null &amp;  
-        touch <span class="nv">$LOCK_FILE</span>
-        <span class="p">;;</span>   
-   stop<span class="p">)</span> 
-        <span class="k">if</span> <span class="o">[</span> ! -f <span class="nv">$LOCK_FILE</span> <span class="o">]</span>;<span class="k">then
-           </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Stopped.</span><span class="se">\0</span><span class="s2">33[0m"</span>
-           <span class="nb">exit </span>0
-        <span class="k">fi
-        </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTOPPING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nv">$TOOLS_CMD</span> -s stop &amp;&gt; /dev/null   
-        rm -f <span class="nv">$LOCK_FILE</span>
-        <span class="p">;;</span>   
-   restart<span class="p">)</span>   
-        <span class="nv">$0</span> stop <span class="o">&amp;&amp;</span> sleep 1 <span class="o">&amp;&amp;</span> <span class="nv">$0</span> start   
-        <span class="p">;;</span>  
-   reload<span class="p">)</span>
-        <span class="nv">$TOOLS_CMD</span> -s reload &amp;&gt; /dev/null 
-        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Reload......</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="p">;;</span>
-   <span class="k">*</span><span class="p">)</span>   
-        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[31mUsage: </span><span class="nv">$DESCRIPTION</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nb">exit </span>1   
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash     </span>
+<span class="nv">VIP</span><span class="o">=</span>210.14.134.8
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in  
+</span>start<span class="p">)</span>  
+<span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mStart vip......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+modprobe ipip  
+/sbin/ifconfig tunl0 <span class="nv">$VIP</span> netmask 255.255.255.255 broadcast <span class="nv">$VIP</span>  
+<span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/arp_ignore  
+<span class="nb">echo</span> <span class="s2">"2"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/arp_announce  
+<span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/sys/net/ipv4/conf/all/arp_ignore  
+<span class="nb">echo</span> <span class="s2">"2"</span> &gt; /proc/sys/net/ipv4/conf/all/arp_announce  
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/rp_filter  
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/all/rp_filter  
+<span class="p">;;</span>  
+stop<span class="p">)</span>  
+/sbin/ifconfig tunl0 down  
+<span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mStop vip......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/arp_ignore  
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/arp_announce  
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/all/arp_ignore  
+<span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/sys/net/ipv4/conf/all/arp_announce  
+<span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/sys/net/ipv4/conf/tunl0/rp_filter  
+<span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/sys/net/ipv4/conf/all/rp_filter  
+<span class="p">;;</span>  
+<span class="k">*</span><span class="p">)</span>  
+<span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mUsage: Pls use </span><span class="nv">$0</span><span class="s2"> {start|stop}</span><span class="se">\0</span><span class="s2">33[0m"</span>
+<span class="nb">exit </span>1  
 <span class="k">esac</span>
 </code></pre>
 </div>
-<hr />
-
-<h2 id="on-boot-start">On boot start</h2>
-
-<blockquote>
-  <p>chmod +x /etc/init.d/nginx</p>
-</blockquote>
-
-<blockquote>
-  <p>/etc/init.d/nginx start</p>
-</blockquote>
-
-<blockquote>
-  <p>echo “/etc/init.d/nginx start” » /etc/rc.local</p>
-</blockquote>
-
-<hr />
-
-<p>end</p>
 
       </article>
       <hr>

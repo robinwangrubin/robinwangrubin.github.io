@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>nginx部署脚本</title>
-	<meta name="description" content="Install">
+	<title>lvs部署脚本</title>
+	<meta name="description" content="```#!/bin/bash#Author: xxxxxxx#Email: xxxxxxx@gmail.com#Description: This script is for start stop reload lvs">
 	
-	<link rel="canonical" href="/shell/nginx.html">
+	<link rel="canonical" href="/shell/lvs-ipvsadm.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
 	
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -95,85 +95,55 @@
 
     <div class="post-area post">
       <header>
-        <h1>nginx部署脚本</h1>
+        <h1>lvs部署脚本</h1>
         <p>Sep 7 2017</p>
       </header>
       <hr>
       <article>
-        <h2 id="install">Install</h2>
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c">#Author: xxxxxxx</span>
+<span class="c">#Email: xxxxxxx@gmail.com</span>
+<span class="c">#Description: This script is for start stop reload lvs </span>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum install -y openssl openssl-devel
-yum install -y zlib zlib-devel
-yum install -y pcre pcre-devel
-useradd nginx -M -s /sbin/nologin
-wget https://nginx.org/download/nginx-1.12.1.tar.gz
-tar xf nginx-1.12.1.tar.gz  &amp;&amp; cd nginx-1.12.1
-./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module
-make &amp;&amp; make install
-ln -s /usr/local/nginx-1.12.1 /usr/local/nginx
-</code></pre>
-</div>
+<span class="nv">WORK_DIR</span><span class="o">=</span><span class="s2">"/root/lvs/"</span>
+<span class="nv">CMD</span><span class="o">=</span><span class="s2">"/usr/sbin/ipvsadm"</span>
+<span class="nv">LOCK_FILE</span><span class="o">=</span><span class="s2">"/root/lvs/lvs.lock"</span>
 
-<hr />
-
-<h2 id="start-script">Start script</h2>
-
-<p>vim /etc/init.d/nginx</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash   </span>
-<span class="nb">set</span> -e   
-<span class="nv">TOOLS_SERVER_NAME</span><span class="o">=</span><span class="s2">"Nginx Server"</span> 
-<span class="nv">TOOLS_CMD</span><span class="o">=</span><span class="s2">"/usr/local/nginx/sbin/nginx"</span>
-<span class="nv">DESCRIPTION</span><span class="o">=</span><span class="s2">"Pls use /etc/init.d/nginx start|stop|restart|reload"</span>
-<span class="nv">LOCK_FILE</span><span class="o">=</span><span class="s2">"/usr/local/nginx/logs/nginx.lock"</span>
-
-<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in 
-  </span>start<span class="p">)</span>   
+<span class="nb">cd</span> <span class="nv">$WORK_DIR</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in
+        </span>start<span class="p">)</span>
         <span class="k">if</span> <span class="o">[</span> -f <span class="nv">$LOCK_FILE</span> <span class="o">]</span>;<span class="k">then
-           </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Started.</span><span class="se">\0</span><span class="s2">33[0m"</span>
-           <span class="nb">exit </span>0
+                </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mLVS was Started.</span><span class="se">\0</span><span class="s2">33[0m"</span>
+                <span class="nb">exit </span>0
         <span class="k">fi
-        </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTARTTING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nv">$TOOLS_CMD</span> &amp;&gt;/dev/null &amp;  
+        </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTARTTING LVS......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+        <span class="k">while </span><span class="nb">read </span>line
+        <span class="k">do</span>
+                <span class="nv">$CMD</span> <span class="nv">$line</span>
+                <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="nv">$CMD</span><span class="s2"> </span><span class="nv">$line</span><span class="se">\0</span><span class="s2">33[0m"</span>
+        <span class="k">done</span> &lt; ./lvs_list.txt
         touch <span class="nv">$LOCK_FILE</span>
-        <span class="p">;;</span>   
-   stop<span class="p">)</span> 
-        <span class="k">if</span> <span class="o">[</span> ! -f <span class="nv">$LOCK_FILE</span> <span class="o">]</span>;<span class="k">then
-           </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Stopped.</span><span class="se">\0</span><span class="s2">33[0m"</span>
-           <span class="nb">exit </span>0
-        <span class="k">fi
-        </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTOPPING </span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2">......</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nv">$TOOLS_CMD</span> -s stop &amp;&gt; /dev/null   
-        rm -f <span class="nv">$LOCK_FILE</span>
-        <span class="p">;;</span>   
-   restart<span class="p">)</span>   
-        <span class="nv">$0</span> stop <span class="o">&amp;&amp;</span> sleep 1 <span class="o">&amp;&amp;</span> <span class="nv">$0</span> start   
-        <span class="p">;;</span>  
-   reload<span class="p">)</span>
-        <span class="nv">$TOOLS_CMD</span> -s reload &amp;&gt; /dev/null 
-        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m</span><span class="k">${</span><span class="nv">TOOLS_SERVER_NAME</span><span class="k">}</span><span class="s2"> was Reload......</span><span class="se">\0</span><span class="s2">33[0m"</span>
         <span class="p">;;</span>
-   <span class="k">*</span><span class="p">)</span>   
-        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[31mUsage: </span><span class="nv">$DESCRIPTION</span><span class="se">\0</span><span class="s2">33[0m"</span>
-        <span class="nb">exit </span>1   
+        stop<span class="p">)</span>
+        <span class="k">if</span> <span class="o">[</span> -f <span class="nv">$LOCK_FILE</span> <span class="o">]</span>;<span class="k">then
+                </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mSTOPPING LVS......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+                <span class="nv">$CMD</span> -C
+                rm -f <span class="nv">$LOCK_FILE</span>
+        <span class="k">else
+                </span><span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mLVS was Stopped.</span><span class="se">\0</span><span class="s2">33[0m"</span>
+                <span class="nb">exit </span>0
+        <span class="k">fi</span>
+        <span class="p">;;</span>
+        restart<span class="p">)</span>
+        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[32mRESTARTTING LVS......</span><span class="se">\0</span><span class="s2">33[0m"</span>
+        <span class="nv">$0</span> stop <span class="o">&amp;&amp;</span> sleep 1 <span class="o">&amp;&amp;</span> <span class="nv">$0</span> start
+        <span class="p">;;</span>
+        <span class="k">*</span><span class="p">)</span>
+        <span class="nb">echo</span> -e <span class="s2">"</span><span class="se">\0</span><span class="s2">33[31mUsage: Pls use sh lvs.sh start|stop|restart|reload</span><span class="se">\0</span><span class="s2">33[0m"</span>
+        <span class="nb">exit </span>1
 <span class="k">esac</span>
 </code></pre>
 </div>
-<hr />
-
-<h2 id="on-boot-start">On boot start</h2>
-
-<blockquote>
-  <p>chmod +x /etc/init.d/nginx</p>
-</blockquote>
-
-<blockquote>
-  <p>/etc/init.d/nginx start</p>
-</blockquote>
-
-<blockquote>
-  <p>echo “/etc/init.d/nginx start” » /etc/rc.local</p>
-</blockquote>
 
 <hr />
 
