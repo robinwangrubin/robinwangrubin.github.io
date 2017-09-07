@@ -106,7 +106,7 @@
 <span class="c">#Description: This script is for optimizing system performance; For Centos6 and Centos7</span>
 
 cat /etc/redhat-release|awk <span class="s1">'{print "OPERATING SYSTEM:",$0}'</span>
-grep <span class="s2">"IPADDR"</span> /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F <span class="s2">"="</span> <span class="s1">'{print $2}'</span>
+grep <span class="s2">"IPADDR"</span> /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F <span class="s2">"="</span> <span class="s1">'{print "HOST IP:",$2}'</span>
 uname -a|awk <span class="s1">'{print "HOSTNAME:",$2"\nKERNEL VERSION:",$3}'</span>        
 
 sed -i <span class="s1">'s/DNS1=.*/DNS1=114.114.114.114/g'</span> /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -156,7 +156,7 @@ wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
 <span class="k">elif</span> <span class="o">[</span> <span class="nv">$VERSION</span> <span class="o">==</span> <span class="s1">'centos7'</span> <span class="o">]</span>;<span class="k">then
 </span>wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
-yum clean all
+yum clean all &amp;&gt; /dev/null
 systemctl stop firewalld.service &amp;&gt; /dev/null
 systemctl disable firewalld.service &amp;&gt; /dev/null
 systemctl stop NetworkManager.service &amp;&gt; /dev/null
@@ -172,6 +172,14 @@ yum makecache &amp;&gt; /dev/null
 yum -y groupinstall Development tools
 </code></pre>
 </div>
+
+<blockquote>
+  <p>wget http://wangrubin.com/scripts/optimizing-system.sh &amp;&amp; sh optimizing-system.sh</p>
+</blockquote>
+
+<hr />
+
+<p>end</p>
 
       </article>
       <hr>

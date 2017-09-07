@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Sep 2017 11:45:56 +0800</pubDate>
-    <lastBuildDate>Thu, 07 Sep 2017 11:45:56 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Sep 2017 12:01:19 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Sep 2017 12:01:19 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -17,7 +17,7 @@
 &lt;span class=&quot;c&quot;&gt;#Description: This script is for optimizing system performance; For Centos6 and Centos7&lt;/span&gt;
 
 cat /etc/redhat-release|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;OPERATING SYSTEM:&quot;,$0}'&lt;/span&gt;
-grep &lt;span class=&quot;s2&quot;&gt;&quot;IPADDR&quot;&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F &lt;span class=&quot;s2&quot;&gt;&quot;=&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt;
+grep &lt;span class=&quot;s2&quot;&gt;&quot;IPADDR&quot;&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F &lt;span class=&quot;s2&quot;&gt;&quot;=&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOST IP:&quot;,$2}'&lt;/span&gt;
 uname -a|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOSTNAME:&quot;,$2&quot;\nKERNEL VERSION:&quot;,$3}'&lt;/span&gt;        
 
 sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -67,7 +67,7 @@ wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
 &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VERSION&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'centos7'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
 &lt;/span&gt;wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
-yum clean all
+yum clean all &amp;amp;&amp;gt; /dev/null
 systemctl stop firewalld.service &amp;amp;&amp;gt; /dev/null
 systemctl disable firewalld.service &amp;amp;&amp;gt; /dev/null
 systemctl stop NetworkManager.service &amp;amp;&amp;gt; /dev/null
@@ -83,6 +83,14 @@ yum makecache &amp;amp;&amp;gt; /dev/null
 yum -y groupinstall Development tools
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;wget http://wangrubin.com/scripts/optimizing-system.sh &amp;amp;&amp;amp; sh optimizing-system.sh&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Thu, 07 Sep 2017 00:00:00 +0800</pubDate>
         <link>/shell/optimizing-system.html</link>

@@ -4,7 +4,7 @@
 #Description: This script is for optimizing system performance; For Centos6 and Centos7
 
 cat /etc/redhat-release|awk '{print "OPERATING SYSTEM:",$0}'
-grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print $2}'
+grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IPADDR:",$2}'
 uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION:",$3}'        
 
 sed -i 's/DNS1=.*/DNS1=114.114.114.114/g' /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -54,7 +54,7 @@ wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
 elif [ $VERSION == 'centos7' ];then
 wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
-yum clean all
+yum clean all &> /dev/null
 systemctl stop firewalld.service &> /dev/null
 systemctl disable firewalld.service &> /dev/null
 systemctl stop NetworkManager.service &> /dev/null
