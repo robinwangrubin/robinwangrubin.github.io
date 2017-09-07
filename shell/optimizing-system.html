@@ -133,14 +133,14 @@ EOF
 sed -i <span class="s2">"s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g"</span> /etc/ssh/sshd_config
 
 <span class="nv">TEST</span><span class="o">=</span><span class="k">$(</span>egrep <span class="s2">"color|auto"</span> /etc/profile|wc -l<span class="k">)</span>
-<span class="k">if</span> <span class="o">[</span> <span class="nv">$TEST</span> -ne 0 <span class="o">]</span>;<span class="k">then
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$TEST</span> -eq 0 <span class="o">]</span>;<span class="k">then
 </span><span class="nb">echo</span> <span class="s2">"alias egrep='egrep --color=auto'"</span> &gt;&gt;/etc/profile
 <span class="nb">echo</span> <span class="s2">"alias grep='grep --color=auto'"</span> &gt;&gt;/etc/profile
 <span class="nb">echo</span> <span class="s2">"alias vi='vim'"</span> &gt;&gt;/etc/profile
 <span class="k">fi
 
 </span><span class="nv">TEST</span><span class="o">=</span><span class="k">$(</span>grep <span class="s2">"ntp1.aliyun.com"</span> /var/spool/cron/root|wc -l<span class="k">)</span>
-<span class="k">if</span> <span class="o">[</span> <span class="nv">$TEST</span> -ne 0 <span class="o">]</span>;<span class="k">then
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$TEST</span> -eq 0 <span class="o">]</span>;<span class="k">then
 </span>touch /var/spool/cron/root
 <span class="nb">echo</span> <span class="s2">"*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &gt;/dev/null 2&gt;&amp;1"</span> &gt;&gt;/var/spool/cron/root
 <span class="k">fi

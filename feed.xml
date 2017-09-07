@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Sep 2017 13:32:44 +0800</pubDate>
-    <lastBuildDate>Thu, 07 Sep 2017 13:32:44 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Sep 2017 13:38:13 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Sep 2017 13:38:13 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -44,14 +44,14 @@ EOF
 sed -i &lt;span class=&quot;s2&quot;&gt;&quot;s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g&quot;&lt;/span&gt; /etc/ssh/sshd_config
 
 &lt;span class=&quot;nv&quot;&gt;TEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;egrep &lt;span class=&quot;s2&quot;&gt;&quot;color|auto&quot;&lt;/span&gt; /etc/profile|wc -l&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TEST&lt;/span&gt; -ne 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TEST&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
 &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias egrep='egrep --color=auto'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias grep='grep --color=auto'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias vi='vim'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
 &lt;span class=&quot;k&quot;&gt;fi
 
 &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;ntp1.aliyun.com&quot;&lt;/span&gt; /var/spool/cron/root|wc -l&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TEST&lt;/span&gt; -ne 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TEST&lt;/span&gt; -eq 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
 &lt;/span&gt;touch /var/spool/cron/root
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &amp;gt;/dev/null 2&amp;gt;&amp;amp;1&quot;&lt;/span&gt; &amp;gt;&amp;gt;/var/spool/cron/root
 &lt;span class=&quot;k&quot;&gt;fi

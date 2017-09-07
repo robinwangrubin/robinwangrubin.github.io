@@ -31,14 +31,14 @@ sed -i "s/\#UseDNS.*/UseDNS no/g" /etc/ssh/sshd_config
 sed -i "s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g" /etc/ssh/sshd_config
 
 TEST=$(egrep "color|auto" /etc/profile|wc -l)
-if [ $TEST -ne 0 ];then
+if [ $TEST -eq 0 ];then
 echo "alias egrep='egrep --color=auto'" >>/etc/profile
 echo "alias grep='grep --color=auto'" >>/etc/profile
 echo "alias vi='vim'" >>/etc/profile
 fi
 
 TEST=$(grep "ntp1.aliyun.com" /var/spool/cron/root|wc -l)
-if [ $TEST -ne 0 ];then
+if [ $TEST -eq 0 ];then
 touch /var/spool/cron/root
 echo "*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com >/dev/null 2>&1" >>/var/spool/cron/root
 fi
