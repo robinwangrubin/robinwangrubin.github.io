@@ -3,9 +3,9 @@
 #Email: xxxxxxx@gmail.com
 #Description: This script is for optimizing system performance; For Centos6 and Centos7
 
-cat /etc/redhat-release|awk '{print "OPERATING SYSTEM: ",$0}'
-grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IPADDR: ",$2}'
-uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION: ",$3}'        
+cat /etc/redhat-release|awk '{print "OPERATING SYSTEM:",$0}'
+grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IPADDR:",$2}'
+uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION:",$3}'        
 
 sed -i 's/DNS1=.*/DNS1=114.114.114.114/g' /etc/sysconfig/network-scripts/ifcfg-eth0
 sed -i 's/DNS2=.*/DNS2=180.76.76.76/g' /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -30,7 +30,7 @@ fi
 sed -i "s/\#UseDNS.*/UseDNS no/g" /etc/ssh/sshd_config
 sed -i "s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g" /etc/ssh/sshd_config
 
-TEST=$(grep "--color=auto" /etc/profile|wc -l)
+TEST=$(egrep "color|auto" /etc/profile|wc -l)
 if [ $TEST -ne 0 ];then
 echo "alias egrep='egrep --color=auto'" >>/etc/profile
 echo "alias grep='grep --color=auto'" >>/etc/profile
