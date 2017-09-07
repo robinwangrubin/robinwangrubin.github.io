@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Sep 2017 13:13:49 +0800</pubDate>
-    <lastBuildDate>Thu, 07 Sep 2017 13:13:49 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Sep 2017 13:18:16 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Sep 2017 13:18:16 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -16,9 +16,9 @@
 &lt;span class=&quot;c&quot;&gt;#Email: xxxxxxx@gmail.com&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;#Description: This script is for optimizing system performance; For Centos6 and Centos7&lt;/span&gt;
 
-cat /etc/redhat-release|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;OPERATING SYSTEM:&quot;,$0}'&lt;/span&gt;
-grep &lt;span class=&quot;s2&quot;&gt;&quot;IPADDR&quot;&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F &lt;span class=&quot;s2&quot;&gt;&quot;=&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOST IP:&quot;,$2}'&lt;/span&gt;
-uname -a|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOSTNAME:&quot;,$2&quot;\nKERNEL VERSION:&quot;,$3}'&lt;/span&gt;        
+cat /etc/redhat-release|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;OPERATING SYSTEM: &quot;,$0}'&lt;/span&gt;
+grep &lt;span class=&quot;s2&quot;&gt;&quot;IPADDR&quot;&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F &lt;span class=&quot;s2&quot;&gt;&quot;=&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOST IPADDR:&quot;,$2}'&lt;/span&gt;
+uname -a|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOSTNAME:&quot;,$2&quot;\nKERNEL VERSION: &quot;,$3}'&lt;/span&gt;        
 
 sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0
 sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS2=.*/DNS2=180.76.76.76/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0

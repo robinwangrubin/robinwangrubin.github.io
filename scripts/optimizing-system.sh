@@ -3,9 +3,9 @@
 #Email: xxxxxxx@gmail.com
 #Description: This script is for optimizing system performance; For Centos6 and Centos7
 
-cat /etc/redhat-release|awk '{print "OPERATING SYSTEM:",$0}'
-grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IP:",$2}'
-uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION:",$3}'        
+cat /etc/redhat-release|awk '{print "OPERATING SYSTEM: ",$0}'
+grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IPADDR: ",$2}'
+uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION: ",$3}'        
 
 sed -i 's/DNS1=.*/DNS1=114.114.114.114/g' /etc/sysconfig/network-scripts/ifcfg-eth0
 sed -i 's/DNS2=.*/DNS2=180.76.76.76/g' /etc/sysconfig/network-scripts/ifcfg-eth0
