@@ -4,7 +4,7 @@
 #Description: This script is for optimizing system performance; For Centos6 and Centos7
 
 cat /etc/redhat-release|awk '{print "OPERATING SYSTEM:",$0}'
-grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IPADDR:",$2}'
+grep "IPADDR" /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F "=" '{print "HOST IP:",$2}'
 uname -a|awk '{print "HOSTNAME:",$2"\nKERNEL VERSION:",$3}'        
 
 sed -i 's/DNS1=.*/DNS1=114.114.114.114/g' /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -30,12 +30,18 @@ fi
 sed -i "s/\#UseDNS.*/UseDNS no/g" /etc/ssh/sshd_config
 sed -i "s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g" /etc/ssh/sshd_config
 
+TEST=$(grep "--color=auto" /etc/profile|wc -l)
+if [ $TEST -ne 0 ];then
 echo "alias egrep='egrep --color=auto'" >>/etc/profile
 echo "alias grep='grep --color=auto'" >>/etc/profile
 echo "alias vi='vim'" >>/etc/profile
+fi
 
+TEST=$(grep "ntp1.aliyun.com" /var/spool/cron/root|wc -l)
+if [ $TEST -ne 0 ];then
 touch /var/spool/cron/root
-echo "*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com >/dev/null 2>&1" >/var/spool/cron/root
+echo "*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com >/dev/null 2>&1" >>/var/spool/cron/root
+fi
 
 yum install wget -y &> /dev/null
 
