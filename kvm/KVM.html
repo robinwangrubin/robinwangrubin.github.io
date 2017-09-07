@@ -149,8 +149,12 @@ systemctl stop firewalld.service
 systemctl disable firewalld.service
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
-sed -i <span class="s1">'s/DNS1=.*/DNS1=114.114.114.114/g'</span> /etc/selinux/config
-systemctl restart network
+sed -i <span class="s1">'s/DNS1=.*/DNS1=114.114.114.114/g'</span> /etc/sysconfig/network-scripts/ifcfg-eth0 
+cat &gt;/etc/resolv.conf<span class="sh">&lt;&lt;EOF
+nameserver 114.114.114.114
+nameserver 180.76.76.76
+EOF
+</span>systemctl restart network
 yum install wget -y
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo

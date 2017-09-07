@@ -5,9 +5,93 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 17 Aug 2017 15:10:04 +0800</pubDate>
-    <lastBuildDate>Thu, 17 Aug 2017 15:10:04 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Sep 2017 11:42:54 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Sep 2017 11:42:54 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Centos6 &amp; Centos 7 初始化脚本</title>
+        <description>&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Author: xxxxxxx&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Email: xxxxxxx@gmail.com&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Description: This script is for optimizing system performance; For Centos6 and Centos7&lt;/span&gt;
+
+cat /etc/redhat-release|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;OPERATING SYSTEM:&quot;,$0}'&lt;/span&gt;
+grep &lt;span class=&quot;s2&quot;&gt;&quot;IPADDR&quot;&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0|awk -F &lt;span class=&quot;s2&quot;&gt;&quot;=&quot;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt;
+uname -a|awk &lt;span class=&quot;s1&quot;&gt;'{print &quot;HOSTNAME:&quot;,$2&quot;\nKERNEL VERSION:&quot;,$3}'&lt;/span&gt;        
+
+sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0
+sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS2=.*/DNS2=180.76.76.76/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0
+cat &amp;gt;/etc/resolv.conf&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+nameserver 114.114.114.114
+nameserver 180.76.76.76
+EOF
+
+&lt;/span&gt;sed -i &lt;span class=&quot;s1&quot;&gt;'s/SELINUX=.*/SELINUX=disabled/g'&lt;/span&gt; /etc/selinux/config
+setenforce 0 &amp;amp;&amp;gt; /dev/null
+
+&lt;span class=&quot;nv&quot;&gt;TEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;grep &lt;span class=&quot;s2&quot;&gt;&quot;soft nproc 65535&quot;&lt;/span&gt; /etc/security/limits.conf|wc -l&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TEST&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;; &lt;span class=&quot;k&quot;&gt;then
+&lt;/span&gt;cat  &amp;gt;&amp;gt; /etc/security/limits.conf &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; EOF
+* soft nproc 65535
+* hard nproc 65535
+* soft nofile 65535
+* hard nofile 65535
+EOF
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fi
+
+&lt;/span&gt;sed -i &lt;span class=&quot;s2&quot;&gt;&quot;s/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\#&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;UseDNS.*/UseDNS no/g&quot;&lt;/span&gt; /etc/ssh/sshd_config
+sed -i &lt;span class=&quot;s2&quot;&gt;&quot;s/GSSAPIAuthentication.*/GSSAPIAuthentication no/g&quot;&lt;/span&gt; /etc/ssh/sshd_config
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias egrep='egrep --color=auto'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias grep='grep --color=auto'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias vi='vim'&quot;&lt;/span&gt; &amp;gt;&amp;gt;/etc/profile
+
+touch /var/spool/cron/root
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com &amp;gt;/dev/null 2&amp;gt;&amp;amp;1&quot;&lt;/span&gt; &amp;gt;/var/spool/cron/root
+
+yum install wget -y &amp;amp;&amp;gt; /dev/null
+
+&lt;span class=&quot;nv&quot;&gt;SYSTEM_VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;cat /etc/redhat-release|grep -o &lt;span class=&quot;s2&quot;&gt;&quot;6.&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SYSTEM_VERSION&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'centos7'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'centos6'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi
+
+if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VERSION&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'centos6'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+&lt;/span&gt;chkconfig --list|grep 3:on|egrep -v &lt;span class=&quot;s2&quot;&gt;&quot;crond|network|rsyslog|sshd|sysstat&quot;&lt;/span&gt;|awk &lt;span class=&quot;s1&quot;&gt;'{print $1}'&lt;/span&gt;|sed -r &lt;span class=&quot;s1&quot;&gt;'s#(.*)#chkconfig \1 off#g'&lt;/span&gt;|bash &amp;amp;&amp;gt;/dev/null
+/etc/init.d/iptables stop &amp;amp;&amp;gt; /dev/null
+wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
+wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VERSION&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'centos7'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+&lt;/span&gt;wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+yum clean all
+systemctl stop firewalld.service &amp;amp;&amp;gt; /dev/null
+systemctl disable firewalld.service &amp;amp;&amp;gt; /dev/null
+systemctl stop NetworkManager.service &amp;amp;&amp;gt; /dev/null
+systemctl disable NetworkManager.service &amp;amp;&amp;gt; /dev/null
+systemclt stop postfix.service &amp;amp;&amp;gt; /dev/null
+systemclt disable postfix.service &amp;amp;&amp;gt; /dev/null
+yum install iptables-services -y &amp;amp;&amp;gt; /dev/null
+&lt;span class=&quot;k&quot;&gt;else 
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Pls Check The System Version&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi
+&lt;/span&gt;yum clean all &amp;amp;&amp;gt; /dev/null
+yum makecache &amp;amp;&amp;gt; /dev/null
+yum -y groupinstall Development tools
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Thu, 07 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/shell/optimizing-system.html</link>
+        <guid isPermaLink="true">/shell/optimizing-system.html</guid>
+        
+        
+        <category>Shell</category>
+        
+      </item>
     
       <item>
         <title>Prometheus-容器监控</title>
@@ -673,8 +757,12 @@ systemctl stop firewalld.service
 systemctl disable firewalld.service
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
-sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/selinux/config
-systemctl restart network
+sed -i &lt;span class=&quot;s1&quot;&gt;'s/DNS1=.*/DNS1=114.114.114.114/g'&lt;/span&gt; /etc/sysconfig/network-scripts/ifcfg-eth0 
+cat &amp;gt;/etc/resolv.conf&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+nameserver 114.114.114.114
+nameserver 180.76.76.76
+EOF
+&lt;/span&gt;systemctl restart network
 yum install wget -y
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
@@ -1142,7 +1230,7 @@ EOF
   &lt;li&gt;安装zookeeper&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
 tar xf zookeeper-3.4.6.tar.gz -C /usr/local/
 ln -s /usr/local/zookeeper-3.4.6/ /usr/local/zookeeper
 mv /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -1516,64 +1604,6 @@ parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quo
         
         
         <category>Python</category>
-        
-      </item>
-    
-      <item>
-        <title>Learning to think in English</title>
-        <description>&lt;h2 id=&quot;do-you-think-in-english&quot;&gt;Do you think in English?&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Article by: Simon Buckland, WSE International&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;For example, when someone asks you a question in English, do you immediately think to yourself in English “Mmmh, how shall i answer this question?” Or do you mentally translate the question into your own language, find an answer in your own language, and then mentally translate the answer into English before speaking?&lt;/p&gt;
-
-&lt;p&gt;It took me quite a long time to write that question - and it will take you quite a long time to do it. if you look at the picture, you'll see exactly what happens when you go “the long way around 'instead of the direct route'”.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/English/1.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I'v used  Chinese as an example, Because Chinese people do often translate mentally into Chinese before speaking in English. and to make it look really complicated for people who can't read Chinese!&lt;/p&gt;
-
-&lt;p&gt;Here are some things for you to notice:&lt;/p&gt;
-
-&lt;p&gt;There are five steps, compared with only one step if you think in english. Obviously, this is going to take time.&lt;/p&gt;
-
-&lt;p&gt;When you translate into your own language you might make a mistake, or you might not find anything which is exactly like what you heard in English.&lt;/p&gt;
-
-&lt;p&gt;Then, when you come up with the answer in your own language it may be something that you don't know how to say in English.&lt;/p&gt;
-
-&lt;p&gt;With all these steps, you'll take even more time to think the right answer. Meanwhile the other person is sitting or standing there waiting for you to speak, Or maybe they're not even waiting anymore - maybe they've got bored with waiting, and they're already gone away!&lt;/p&gt;
-
-&lt;p&gt;So i think it's obvious that you need to start thinking in English as soon as possible. The next question is: how long do you need to study English before you start thinking in English? Six months? One year? Two years? Ten years?&lt;/p&gt;
-
-&lt;p&gt;The answer may surprise you: you can start thinking in English right from the beginning, even if you started studying only a coupleof weeks ago. How is this possible? The answer depends on understanding one or two things about how the brain works.&lt;/p&gt;
-
-&lt;p&gt;There is an area in the human brain called, Wernicks's Area, witch is generallyassociatede with processing and understanding language. This area of brain is right next to the parts of the brain associated with visual images and memory.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/English/2.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Take a look at this picture - which world do you first look at? Of course, it's the world in your own language - excuse me if yours is missing. Because the brain links the picture of the dog with the word 'dog' in your native language. But it is possible to use this aspect of the brain to help you think in English - by thinking of a picture in English, or related to English. When you speak English.&lt;/p&gt;
-
-&lt;p&gt;Think about speaking English for a moment - What pictures come into your mind? Maybe it's famous places in English-speaking countries like Towe Bridge in London or the Statue of Liberty in New York. Or maybe the picture that comes into your mind is your local Wall Street Center - or a teacher or a Personal Tutor. It doesn't matter - if you try to keep these images in your mind when you speak, it will help you to think in English. Try it and see.&lt;/p&gt;
-
-&lt;p&gt;And here's another idea for you to try, But first a question: Have you ever seen someone walking down the street, Talking to himself? Probably you thought 'poor man'; 'He's sick'; 'He needs to be in the hospital' - or something like that.&lt;/p&gt;
-
-&lt;p&gt;Well, if people like that are crazy. so are most of us: we almost all talk to ourselves. The only difference is that us 'normal' people don't talk to ourselves out loud; we just do it inside our own heads, where no one can hear us.&lt;/p&gt;
-
-&lt;p&gt;So when you 'talk to yourself', What language do you do it in? Obviously, in your own language, So why not try talking to yourself in English, Ask yourself some simple questions like: “How are you today?” or “Did you have a nice weekend?” or perhaps, if you're thinking about some decision in your life, talk about that in English - “So shall i take that job? will i be happy there?” or “Do i really like Maria? I think so, Maybe i'll ask her to go out to dinner with me” etc.etc.&lt;/p&gt;
-
-&lt;p&gt;See how long you can keep up this 'mental conversation' in English: five minutes? Ten? Half an hour? more? You'll be surprised how much it will help you if you can talk yourself in English. After all, when you talk to yourself you know someone islistening!&lt;/p&gt;
-
-&lt;p&gt;And when you're alone - but not when you are on the street or a train - try speaking out loud too. That will help you confidence in speaking as well.&lt;/p&gt;
-
-&lt;p&gt;So, what do you think about this. Do you often think in English? What is it like for you? Please post your thoughts and experiences here - and thanks for reading.&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 18 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/point/Learning-to-think-in-English.html</link>
-        <guid isPermaLink="true">/point/Learning-to-think-in-English.html</guid>
-        
-        
-        <category>Point</category>
         
       </item>
     
