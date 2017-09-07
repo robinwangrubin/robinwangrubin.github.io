@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Sep 2017 13:38:13 +0800</pubDate>
-    <lastBuildDate>Thu, 07 Sep 2017 13:38:13 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Sep 2017 14:37:41 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Sep 2017 14:37:41 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -101,6 +101,96 @@ yum -y groupinstall Development tools
         <pubDate>Thu, 07 Sep 2017 00:00:00 +0800</pubDate>
         <link>/shell/optimizing-system.html</link>
         <guid isPermaLink="true">/shell/optimizing-system.html</guid>
+        
+        
+        <category>Shell</category>
+        
+      </item>
+    
+      <item>
+        <title>nginx部署脚本</title>
+        <description>&lt;h2 id=&quot;install&quot;&gt;Install&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum install -y openssl openssl-devel
+yum install -y zlib zlib-devel
+yum install -y pcre pcre-devel
+useradd nginx -M -s /sbin/nologin
+wget https://nginx.org/download/nginx-1.12.1.tar.gz
+tar xf nginx-1.12.1.tar.gz  &amp;amp;&amp;amp; cd nginx-1.12.1
+./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module
+make &amp;amp;&amp;amp; make install
+ln -s /usr/local/nginx-1.12.1 /usr/local/nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;start-script&quot;&gt;Start script&lt;/h2&gt;
+
+&lt;p&gt;vim /etc/init.d/nginx&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash   &lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; -e   
+&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Nginx Server&quot;&lt;/span&gt; 
+&lt;span class=&quot;nv&quot;&gt;TOOLS_CMD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/nginx/sbin/nginx&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DESCRIPTION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Pls use /etc/init.d/nginx start|stop|restart|reload&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLOCK_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/nginx/nginx.clock&quot;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in 
+  &lt;/span&gt;start&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f &lt;span class=&quot;nv&quot;&gt;$CLOCK_FILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+           &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; was Started.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+           &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
+        &lt;span class=&quot;k&quot;&gt;fi
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32mSTARTTING &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;......&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$TOOLS_CMD&lt;/span&gt; &amp;amp;&amp;gt;/dev/null &amp;amp;  
+        touch &lt;span class=&quot;nv&quot;&gt;$CLOCK_FILE&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;   
+   stop&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ! -f &lt;span class=&quot;nv&quot;&gt;$CLOCK_FILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
+           &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; was Stopped.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+           &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
+        &lt;span class=&quot;k&quot;&gt;fi
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32mSTOPPING &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;......&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$TOOLS_CMD&lt;/span&gt; -s stop &amp;amp;&amp;gt; /dev/null   
+        rm -f &lt;span class=&quot;nv&quot;&gt;$CLOCK_FILE&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;   
+   restart&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
+        &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; stop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sleep 1 &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; start   
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;  
+   reload&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$TOOLS_CMD&lt;/span&gt; -s reload &amp;amp;&amp;gt; /dev/null 
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; was Reload......&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+   &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[31mUsage: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DESCRIPTION&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1   
+&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;on-boot-start&quot;&gt;On boot start&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;chmod +x /etc/init.d/nginx&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/etc/init.d/nginx start&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;echo “/etc/init.d/nginx start” » /etc/rc.local&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Thu, 07 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/shell/nginx.html</link>
+        <guid isPermaLink="true">/shell/nginx.html</guid>
         
         
         <category>Shell</category>
@@ -1530,94 +1620,6 @@ output &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         
         
         <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Python抓取特定XML JSON HTML文件内容</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#xml&quot; id=&quot;markdown-toc-xml&quot;&gt;XML文件处理&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;xml&quot;&gt;XML文件处理&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/python&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# -*- coding: UTF-8 -*-&lt;/span&gt;
-
-from xml.parsers.expat import ParserCreate
-from urllib import request
-
-&lt;span class=&quot;c&quot;&gt;# 定义回调机制&lt;/span&gt;
-class MovieHandler&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;object&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-   def __init__&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-      self.CurrentData &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.type &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.format &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.year &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.rating &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.stars &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      self.description &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-
-   &lt;span class=&quot;c&quot;&gt;# 元素开始事件处理&lt;/span&gt;
-   def startElement&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;self, tag, attributes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-      self.CurrentData &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; tag
-      &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;movie&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;*****Movie*****&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-         title &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; attributes[&lt;span class=&quot;s2&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Title:&quot;&lt;/span&gt;, title&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-   &lt;span class=&quot;c&quot;&gt;# 元素结束事件处理&lt;/span&gt;
-   def endElement&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;self, tag&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-      &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Type:&quot;&lt;/span&gt;, self.type&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;format&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Format:&quot;&lt;/span&gt;, self.format&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;year&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Year:&quot;&lt;/span&gt;, self.year&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Rating:&quot;&lt;/span&gt;, self.rating&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;stars&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Stars:&quot;&lt;/span&gt;, self.stars&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;description&quot;&lt;/span&gt;:
-         print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Description:&quot;&lt;/span&gt;, self.description&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-      self.CurrentData &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-
-   &lt;span class=&quot;c&quot;&gt;# 内容事件处理&lt;/span&gt;
-   def characters&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;self, content&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
-      &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;:
-         self.type &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;format&quot;&lt;/span&gt;:
-         self.format &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;year&quot;&lt;/span&gt;:
-         self.year &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;:
-         self.rating &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;stars&quot;&lt;/span&gt;:
-         self.stars &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-      &lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;self.CurrentData &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;description&quot;&lt;/span&gt;:
-         self.description &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; content
-
-&lt;span class=&quot;c&quot;&gt;# 获取XML文件&lt;/span&gt;
-with request.urlopen&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http://wangrubin.com/testfile/movies.xml&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; as f:
-        xml &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; f.read&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-
-handler &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; MovieHandler&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-parser &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ParserCreate&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# 重写原有的StartElementHandler EndElementHandler CharacterDataHandler&lt;/span&gt;
-parser.StartElementHandler &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; handler.startElement
-parser.EndElementHandler &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; handler.endElement
-parser.CharacterDataHandler &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; handler.characters
-
-parser.Parse&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xml&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-</description>
-        <pubDate>Tue, 25 Apr 2017 00:00:00 +0800</pubDate>
-        <link>/python/python-web.html</link>
-        <guid isPermaLink="true">/python/python-web.html</guid>
-        
-        
-        <category>Python</category>
         
       </item>
     
