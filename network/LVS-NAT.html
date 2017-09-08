@@ -256,7 +256,9 @@
 
 <p><code class="highlighter-rouge">安装LVS</code></p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">modprobe ip_vs
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">modprobe -r ip_vs		<span class="c">#移除lvs模块</span>
+<span class="nb">echo</span> <span class="s2">"options ip_vs conn_tab_bits=20"</span> &gt; /etc/modprobe.d/ip_vs.conf      <span class="c">#优化lvs参数</span>
+modprobe ip_vs			<span class="c">#导入lvs模块</span>
 yum install ipvsadm -y	<span class="c">#安装IPVS的管理模块，真正实现负载的是工作在内核空间的IPVS</span>
 lsmod |grep ip_vs	<span class="c">#有输出则代表内核支持lvs，基本都支持lvs</span>
 <span class="nb">ulimit</span> -n 65535
