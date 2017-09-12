@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Logstash</title>
+	<meta name="description" content="Install JAVA ENV">
+	
+	<link rel="canonical" href="/bigdata/Logstash.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Logstash</h1>
+        <p>Sep 12 2017</p>
+      </header>
+      <hr>
+      <article>
+        <h2 id="install-java-env">Install JAVA ENV</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+tar xf jdk-8u131-linux-x64.tar.gz -C /usr/local/
+cat &gt;&gt; /etc/profile &lt;&lt;EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_131
+export CLASSPATH=.:\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+source /etc/profile
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="install-logstash">Install Logstash</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget https://download.elastic.co/logstash/logstash/logstash-2.4.0.tar.gz
+tar xf logstash-2.4.0.tar.gz &amp;&amp; cd logstash-2.4.0
+sed -i 's#source.*#source "https://ruby.taobao.org/"#g' Gemfile
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="install-plugin">Install Plugin</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/logstash-plugin install logstash-input-elasticsearch
+./bin/logstash-plugin install logstash-output-elasticsearch
+./bin/logstash-plugin install logstash-input-kafka
+./bin/logstash-plugin install logstash-output-kafka
+./bin/logstash-plugin install logstash-output-webhdfs
+./bin/logstash-plugin list|egrep "kafka|webhdfs|elasticsearch"
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="configure-logstash">Configure Logstash</h2>
+
+<ul>
+  <li>File –&gt; Kafka/File</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#
+input {
+    file {
+        path =&gt; ["/$PATH/**/*access.log"]
+        sincedb_path =&gt; "/$PATH/logstash/sincedb"
+        start_position =&gt; "beginning"
+		codec =&gt; "plain"
+        discover_interval =&gt; 10
+        close_older =&gt; 3600
+        ignore_older =&gt; 86400
+        sincedb_write_interval =&gt; 5
+        stat_interval =&gt; 1
+    }
+}
+
+output {
+    kafka {
+        bootstrap_servers =&gt; "test-kafka00:9092,test-kafka01:9092,test-kafka02:9092"
+        topic_id =&gt; "test_topic"
+        codec =&gt; plain {
+                        format =&gt; "%{message}"
+                }
+    }
+    file {
+        path =&gt; "/home/mtime/logs/accesslog/vip.mtime.com/from_kafka.log"
+        message_format =&gt; "%{message}"
+    }
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>sincedb_path: sincedb存放位置；用于记录文件读取的偏移量</p>
+</blockquote>
+
+<blockquote>
+  <p>start_position: 在没有sincedb记录的前提下；默认从文件尾部开始读取（tail -f）；beginning 从头读取</p>
+</blockquote>
+
+<blockquote>
+  <p>codec: plain表示文本模式；json表示按照json格式处理</p>
+</blockquote>
+
+<blockquote>
+  <p>discover_interval: 没隔多久检测一次被监听目录下是否有新文件生成</p>
+</blockquote>
+
+<blockquote>
+  <p>close_older: 默认3600s文件没有变化时；释放文件监听句柄</p>
+</blockquote>
+
+<blockquote>
+  <p>ignore_older: 如果一个文件的最后修改时间超过这个值就忽略这个文件；默认是86400s（1day）</p>
+</blockquote>
+
+<blockquote>
+  <p>sincedb_write_interval: 每隔多久写一次sincedb记录；关系到丢失数据的容忍度；不推荐太大</p>
+</blockquote>
+
+<blockquote>
+  <p>stat_interval: 每隔多久检查一次被监听文件状态是否有更新；默认1s</p>
+</blockquote>
+
+<blockquote>
+  <p>message_format: logstash-output-file插件无法使用codec插件；所以用此参数；</p>
+</blockquote>
+
+<blockquote>
+  <p>%{message}: 获取原始的日志内容；不添加任何多余字段；</p>
+</blockquote>
+
+<ul>
+  <li>Kafka –&gt; ES</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#
+input {
+    kafka {
+        zk_connect =&gt; "zookeeper01:2181,zookeeper03:2181,zookeeper03:2181"
+        group_id =&gt; "logstash-kafka-es"
+        topic_id =&gt; "test_kafka"
+        codec =&gt; plain
+        reset_beginning =&gt; false
+        consumer_threads =&gt; 4
+        decorate_events =&gt; false
+    }
+}
+
+filter {
+        grok {
+                match =&gt; {
+                        "message" =&gt; "^(?&lt;hostname&gt;.+?)\s(?&lt;modulname&gt;.+?)\s(?&lt;remote_addr&gt;.+?)\s\-\s(?&lt;remote_user&gt;.+?)\s\[(?&lt;localtime&gt;.+?)\]\s\"(?&lt;request&gt;.+?)\"\s(?&lt;status&gt;.+?)\s(?&lt;body_bytes_sent&gt;.+?)\s\"(?&lt;http_referer&gt;.+?)\"\s\"(?&lt;http_user_agent&gt;.+?)\"\s\"(?&lt;http_x_forwarded_for&gt;.+?)\"\s\"(?&lt;upstream_addr&gt;.+?)\"\s\"(?&lt;upstream_response_time&gt;.+?)\"\s\"(?&lt;request_time&gt;.+?)\"\s\"(?&lt;http_cookie&gt;.+?)\""
+                }
+        }
+        mutate {
+                convert =&gt; [
+                "status", "integer",
+                "body_bytes_sent" , "integer",
+                "upstream_response_time", "float",
+                "request_time", "float"
+                ]
+        }
+}
+
+output {
+        if [modulname] {
+           elasticsearch {
+                workers =&gt; 2
+                hosts =&gt; ["elasticsearch01:9210","1elasticsearch02:9210","elasticsearch03:9210"]
+                index =&gt; "logstash-%{modulname}-%{+YYYY.MM.dd}"
+                flush_size =&gt; 10000
+                idle_flush_time =&gt; 60
+                template_overwrite =&gt; true
+            }
+        } else {
+           file {
+                path =&gt; "/$PATH/logstash/logstash_kafka_es_error.log"
+                message_format =&gt; "%{message}"
+           }
+        }
+        stdout{codec =&gt; rubydebug}
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>group_id: 消费者分组 可以通过组ID去指定,不同的组之间消费是相互不受影响的,相互隔离</p>
+</blockquote>
+
+<blockquote>
+  <p>topic_id: 指定消费某个topic</p>
+</blockquote>
+
+<blockquote>
+  <p>reset_beginning: logstash启动后从什么位置开始读取数据；默认是结束位置；如果要导入原有数据；将此值设置为true</p>
+</blockquote>
+
+<blockquote>
+  <p>decorate_events: 输出自身一些消息；类似消费消息大小；topic来源等信息；你默认false</p>
+</blockquote>
+
+<blockquote>
+  <p>rebalance_max_retries: 注册节点的重试次数；多个logstash消费同一个topic；需要向zk注册partitons归属于哪个logstash消费；</p>
+</blockquote>
+
+<blockquote>
+  <p>grok: 用正则表达式将纯文本内容变成json格式</p>
+</blockquote>
+
+<blockquote>
+  <p>mutate: 更改json格式中指定key的value的字符类型；integer整数 string字符串 float浮点数</p>
+</blockquote>
+
+<ul>
+  <li>Kafka –&gt; HDFS</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#
+input {
+    kafka {
+        zk_connect =&gt; "zookeeper01:2181,zookeeper03:2181,zookeeper03:2181"
+        group_id =&gt; "test_kafka"
+        topic_id =&gt; "test_kafka_id"
+        codec =&gt; plain
+        reset_beginning =&gt; false
+        consumer_threads =&gt; 4
+        decorate_events =&gt; false
+    }
+}
+
+filter {
+        grok {
+                match =&gt; {
+                        "message" =&gt;"^(?&lt;hostname&gt;.+?)\s(?&lt;modulname&gt;.+?)\s(?&lt;remote_addr&gt;.+?)\s\-\s(?&lt;remote_user&gt;.+?)\s\[(?&lt;Day&gt;.+?)/(?&lt;Month&gt;.+?)/(?&lt;Year&gt;.+?):(?&lt;Hour&gt;.+?):"
+                }
+        }
+        mutate {
+                gsub =&gt; ["modulname", "\.", ""]
+        }
+        if [Month] == "Jan" {
+                        mutate {
+                                update =&gt; ["Month","01"]
+                        } 
+        } else if [Month] == "Feb" {
+                        mutate {
+                                update =&gt; ["Month","02"]
+                        }
+        } else if [Month] == "Mar" {
+                        mutate {
+                                update =&gt; ["Month","03"]
+                        }
+        } else if [Month] == "Api" {
+                        mutate {
+                                update =&gt; ["Month","04"]
+                        }
+        } else if [Month] == "May" {
+                        mutate {
+                                update =&gt; ["Month","05"]
+                        }
+        } else if [Month] == "Jun" {
+                        mutate {
+                                update =&gt; ["Month","06"]
+                        }
+        } else if [Month] == "Jul" {
+                        mutate {
+                                update =&gt; ["Month","07"]
+                        }
+        } else if [Month] == "Aug" {
+                        mutate {
+                                update =&gt; ["Month","08"]
+                        }
+        } else if [Month] == "Sep" {
+                        mutate {
+                                update =&gt; ["Month","09"]
+                        }
+        } else if [Month] == "Oct" {
+                        mutate {
+                                update =&gt; ["Month","10"]
+                        }
+        } else if [Month] == "Nov" {
+                        mutate {
+                                update =&gt; ["Month","11"]
+                        }
+        } else if [Month] == "Dec" {
+                        mutate {
+                                update =&gt; ["Month","12"]
+                        }
+        } 
+}
+
+output {
+        if [modulname] {
+           webhdfs {
+                workers =&gt; 2
+                host =&gt; "hdfs-host.host.com"
+                port =&gt; 50070
+                user =&gt; "loguser"
+                path =&gt; "/Service-Data/Logs/%{modulname}/dt=%{Year}%{Month}%{Day}/hour=%{Hour}/%{hostname}_%{Year}%{Month}%{Day}%{Hour}.log"
+                flush_size =&gt; 5000
+                compression =&gt; "gzip"
+                idle_flush_time =&gt; 6
+                retry_interval =&gt; 3
+                retry_times =&gt; 3
+                codec =&gt; line {
+                        format =&gt; "%{message}"
+                }
+           }
+        } else {
+           file {
+                path =&gt; "/$PATH/logstash/logstash_kafka_hdfs_error.log"
+                message_format =&gt; "%{message}"
+           }
+        }
+        stdout{codec =&gt; rubydebug}
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>update: 更新value值</p>
+</blockquote>
+
+<hr />
+
+<h2 id="start-logstash">Start Logstash</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nohup ./bin/logstash -f conf/logstash.conf &gt;&gt;/var/log/logstash.debug.log &amp;
+</code></pre>
+</div>
+
+<hr />
+
+<p>PS: 推荐用supervisor守护logstash进程</p>
+
+<p>end</p>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>

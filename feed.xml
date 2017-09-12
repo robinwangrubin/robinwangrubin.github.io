@@ -5,9 +5,341 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 08 Sep 2017 20:22:11 +0800</pubDate>
-    <lastBuildDate>Fri, 08 Sep 2017 20:22:11 +0800</lastBuildDate>
+    <pubDate>Tue, 12 Sep 2017 14:23:24 +0800</pubDate>
+    <lastBuildDate>Tue, 12 Sep 2017 14:23:24 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Logstash</title>
+        <description>&lt;h2 id=&quot;install-java-env&quot;&gt;Install JAVA ENV&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget -c --header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+tar xf jdk-8u131-linux-x64.tar.gz -C /usr/local/
+cat &amp;gt;&amp;gt; /etc/profile &amp;lt;&amp;lt;EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_131
+export CLASSPATH=.:\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+source /etc/profile
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-logstash&quot;&gt;Install Logstash&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget https://download.elastic.co/logstash/logstash/logstash-2.4.0.tar.gz
+tar xf logstash-2.4.0.tar.gz &amp;amp;&amp;amp; cd logstash-2.4.0
+sed -i 's#source.*#source &quot;https://ruby.taobao.org/&quot;#g' Gemfile
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;install-plugin&quot;&gt;Install Plugin&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/logstash-plugin install logstash-input-elasticsearch
+./bin/logstash-plugin install logstash-output-elasticsearch
+./bin/logstash-plugin install logstash-input-kafka
+./bin/logstash-plugin install logstash-output-kafka
+./bin/logstash-plugin install logstash-output-webhdfs
+./bin/logstash-plugin list|egrep &quot;kafka|webhdfs|elasticsearch&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;configure-logstash&quot;&gt;Configure Logstash&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;File –&amp;gt; Kafka/File&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#
+input {
+    file {
+        path =&amp;gt; [&quot;/$PATH/**/*access.log&quot;]
+        sincedb_path =&amp;gt; &quot;/$PATH/logstash/sincedb&quot;
+        start_position =&amp;gt; &quot;beginning&quot;
+		codec =&amp;gt; &quot;plain&quot;
+        discover_interval =&amp;gt; 10
+        close_older =&amp;gt; 3600
+        ignore_older =&amp;gt; 86400
+        sincedb_write_interval =&amp;gt; 5
+        stat_interval =&amp;gt; 1
+    }
+}
+
+output {
+    kafka {
+        bootstrap_servers =&amp;gt; &quot;test-kafka00:9092,test-kafka01:9092,test-kafka02:9092&quot;
+        topic_id =&amp;gt; &quot;test_topic&quot;
+        codec =&amp;gt; plain {
+                        format =&amp;gt; &quot;%{message}&quot;
+                }
+    }
+    file {
+        path =&amp;gt; &quot;/home/mtime/logs/accesslog/vip.mtime.com/from_kafka.log&quot;
+        message_format =&amp;gt; &quot;%{message}&quot;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;sincedb_path: sincedb存放位置；用于记录文件读取的偏移量&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;start_position: 在没有sincedb记录的前提下；默认从文件尾部开始读取（tail -f）；beginning 从头读取&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;codec: plain表示文本模式；json表示按照json格式处理&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;discover_interval: 没隔多久检测一次被监听目录下是否有新文件生成&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;close_older: 默认3600s文件没有变化时；释放文件监听句柄&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ignore_older: 如果一个文件的最后修改时间超过这个值就忽略这个文件；默认是86400s（1day）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;sincedb_write_interval: 每隔多久写一次sincedb记录；关系到丢失数据的容忍度；不推荐太大&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;stat_interval: 每隔多久检查一次被监听文件状态是否有更新；默认1s&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;message_format: logstash-output-file插件无法使用codec插件；所以用此参数；&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;%{message}: 获取原始的日志内容；不添加任何多余字段；&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Kafka –&amp;gt; ES&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#
+input {
+    kafka {
+        zk_connect =&amp;gt; &quot;zookeeper01:2181,zookeeper03:2181,zookeeper03:2181&quot;
+        group_id =&amp;gt; &quot;logstash-kafka-es&quot;
+        topic_id =&amp;gt; &quot;test_kafka&quot;
+        codec =&amp;gt; plain
+        reset_beginning =&amp;gt; false
+        consumer_threads =&amp;gt; 4
+        decorate_events =&amp;gt; false
+    }
+}
+
+filter {
+        grok {
+                match =&amp;gt; {
+                        &quot;message&quot; =&amp;gt; &quot;^(?&amp;lt;hostname&amp;gt;.+?)\s(?&amp;lt;modulname&amp;gt;.+?)\s(?&amp;lt;remote_addr&amp;gt;.+?)\s\-\s(?&amp;lt;remote_user&amp;gt;.+?)\s\[(?&amp;lt;localtime&amp;gt;.+?)\]\s\&quot;(?&amp;lt;request&amp;gt;.+?)\&quot;\s(?&amp;lt;status&amp;gt;.+?)\s(?&amp;lt;body_bytes_sent&amp;gt;.+?)\s\&quot;(?&amp;lt;http_referer&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;http_user_agent&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;http_x_forwarded_for&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;upstream_addr&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;upstream_response_time&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;request_time&amp;gt;.+?)\&quot;\s\&quot;(?&amp;lt;http_cookie&amp;gt;.+?)\&quot;&quot;
+                }
+        }
+        mutate {
+                convert =&amp;gt; [
+                &quot;status&quot;, &quot;integer&quot;,
+                &quot;body_bytes_sent&quot; , &quot;integer&quot;,
+                &quot;upstream_response_time&quot;, &quot;float&quot;,
+                &quot;request_time&quot;, &quot;float&quot;
+                ]
+        }
+}
+
+output {
+        if [modulname] {
+           elasticsearch {
+                workers =&amp;gt; 2
+                hosts =&amp;gt; [&quot;elasticsearch01:9210&quot;,&quot;1elasticsearch02:9210&quot;,&quot;elasticsearch03:9210&quot;]
+                index =&amp;gt; &quot;logstash-%{modulname}-%{+YYYY.MM.dd}&quot;
+                flush_size =&amp;gt; 10000
+                idle_flush_time =&amp;gt; 60
+                template_overwrite =&amp;gt; true
+            }
+        } else {
+           file {
+                path =&amp;gt; &quot;/$PATH/logstash/logstash_kafka_es_error.log&quot;
+                message_format =&amp;gt; &quot;%{message}&quot;
+           }
+        }
+        stdout{codec =&amp;gt; rubydebug}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;group_id: 消费者分组 可以通过组ID去指定,不同的组之间消费是相互不受影响的,相互隔离&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;topic_id: 指定消费某个topic&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;reset_beginning: logstash启动后从什么位置开始读取数据；默认是结束位置；如果要导入原有数据；将此值设置为true&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;decorate_events: 输出自身一些消息；类似消费消息大小；topic来源等信息；你默认false&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;rebalance_max_retries: 注册节点的重试次数；多个logstash消费同一个topic；需要向zk注册partitons归属于哪个logstash消费；&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;grok: 用正则表达式将纯文本内容变成json格式&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mutate: 更改json格式中指定key的value的字符类型；integer整数 string字符串 float浮点数&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Kafka –&amp;gt; HDFS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#
+input {
+    kafka {
+        zk_connect =&amp;gt; &quot;zookeeper01:2181,zookeeper03:2181,zookeeper03:2181&quot;
+        group_id =&amp;gt; &quot;test_kafka&quot;
+        topic_id =&amp;gt; &quot;test_kafka_id&quot;
+        codec =&amp;gt; plain
+        reset_beginning =&amp;gt; false
+        consumer_threads =&amp;gt; 4
+        decorate_events =&amp;gt; false
+    }
+}
+
+filter {
+        grok {
+                match =&amp;gt; {
+                        &quot;message&quot; =&amp;gt;&quot;^(?&amp;lt;hostname&amp;gt;.+?)\s(?&amp;lt;modulname&amp;gt;.+?)\s(?&amp;lt;remote_addr&amp;gt;.+?)\s\-\s(?&amp;lt;remote_user&amp;gt;.+?)\s\[(?&amp;lt;Day&amp;gt;.+?)/(?&amp;lt;Month&amp;gt;.+?)/(?&amp;lt;Year&amp;gt;.+?):(?&amp;lt;Hour&amp;gt;.+?):&quot;
+                }
+        }
+        mutate {
+                gsub =&amp;gt; [&quot;modulname&quot;, &quot;\.&quot;, &quot;&quot;]
+        }
+        if [Month] == &quot;Jan&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;01&quot;]
+                        } 
+        } else if [Month] == &quot;Feb&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;02&quot;]
+                        }
+        } else if [Month] == &quot;Mar&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;03&quot;]
+                        }
+        } else if [Month] == &quot;Api&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;04&quot;]
+                        }
+        } else if [Month] == &quot;May&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;05&quot;]
+                        }
+        } else if [Month] == &quot;Jun&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;06&quot;]
+                        }
+        } else if [Month] == &quot;Jul&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;07&quot;]
+                        }
+        } else if [Month] == &quot;Aug&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;08&quot;]
+                        }
+        } else if [Month] == &quot;Sep&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;09&quot;]
+                        }
+        } else if [Month] == &quot;Oct&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;10&quot;]
+                        }
+        } else if [Month] == &quot;Nov&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;11&quot;]
+                        }
+        } else if [Month] == &quot;Dec&quot; {
+                        mutate {
+                                update =&amp;gt; [&quot;Month&quot;,&quot;12&quot;]
+                        }
+        } 
+}
+
+output {
+        if [modulname] {
+           webhdfs {
+                workers =&amp;gt; 2
+                host =&amp;gt; &quot;hdfs-host.host.com&quot;
+                port =&amp;gt; 50070
+                user =&amp;gt; &quot;loguser&quot;
+                path =&amp;gt; &quot;/Service-Data/Logs/%{modulname}/dt=%{Year}%{Month}%{Day}/hour=%{Hour}/%{hostname}_%{Year}%{Month}%{Day}%{Hour}.log&quot;
+                flush_size =&amp;gt; 5000
+                compression =&amp;gt; &quot;gzip&quot;
+                idle_flush_time =&amp;gt; 6
+                retry_interval =&amp;gt; 3
+                retry_times =&amp;gt; 3
+                codec =&amp;gt; line {
+                        format =&amp;gt; &quot;%{message}&quot;
+                }
+           }
+        } else {
+           file {
+                path =&amp;gt; &quot;/$PATH/logstash/logstash_kafka_hdfs_error.log&quot;
+                message_format =&amp;gt; &quot;%{message}&quot;
+           }
+        }
+        stdout{codec =&amp;gt; rubydebug}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;update: 更新value值&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;start-logstash&quot;&gt;Start Logstash&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nohup ./bin/logstash -f conf/logstash.conf &amp;gt;&amp;gt;/var/log/logstash.debug.log &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;PS: 推荐用supervisor守护logstash进程&lt;/p&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 12 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/bigdata/Logstash.html</link>
+        <guid isPermaLink="true">/bigdata/Logstash.html</guid>
+        
+        
+        <category>BigData</category>
+        
+      </item>
     
       <item>
         <title>Centos6 &amp; Centos 7 初始化脚本</title>
@@ -856,56 +1188,6 @@ case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span c
         <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
         <link>/network/overture.html</link>
         <guid isPermaLink="true">/network/overture.html</guid>
-        
-        
-        <category>Network</category>
-        
-      </item>
-    
-      <item>
-        <title>带宽测试工具--iperf</title>
-        <description>&lt;h2 id=&quot;iperf&quot;&gt;安装iperf&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Tar包安装&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget http://downloads.es.net/pub/iperf/iperf-3.0.6.tar.gz
-tar xf iperf-3.0.6.tar.gz 
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;iperf-3.0.6
-./configure 
-make
-make install&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Docker容器形式安装&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker pull moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;测试网络带宽&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;iperf3 -u -c 192.168.1.251 -p 5201 -b 1000M -t 60&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker run -it -p 5201:5201/tcp -p 5201:5201/udp moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;docker service create &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  --name iperf &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  --constraint &lt;span class=&quot;s1&quot;&gt;'node.hostname==kafka02'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  --publish 5201:5201/tcp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  --publish 5201:5201/udp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  moutten/iperf:3.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Fri, 16 Jun 2017 00:00:00 +0800</pubDate>
-        <link>/network/iperf.html</link>
-        <guid isPermaLink="true">/network/iperf.html</guid>
         
         
         <category>Network</category>
