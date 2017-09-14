@@ -143,7 +143,7 @@
 
 <h3 id="section">生产脚本示例</h3>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="nv">STATUS_CODE</span><span class="o">=</span><span class="k">$(</span>curl -I --connect-timeout 10 -o /dev/null -s -w %<span class="o">{</span>http_code<span class="o">}</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> wangrubin.com<span class="k">)</span>
 <span class="k">if</span> <span class="o">[</span> <span class="nv">$STATUS_CODE</span> -eq 200 <span class="o">]</span>;<span class="k">then
     </span><span class="nb">echo</span> <span class="s2">"Nginx is Ok"</span>
@@ -167,7 +167,7 @@
 
 <h3 id="section-1">生产脚本示例</h3>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="c">#Author: wangrubin</span>
 <span class="c">#Email: robinwangrubin@gmail.com</span>
 <span class="c">#Description: This script is for test</span>
@@ -184,7 +184,7 @@
 <span class="k">done
 </span><span class="nb">echo</span> <span class="nv">$TATAL_NUM</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="k">for </span>n <span class="k">in</span> <span class="o">{</span>1..255<span class="o">}</span>
 <span class="k">do
  </span>ping -c 2 -W 2 10.0.0.<span class="nv">$n</span> &amp;&gt;/dev/null
@@ -197,7 +197,7 @@ done</span></code></pre></figure>
 
 <h2 id="while">WHILE循环</h2>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="nv">int</span><span class="o">=</span>1
 <span class="k">while</span><span class="o">((</span> <span class="nv">$int</span>&lt;<span class="o">=</span>20 <span class="o">))</span> 
 <span class="k">do
@@ -224,7 +224,7 @@ done</span></code></pre></figure>
 
 <h2 id="case">CASE语句</h2>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="nb">read</span> -t 5 -p <span class="s2">"Pls input a number less 10: "</span> n
 <span class="k">case</span> <span class="s2">"</span><span class="nv">$n</span><span class="s2">"</span> <span class="k">in
 </span>1<span class="p">)</span>
@@ -243,7 +243,7 @@ done</span></code></pre></figure>
 
 <h3 id="section-3">生产脚本示例</h3>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="c">#chkconfig:2345 54 65</span>
 <span class="c">#description: Stop/Start/Reload Nginx scripts</span>
 <span class="nv">ACTION</span><span class="o">=</span><span class="nv">$1</span>
@@ -315,7 +315,7 @@ chkconfig --list nginx</code></pre></figure>
 
 <h2 id="section-4">函数</h2>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 
 <span class="k">function </span>Fist_Function<span class="o">()</span> <span class="o">{</span>
     <span class="nb">echo</span> <span class="s2">"This is my first function"</span>
@@ -326,7 +326,7 @@ Fist_Function</code></pre></figure>
 
 <h3 id="section-5">生产脚本示例</h3>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="c">#Author: wangrubin</span>
 <span class="c">#Email: robinwangrubin@gmail.com</span>
 <span class="c">#Description: This script is for test</span>
@@ -372,7 +372,7 @@ Fist_Function</code></pre></figure>
   <li>测试脚本</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="k">for</span><span class="o">((</span><span class="nv">i</span><span class="o">=</span>0;i&lt;<span class="o">=</span>5;i++<span class="o">))</span>
 <span class="k">do
  if</span> <span class="o">[</span> <span class="nv">$i</span> -eq 3 <span class="o">]</span>;<span class="k">then
@@ -408,7 +408,7 @@ Fist_Function</code></pre></figure>
 1 2 3 4 5
 <span class="o">[</span>root@CentOS_6 scripts]# <span class="nb">unset </span>shuzu[4]    <span class="c">#删除数组中成员</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="k">function </span>YN<span class="o">(){</span>
 curl -I <span class="nv">$1</span> &amp;&gt;/dev/null
 <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne 0 <span class="o">]</span>;<span class="k">then

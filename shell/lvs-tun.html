@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>lvs_tun_vip.sh</title>
-	<meta name="description" content="#!/bin/bash     VIP=210.14.134.8case "$1" in  start)  echo -e "\033[32mStart vip......\033[0m"modprobe ipip  /sbin/ifconfig tunl0 $VIP netmask 255.255.255.25...">
+	<meta name="description" content="#!/usr/bin/env bash     VIP=210.14.134.8case "$1" in  start)  echo -e "\033[32mStart vip......\033[0m"modprobe ipip  /sbin/ifconfig tunl0 $VIP netmask 255.25...">
 	
 	<link rel="canonical" href="/shell/lvs-tun.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
@@ -100,7 +100,7 @@
       </header>
       <hr>
       <article>
-        <div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash     </span>
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash     </span>
 <span class="nv">VIP</span><span class="o">=</span>210.14.134.8
 <span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in  
 </span>start<span class="p">)</span>  

@@ -139,7 +139,7 @@ I am handsome boy</code></pre></figure>
 <h2 id="section-2">获取传参中的最后一个参数</h2>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">giggle@giggle:~$ </span>cat <span class="nb">test</span> 
-<span class="c">#!/bin/bash</span>
+<span class="c">#!/usr/bin/env bash</span>
 <span class="nb">echo</span> <span class="s2">"Total of the arguments passwd $#"</span>
 <span class="nb">echo</span> <span class="s2">"The process ID is </span><span class="nv">$$</span><span class="s2">"</span>
 <span class="nb">echo</span> <span class="s2">"Last argument os </span><span class="k">$(</span><span class="nb">eval echo</span> <span class="se">\$</span><span class="nv">$#)</span><span class="s2">"
@@ -158,7 +158,7 @@ Last argument os black</span></code></pre></figure>
 LANGUE ENGLISH
 LIKE YES
 <span class="gp">giggle@giggle:~$ </span>cat test2.sh 
-<span class="c">#!/bin/bash</span>
+<span class="c">#!/usr/bin/env bash</span>
 <span class="k">while </span><span class="nb">read </span>NAME VALUE
 <span class="k">do
 </span><span class="nb">eval</span> <span class="s2">"</span><span class="k">${</span><span class="nv">NAME</span><span class="k">}</span><span class="s2">=</span><span class="k">${</span><span class="nv">VALUE</span><span class="k">}</span><span class="s2">"</span>
@@ -189,7 +189,7 @@ GOOGLE ENGLISH YES</code></pre></figure>
 
 <h2 id="section-4">变量名中包含变量</h2>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/usr/bin/env bash</span>
 <span class="k">for </span>n <span class="k">in</span> <span class="sb">`</span>seq 3<span class="sb">`</span>
 <span class="k">do
    </span><span class="nb">eval </span>a_<span class="k">${</span><span class="nv">n</span><span class="k">}</span><span class="o">=</span><span class="s1">'$(date +%F\ %R -d -${n}min)'</span>

@@ -120,7 +120,7 @@ ln -s /usr/local/nginx-1.12.1 /usr/local/nginx
 
 <p>vim /etc/init.d/nginx</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash   </span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash   </span>
 <span class="nb">set</span> -e   
 <span class="nv">TOOLS_SERVER_NAME</span><span class="o">=</span><span class="s2">"Nginx Server"</span> 
 <span class="nv">TOOLS_CMD</span><span class="o">=</span><span class="s2">"/usr/local/nginx/sbin/nginx"</span>
