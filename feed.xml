@@ -5,34 +5,33 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 20 Sep 2017 11:47:05 +0800</pubDate>
-    <lastBuildDate>Wed, 20 Sep 2017 11:47:05 +0800</lastBuildDate>
+    <pubDate>Wed, 20 Sep 2017 15:10:24 +0800</pubDate>
+    <lastBuildDate>Wed, 20 Sep 2017 15:10:24 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
         <title>supervisor进程守护</title>
         <description>&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /etc/supervisor/conf
 mkdir -p /var/log/supervisor
-mkdir -p /var/run/supervisor
 yum install python-setuptools-devel
 easy_install supervisor
 echo_supervisord_conf &amp;gt; /etc/supervisor/supervisord.conf.bak
 cat &amp;gt;/etc/supervisor/supervisord.conf&amp;lt;&amp;lt;EOF
 [unix_http_server]
-file=/var/run/supervisor/supervisor.sock   ; the path to the socket file
+file=/var/run/supervisor.sock   ; the path to the socket file
 [supervisord]
 logfile=/var/log/supervisor/supervisord.log ; main log file; default $CWD/supervisord.log
 logfile_maxbytes=50MB        ; max main logfile bytes b4 rotation; default 50MB
 logfile_backups=10           ; # of main logfile backups; 0 means none, default 10
 loglevel=info                ; log level; default info; others: debug,warn,trace
-pidfile=/var/run/supervisor/supervisord.pid ; supervisord pidfile; default supervisord.pid
+pidfile=/var/run/supervisord.pid ; supervisord pidfile; default supervisord.pid
 nodaemon=false               ; start in foreground if true; default false
 minfds=65535                  ; min. avail startup file descriptors; default 1024
 minprocs=65535                 ; min. avail process descriptors;default 200
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisorctl]
-serverurl=unix:///var/run/supervisor/supervisor.sock ; use a unix:// URL  for a unix socket
+serverurl=unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket
 [include]
 files = /etc/supervisor/conf/*.ini
 EOF
@@ -380,6 +379,10 @@ nohup ./bin/logstash -f conf/logstash.conf &amp;gt;&amp;gt;/var/log/logstash.deb
 &lt;hr /&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;推荐用supervisor守护logstash进程&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://wangrubin.com/point/supervisor.html&quot;&gt;参考supervisor进程守护&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &amp;gt;/etc/supervisor/conf/logstash.ini&amp;lt;&amp;lt;EOF
 [program:Logstash]

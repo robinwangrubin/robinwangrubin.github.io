@@ -425,6 +425,10 @@ nohup ./bin/logstash -f conf/logstash.conf &gt;&gt;/var/log/logstash.debug.log &
 
 <p><code class="highlighter-rouge">推荐用supervisor守护logstash进程</code></p>
 
+<ul>
+  <li><a href="http://wangrubin.com/point/supervisor.html">参考supervisor进程守护</a></li>
+</ul>
+
 <div class="highlighter-rouge"><pre class="highlight"><code>cat &gt;/etc/supervisor/conf/logstash.ini&lt;&lt;EOF
 [program:Logstash]
 command = /usr/local/logstash/bin/logstash -f /usr/local/logstash/conf/logstash.conf
