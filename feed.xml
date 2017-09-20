@@ -5,9 +5,54 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 14 Sep 2017 17:19:07 +0800</pubDate>
-    <lastBuildDate>Thu, 14 Sep 2017 17:19:07 +0800</lastBuildDate>
+    <pubDate>Wed, 20 Sep 2017 11:47:05 +0800</pubDate>
+    <lastBuildDate>Wed, 20 Sep 2017 11:47:05 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>supervisor进程守护</title>
+        <description>&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /etc/supervisor/conf
+mkdir -p /var/log/supervisor
+mkdir -p /var/run/supervisor
+yum install python-setuptools-devel
+easy_install supervisor
+echo_supervisord_conf &amp;gt; /etc/supervisor/supervisord.conf.bak
+cat &amp;gt;/etc/supervisor/supervisord.conf&amp;lt;&amp;lt;EOF
+[unix_http_server]
+file=/var/run/supervisor/supervisor.sock   ; the path to the socket file
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log ; main log file; default $CWD/supervisord.log
+logfile_maxbytes=50MB        ; max main logfile bytes b4 rotation; default 50MB
+logfile_backups=10           ; # of main logfile backups; 0 means none, default 10
+loglevel=info                ; log level; default info; others: debug,warn,trace
+pidfile=/var/run/supervisor/supervisord.pid ; supervisord pidfile; default supervisord.pid
+nodaemon=false               ; start in foreground if true; default false
+minfds=65535                  ; min. avail startup file descriptors; default 1024
+minprocs=65535                 ; min. avail process descriptors;default 200
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+[supervisorctl]
+serverurl=unix:///var/run/supervisor/supervisor.sock ; use a unix:// URL  for a unix socket
+[include]
+files = /etc/supervisor/conf/*.ini
+EOF
+supervisord -c /etc/supervisor/supervisord.conf
+echo &quot;supervisord -c /etc/supervisor/supervisord.conf&quot; &amp;gt;&amp;gt;/etc/rc.local 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+</description>
+        <pubDate>Wed, 20 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/point/supervisor.html</link>
+        <guid isPermaLink="true">/point/supervisor.html</guid>
+        
+        
+        <category>Point</category>
+        
+      </item>
     
       <item>
         <title>Logstash</title>
@@ -29,8 +74,9 @@ source /etc/profile
 &lt;h2 id=&quot;install-logstash&quot;&gt;Install Logstash&lt;/h2&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget https://download.elastic.co/logstash/logstash/logstash-2.4.0.tar.gz
-tar xf logstash-2.4.0.tar.gz &amp;amp;&amp;amp; cd logstash-2.4.0
-sed -i 's#source.*#source &quot;https://ruby.taobao.org/&quot;#g' Gemfile
+tar xf logstash-2.4.0.tar.gz -C /usr/local/
+ln -s /usr/local/logstash-2.4.0 /usr/local/logstash
+sed -i 's#source.*#source &quot;https://ruby.taobao.org/&quot;#g' /usr/local/logstash/Gemfile
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -38,7 +84,8 @@ sed -i 's#source.*#source &quot;https://ruby.taobao.org/&quot;#g' Gemfile
 
 &lt;h2 id=&quot;install-plugin&quot;&gt;Install Plugin&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/logstash-plugin install logstash-input-elasticsearch
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/local/logstash
+./bin/logstash-plugin install logstash-input-elasticsearch
 ./bin/logstash-plugin install logstash-output-elasticsearch
 ./bin/logstash-plugin install logstash-input-kafka
 ./bin/logstash-plugin install logstash-output-kafka
@@ -50,6 +97,10 @@ sed -i 's#source.*#source &quot;https://ruby.taobao.org/&quot;#g' Gemfile
 &lt;hr /&gt;
 
 &lt;h2 id=&quot;configure-logstash&quot;&gt;Configure Logstash&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mkdir /usr/local/logstash/conf/&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;ul&gt;
   &lt;li&gt;File –&amp;gt; Kafka/File&lt;/li&gt;
@@ -321,13 +372,37 @@ output {
 
 &lt;h2 id=&quot;start-logstash&quot;&gt;Start Logstash&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nohup ./bin/logstash -f conf/logstash.conf &amp;gt;&amp;gt;/var/log/logstash.debug.log &amp;amp;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/local/logstash
+nohup ./bin/logstash -f conf/logstash.conf &amp;gt;&amp;gt;/var/log/logstash.debug.log &amp;amp;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt;PS: 推荐用supervisor守护logstash进程&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;推荐用supervisor守护logstash进程&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &amp;gt;/etc/supervisor/conf/logstash.ini&amp;lt;&amp;lt;EOF
+[program:Logstash]
+command = /usr/local/logstash/bin/logstash -f /usr/local/logstash/conf/logstash.conf
+autostart = true
+autorestart = true
+startsecs = 3
+startretries = 3
+stopwaitsecs = 5
+user = root
+redirect_stderr = true
+stdout_logfile = /var/log/supervisor/logstash.log
+stdout_logfile_maxbytes = 500MB
+stdout_logfile_backups = 0
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;supervisorctl update&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;end&lt;/p&gt;
 
@@ -1007,187 +1082,6 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0&lt;/code
         <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
         <link>/network/shadow.html</link>
         <guid isPermaLink="true">/network/shadow.html</guid>
-        
-        
-        <category>Network</category>
-        
-      </item>
-    
-      <item>
-        <title>dns代理-overture</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;为什么需要这个代理工具？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;解决方案&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;安装配置&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#overture&quot; id=&quot;markdown-toc-overture&quot;&gt;启动overture&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;编写启动脚本&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;为什么需要这个代理工具？&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;假设我们有一个域名是www.abc.com;这个一名在公网DNS上有A记录，但是在内网DNS上没有；&lt;/li&gt;
-  &lt;li&gt;我们的笔记本指向了内网DNS，此时，当我们解析www.abc.com时，内网DNS将无法解析；&lt;/li&gt;
-  &lt;li&gt;根据DNS解析原理；此时无法解析是正常的；因为内网dns上配置了abc.com权威综；当权威dns没有此A记录；是不会发生递归或迭代查询的。&lt;/li&gt;
-  &lt;li&gt;最终需要实现：优先返回内网dns记录；内网dns没有A记录；则去公网DNS查询一遍。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;解决方案&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;使用overture代理所有的dns请求；优先找主DNS解析；主DNS无法解析；找备DNS解析；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;项目源码&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://github.com/shawn1m/overture&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;安装配置&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;下载overture&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;https://github.com/shawn1m/overture/releases&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mkdir overture &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;overture
-wget https://github.com/shawn1m/overture/releases/download/1.3.5.2/overture-linux-amd64.zip
-unzip overture-linux-amd64.zip
-cp ip_network_sample ip_network_sample.bak
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0/0&quot;&lt;/span&gt; &amp;gt; ip_network_sample&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;overture返回主DNS的结果给客户端需要满足两个两件：主DNS给overture返回了一条A记录；此A记录匹配ip_network_sample这个文件中的网段。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat config.json
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;s2&quot;&gt;&quot;BindAddress&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;:53&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;PrimaryDNS&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;dns-master&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;192.168.1.1:53&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Protocol&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;SOCKS5Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Timeout&quot;&lt;/span&gt;: 5,
-      &lt;span class=&quot;s2&quot;&gt;&quot;EDNSClientSubnet&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&quot;Policy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;disable&quot;&lt;/span&gt;,
-        &lt;span class=&quot;s2&quot;&gt;&quot;ExternalIP&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;AlternativeDNS&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;dns-salve&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;114.114.114.114:53&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Protocol&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;SOCKS5Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;,
-      &lt;span class=&quot;s2&quot;&gt;&quot;Timeout&quot;&lt;/span&gt;: 5,
-      &lt;span class=&quot;s2&quot;&gt;&quot;EDNSClientSubnet&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&quot;Policy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;disable&quot;&lt;/span&gt;,
-        &lt;span class=&quot;s2&quot;&gt;&quot;ExternalIP&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;OnlyPrimaryDNS&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;RedirectIPv6Record&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;IPNetworkFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./ip_network_sample&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;DomainFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./domain_sample&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;DomainBase64Decode&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;HostsFile&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;./hosts_sample&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;MinimumTTL&quot;&lt;/span&gt;: 3600,
-  &lt;span class=&quot;s2&quot;&gt;&quot;CacheSize&quot;&lt;/span&gt; : 500,
-  &lt;span class=&quot;s2&quot;&gt;&quot;RejectQtype&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;255]
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;BindAddress：监听的ip地址和端口号，默认同时监听TCP和UDP端口。&lt;/li&gt;
-  &lt;li&gt;PrimaryDNS：主dns&lt;/li&gt;
-  &lt;li&gt;Name：dns标志&lt;/li&gt;
-  &lt;li&gt;Address：dns的ip和端口号&lt;/li&gt;
-  &lt;li&gt;Protocol：使用的协议&lt;/li&gt;
-  &lt;li&gt;SOCKS5Address：转发dns请求到socket5代理&lt;/li&gt;
-  &lt;li&gt;Timeout：代理到后端的超时时间&lt;/li&gt;
-  &lt;li&gt;EDNSClientSubnet：智能dns解析，根据客户端的IP地址做判断而不是客户端指定的dns的ip地址；可参考 https://tools.ietf.org/html/rfc7871&lt;/li&gt;
-  &lt;li&gt;MinimumTTL：overture缓存解析记录的时长&lt;/li&gt;
-  &lt;li&gt;CacheSize：overture缓存大小&lt;/li&gt;
-  &lt;li&gt;RejectQtype：拒绝指定类型的DNS请求：可参考 https://en.wikipedia.org/wiki/List_of_DNS_record_types&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;overture&quot;&gt;启动overture&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;./overture-linux-amd64 --help
-Usage of ./overture-linux-amd64:
-  -c string
-        config file path &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default &lt;span class=&quot;s2&quot;&gt;&quot;./config.json&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  -l string
-        log file path &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default &lt;span class=&quot;s2&quot;&gt;&quot;./overture.log&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  -p int
-        number of processor to use &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default 24&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  -v    verbose mode&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;-c：指定配置文件路径；默认当前启动路径的下的config.json文件&lt;/li&gt;
-  &lt;li&gt;-l：指定日志路径和日志文件；默认当前启动路径下的overture.log&lt;/li&gt;
-  &lt;li&gt;-p：指定进程数；默认当前cpu的核心数&lt;/li&gt;
-  &lt;li&gt;-v：debug日志模式&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;section-3&quot;&gt;编写启动脚本&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env bash   &lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; -e   
-&lt;span class=&quot;nv&quot;&gt;TOOLS_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;overture-linux-amd64&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;TOOLS_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/home/mtime/overture&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Overture Server&quot;&lt;/span&gt; 
-&lt;span class=&quot;nv&quot;&gt;DESCRIPTION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Pls use /etc/init.d/overture start|stop|restart&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;PIDFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/home/mtime/overture/overture.pid&quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ! -x &lt;span class=&quot;nv&quot;&gt;$DAEMON&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32mNOT Find &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
-&lt;span class=&quot;k&quot;&gt;fi   
-
-case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in 
-  &lt;/span&gt;start&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-            &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; was Started.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-            &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
-         &lt;span class=&quot;k&quot;&gt;fi
-         &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32mSTARTTING &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;......&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-         nohup &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; -c &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/config.json -l &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/overture.log &amp;amp;&amp;gt;/dev/null &amp;amp;  
-         touch &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt;
-         &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;   
-   stop&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
-         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ! -f &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
-            &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; was Stopped.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-            &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
-         &lt;span class=&quot;k&quot;&gt;fi
-         &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[32mSTOPPING &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_SERVER_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;......&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-         &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; -9 &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;pidof &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOOLS_NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &amp;amp;&amp;gt; /dev/null   
-         rm -f &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt;
-         &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;   
-   restart&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-         &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; stop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sleep 1 &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; start   
-         &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;   
-   &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-         &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -e &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[31mUsage: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DESCRIPTION&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
-         &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1   
-&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;   &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/network/overture.html</link>
-        <guid isPermaLink="true">/network/overture.html</guid>
         
         
         <category>Network</category>

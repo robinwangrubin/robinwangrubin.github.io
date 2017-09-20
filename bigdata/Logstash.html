@@ -118,8 +118,9 @@ source /etc/profile
 <h2 id="install-logstash">Install Logstash</h2>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>wget https://download.elastic.co/logstash/logstash/logstash-2.4.0.tar.gz
-tar xf logstash-2.4.0.tar.gz &amp;&amp; cd logstash-2.4.0
-sed -i 's#source.*#source "https://ruby.taobao.org/"#g' Gemfile
+tar xf logstash-2.4.0.tar.gz -C /usr/local/
+ln -s /usr/local/logstash-2.4.0 /usr/local/logstash
+sed -i 's#source.*#source "https://ruby.taobao.org/"#g' /usr/local/logstash/Gemfile
 </code></pre>
 </div>
 
@@ -127,7 +128,8 @@ sed -i 's#source.*#source "https://ruby.taobao.org/"#g' Gemfile
 
 <h2 id="install-plugin">Install Plugin</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>./bin/logstash-plugin install logstash-input-elasticsearch
+<div class="highlighter-rouge"><pre class="highlight"><code>cd /usr/local/logstash
+./bin/logstash-plugin install logstash-input-elasticsearch
 ./bin/logstash-plugin install logstash-output-elasticsearch
 ./bin/logstash-plugin install logstash-input-kafka
 ./bin/logstash-plugin install logstash-output-kafka
@@ -139,6 +141,10 @@ sed -i 's#source.*#source "https://ruby.taobao.org/"#g' Gemfile
 <hr />
 
 <h2 id="configure-logstash">Configure Logstash</h2>
+
+<blockquote>
+  <p>mkdir /usr/local/logstash/conf/</p>
+</blockquote>
 
 <ul>
   <li>File –&gt; Kafka/File</li>
@@ -410,13 +416,37 @@ output {
 
 <h2 id="start-logstash">Start Logstash</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>nohup ./bin/logstash -f conf/logstash.conf &gt;&gt;/var/log/logstash.debug.log &amp;
+<div class="highlighter-rouge"><pre class="highlight"><code>cd /usr/local/logstash
+nohup ./bin/logstash -f conf/logstash.conf &gt;&gt;/var/log/logstash.debug.log &amp;
 </code></pre>
 </div>
 
 <hr />
 
-<p>PS: 推荐用supervisor守护logstash进程</p>
+<p><code class="highlighter-rouge">推荐用supervisor守护logstash进程</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cat &gt;/etc/supervisor/conf/logstash.ini&lt;&lt;EOF
+[program:Logstash]
+command = /usr/local/logstash/bin/logstash -f /usr/local/logstash/conf/logstash.conf
+autostart = true
+autorestart = true
+startsecs = 3
+startretries = 3
+stopwaitsecs = 5
+user = root
+redirect_stderr = true
+stdout_logfile = /var/log/supervisor/logstash.log
+stdout_logfile_maxbytes = 500MB
+stdout_logfile_backups = 0
+EOF
+</code></pre>
+</div>
+
+<blockquote>
+  <p>supervisorctl update</p>
+</blockquote>
+
+<hr />
 
 <p>end</p>
 
