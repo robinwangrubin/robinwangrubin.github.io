@@ -5,9 +5,556 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Sep 2017 10:48:40 +0800</pubDate>
-    <lastBuildDate>Thu, 21 Sep 2017 10:48:40 +0800</lastBuildDate>
+    <pubDate>Thu, 21 Sep 2017 14:50:13 +0800</pubDate>
+    <lastBuildDate>Thu, 21 Sep 2017 14:50:13 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Elasticsearch</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;架构原理&lt;/h2&gt;
+
+&lt;h3 id=&quot;segment-buffer-translog&quot;&gt;segment buffer translog&lt;/h3&gt;
+
+&lt;h3 id=&quot;segment-merge&quot;&gt;segment merge&lt;/h3&gt;
+
+&lt;h3 id=&quot;routing-replica&quot;&gt;routing replica&lt;/h3&gt;
+
+&lt;h3 id=&quot;shard&quot;&gt;shard&lt;/h3&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;elasticsearch&quot;&gt;安装 elasticsearch&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;useradd elasticsearch -M -s /sbin/nologin
+https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.6/elasticsearch-2.4.6.tar.gz
+tar xf elasticsearch-2.4.6.tar.gz -C /usr/local/
+chown -R elasticsearch: /usr/local/elasticsearch-2.4.6
+ln -s /usr/local/elasticsearch-2.4.6 /usr/local/elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;plugin&quot;&gt;安装 plugin&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/local/elasticsearch
+./bin/plugin install mobz/elasticsearch-head
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;elasticsearch-cluster&quot;&gt;配置 elasticsearch cluster&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv /usr/local/elasticsearch/config/elasticsearch.yml /usr/local/elasticsearch/config/elasticsearch.yml.bak
+cat &amp;gt;/usr/local/elasticsearch/config/elasticsearch.yml &amp;lt;&amp;lt;EOF
+ cluster.name: robin_test_cluster
+ node.name: xxxxYour Hostname	
+ network.host: 0.0.0.0
+ discovery.zen.minimum_master_nodes: 3
+ discovery.zen.ping_timeout: 100s
+ discovery.zen.fd.ping_timeout: 100s
+ discovery.zen.ping.multicast.enabled: false
+ discovery.zen.ping.unicast.hosts: [&quot;192.168.1.190&quot;,&quot;192.168.1.191&quot;,&quot;192.168.1.192&quot;]
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;supervisor-&quot;&gt;Supervisor 守护&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &amp;gt;/etc/supervisor/conf/elasticsearch.ini &amp;lt;&amp;lt;EOF
+[program:Elasticsearch]
+command = /usr/local/elasticsearch/bin/elasticsearch
+autostart = true
+autorestart = true
+startsecs = 3
+startretries = 3
+stopwaitsecs = 5
+user = elasticsearch
+redirect_stderr = true
+stdout_logfile = /var/log/supervisor/elasticsearch.log
+stdout_logfile_maxbytes = 500MB
+stdout_logfile_backups = 0
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;es&quot;&gt;启动es服务&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;supervisorctl update
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;服务验证&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;netstat -lntup|grep 9200
+netstat -lntup|grep 9300
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl 'http://localhost:9200/?pretty'
+{
+  &quot;name&quot; : &quot;Abner Little&quot;,
+  &quot;cluster_name&quot; : &quot;RobinES&quot;,
+  &quot;cluster_uuid&quot; : &quot;qFXwzSfgRvSVv8EhJmeSlQ&quot;,
+  &quot;version&quot; : {
+    &quot;number&quot; : &quot;2.4.6&quot;,
+    &quot;build_hash&quot; : &quot;5376dca9f70f3abef96a77f4bb22720ace8240fd&quot;,
+    &quot;build_timestamp&quot; : &quot;2017-07-18T12:17:44Z&quot;,
+    &quot;build_snapshot&quot; : false,
+    &quot;lucene_version&quot; : &quot;5.5.4&quot;
+  },
+  &quot;tagline&quot; : &quot;You Know, for Search&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;elasticsearch-1&quot;&gt;Elasticsearch日常操作&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;增&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog -d '{&quot;date&quot; : &quot;1434966686000&quot;,&quot;user&quot; : &quot;chenlin7&quot;,&quot;mesg&quot; : &quot;first message into Elasticsearch&quot;}'
+{&quot;_index&quot;:&quot;logstash-2015.06.21&quot;,&quot;_type&quot;:&quot;testlog&quot;,&quot;_id&quot;:&quot;AV6eVtpCdKKfa5USSXuh&quot;,&quot;_version&quot;:1,&quot;_shards&quot;:{&quot;total&quot;:2,&quot;successful&quot;:2,&quot;failed&quot;:0},&quot;created&quot;:true}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;查&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh?pretty
+{
+  &quot;_index&quot; : &quot;logstash-2015.06.21&quot;,
+  &quot;_type&quot; : &quot;testlog&quot;,
+  &quot;_id&quot; : &quot;AV6eVtpCdKKfa5USSXuh&quot;,
+  &quot;_version&quot; : 1,
+  &quot;found&quot; : true,
+  &quot;_source&quot; : {
+    &quot;date&quot; : &quot;1434966686000&quot;,
+    &quot;user&quot; : &quot;chenlin7&quot;,
+    &quot;mesg&quot; : &quot;first message into Elasticsearch&quot;
+  }
+}
+
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh/_source?pretty
+{
+  &quot;date&quot; : &quot;1434966686000&quot;,
+  &quot;user&quot; : &quot;chenlin7&quot;,
+  &quot;mesg&quot; : &quot;first message into Elasticsearch&quot;
+}
+
+curl -XGET 'http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh?fields=user,mesg&amp;amp;pretty'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;改&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh/_update -d '{&quot;doc&quot;: {&quot;date&quot; : &quot;1111111111111&quot;,&quot;user&quot; : &quot;someone&quot;,&quot;mesg&quot; : &quot;first message into Elasticsearch&quot;}}'
+curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh -d '{&quot;date&quot; : &quot;2222222222&quot;,&quot;user&quot; : &quot;Robin&quot;,&quot;mesg&quot; : &quot;first message into Elasticsearch version 2&quot;}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-5&quot;&gt;删&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XDELETE http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh
+curl -XDELETE http://localhost:9200/logstash-2015.06*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;上面都是对单条数据的操作；下面开始做全文搜索和聚合请求&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;全文搜索&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog -d '{&quot;date&quot; : &quot;1110&quot;,&quot;user&quot; : &quot;Robin&quot;,&quot;mesg&quot; : &quot;first message into Elasticsearch&quot;}'
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=first
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=mesg:first
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=user:&quot;Robin&quot;
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=_exists_:user
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=_missing_:user
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=user:&quot;chenlin?&quot;
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=frist~
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-7&quot;&gt;聚合请求&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;下载测试数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget http://wangrubin.com/testfile/accounts.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;测试数据样例&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;account_number&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;372&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;balance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28566&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;firstname&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Alba&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;lastname&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Forbes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;age&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;M&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;address&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;814 Meserole Avenue&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;employer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Isostream&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;email&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;albaforbes@isostream.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;city&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Clarence&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;state&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;OR&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;写入测试数据到es中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary  @accounts.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;验证是否写入成功&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl 'localhost:9200/_cat/indices?v'
+health status index               pri rep docs.count docs.deleted store.size pri.store.size 
+green  open   logstash-2017.09.20   5   1          1            0      8.4kb          4.2kb 
+green  open   bank                  5   1       1000            0    925.2kb        456.9kb 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;搜索全部的文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_all&quot;: {} }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;搜索back索引下第一条数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_all&quot;: {} },
+  &quot;size&quot;: 1
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;下面的命令请求了第10-20的文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_all&quot;: {} },
+  &quot;from&quot;: 10,
+  &quot;size&quot;: 10
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;指定了返回特定的字段&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_all&quot;: {} },
+  &quot;_source&quot;: [&quot;account_number&quot;, &quot;balance&quot;]
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;返回特定的字段&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match&quot;: { &quot;account_number&quot;: 20 } }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查询地址为mill的信息&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match&quot;: { &quot;address&quot;: &quot;mill&quot; } }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查询地址为mill或者lane的信息&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match&quot;: { &quot;address&quot;: &quot;mill lane&quot; } }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果我们想要返回同时包含mill和lane的，可以通过match_phrase查询&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_phrase&quot;: { &quot;address&quot;: &quot;mill lane&quot; } }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;比如查询同时包含mill和lane的文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;must&quot;: [
+        { &quot;match&quot;: { &quot;address&quot;: &quot;mill&quot; } },
+        { &quot;match&quot;: { &quot;address&quot;: &quot;lane&quot; } }
+      ]
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查询包含mill或者lane的文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;should&quot;: [
+        { &quot;match&quot;: { &quot;address&quot;: &quot;mill&quot; } },
+        { &quot;match&quot;: { &quot;address&quot;: &quot;lane&quot; } }
+      ]
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;排除包含mill和lane的文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;must_not&quot;: [
+        { &quot;match&quot;: { &quot;address&quot;: &quot;mill&quot; } },
+        { &quot;match&quot;: { &quot;address&quot;: &quot;lane&quot; } }
+      ]
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;bool查询可以同时使用must, should, must_not组成一个复杂的查询&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;must&quot;: [
+        { &quot;match&quot;: { &quot;age&quot;: &quot;40&quot; } }
+      ],
+      &quot;must_not&quot;: [
+        { &quot;match&quot;: { &quot;state&quot;: &quot;ID&quot; } }
+      ]
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查询在2000-3000范围内的所有文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;must&quot;: { &quot;match_all&quot;: {} },
+      &quot;filter&quot;: {
+        &quot;range&quot;: {
+          &quot;balance&quot;: {
+            &quot;gte&quot;: 20000,
+            &quot;lte&quot;: 30000
+          }
+        }
+      }
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数据聚合统计&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;size&quot;: 0,
+  &quot;aggs&quot;: {
+    &quot;group_by_state&quot;: {
+      &quot;terms&quot;: {
+        &quot;field&quot;: &quot;state&quot;
+      }
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;统计不同账户状态下的平均余额&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;size&quot;: 0,
+  &quot;aggs&quot;: {
+    &quot;group_by_state&quot;: {
+      &quot;terms&quot;: {
+        &quot;field&quot;: &quot;state&quot;
+      },
+      &quot;aggs&quot;: {
+        &quot;average_balance&quot;: {
+          &quot;avg&quot;: {
+            &quot;field&quot;: &quot;balance&quot;
+          }
+        }
+      }
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;先按范围分组，在统计不同性别的账户余额&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  &quot;size&quot;: 0,
+  &quot;aggs&quot;: {
+    &quot;group_by_age&quot;: {
+      &quot;range&quot;: {
+        &quot;field&quot;: &quot;age&quot;,
+        &quot;ranges&quot;: [
+          {
+            &quot;from&quot;: 20,
+            &quot;to&quot;: 30
+          },
+          {
+            &quot;from&quot;: 30,
+            &quot;to&quot;: 40
+          },
+          {
+            &quot;from&quot;: 40,
+            &quot;to&quot;: 50
+          }
+        ]
+      },
+      &quot;aggs&quot;: {
+        &quot;group_by_gender&quot;: {
+          &quot;terms&quot;: {
+            &quot;field&quot;: &quot;gender&quot;
+          },
+          &quot;aggs&quot;: {
+            &quot;average_balance&quot;: {
+              &quot;avg&quot;: {
+                &quot;field&quot;: &quot;balance&quot;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;模拟统计生产环境的每小时日志量&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000 &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%Y&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%m&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%d&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%H&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%M&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date +%S&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+cat &amp;gt;&amp;gt;/root/elasticsearch.json&lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;EOF
+{&quot;index&quot;:{&quot;_id&quot;:&quot;$int&quot;}}
+{&quot;account_number&quot;:1,&quot;balance&quot;:39225,&quot;firstname&quot;:&quot;Amber&quot;,&quot;lastname&quot;:&quot;Duke&quot;,&quot;age&quot;:32,&quot;gender&quot;:&quot;M&quot;,&quot;address&quot;:&quot;880 Holmes Lane&quot;,&quot;employer&quot;:&quot;Pyrami&quot;,&quot;email&quot;:&quot;amberduke@pyrami.com&quot;,&quot;city&quot;:&quot;Brogan&quot;,&quot;state&quot;:&quot;IL&quot;,&quot;localtime&quot;:&quot;${d}/${m}/${y}:${h}:${M}:${s} +0800&quot;}
+EOF
+&lt;/span&gt;sleep 3
+&lt;span class=&quot;nb&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;int+1
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/wangrubin-2017-09-21/account/_bulk?pretty' --data-binary  @elasticsearch.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST 'localhost:9200/wangrubin*/_search?pretty' -d '
+{
+  &quot;query&quot;: { &quot;match_phrase&quot;: { &quot;localtime&quot;: &quot;21 09 2017 12&quot; } },
+  &quot;size&quot;: 0
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;reindex&quot;&gt;Reindex&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST http://localhost:9200/_reindex -d '
+{
+  &quot;source&quot;: {
+    &quot;index&quot;: &quot;logstash-2015.06.21&quot;
+  },
+  &quot;dest&quot;: {
+    &quot;index&quot;: &quot;logstash-2017.09.20&quot;
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;经过测试这功能就像 cp src dst&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-8&quot;&gt;性能优化&lt;/h2&gt;
+
+</description>
+        <pubDate>Thu, 21 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/bigdata/Elasticsearch.html</link>
+        <guid isPermaLink="true">/bigdata/Elasticsearch.html</guid>
+        
+        
+        <category>Bigdata</category>
+        
+      </item>
     
       <item>
         <title>supervisor进程守护</title>
@@ -1021,73 +1568,6 @@ verify_remote_cert： harbor同步时是否验证对端的证书。&lt;/code&gt;
         
         
         <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>shadow代理</title>
-        <description>&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;下载shadow二进制文件&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;编写配置文件&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;cat shadow.json 
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;s2&quot;&gt;&quot;addr&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;:8080&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;dial_timeout&quot;&lt;/span&gt;: 30000,
-  &lt;span class=&quot;s2&quot;&gt;&quot;read_timeout&quot;&lt;/span&gt;: 120000,
-  &lt;span class=&quot;s2&quot;&gt;&quot;proxy&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;192.168.1.2:8080&quot;&lt;/span&gt;,
-  &lt;span class=&quot;s2&quot;&gt;&quot;verbose&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;addr：监听的IP地址和端口号&lt;/li&gt;
-  &lt;li&gt;dial_timeout：连接超时时间&lt;/li&gt;
-  &lt;li&gt;read_timeout：传送数据超时时间&lt;/li&gt;
-  &lt;li&gt;proxy：二级代理ip和端口号&lt;/li&gt;
-  &lt;li&gt;verbose：打印日志&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;supervisorshadow&quot;&gt;利用supervisor管理shadow&lt;/h3&gt;
-
-&lt;p&gt;cat shadow.ini&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:shadow]
-&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/mtime/shadow -c /home/mtime/shadow.json
-autostart &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;autorestart &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;startsecs &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 3
-startretries &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 3
-stopwaitsecs &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 5
-user &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; root
-redirect_stderr &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;stdout_logfile &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/mtime/logs/supervisor/shadow.log
-stdout_logfile_maxbytes &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 500MB
-stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;supervisorctl reload&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;supervisorctl status&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/network/shadow.html</link>
-        <guid isPermaLink="true">/network/shadow.html</guid>
-        
-        
-        <category>Network</category>
         
       </item>
     

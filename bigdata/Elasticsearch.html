@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Elasticsearch</title>
+	<meta name="description" content="架构原理">
+	
+	<link rel="canonical" href="/bigdata/Elasticsearch.html">
+	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
+	
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/monokai_sublime.min.css">
+	<script type="text/javascript" src="/static/js/highlight.min.js"></script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+    -->
+    
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Robin's Personal Website</a>
+      <p class="navbar-text"></p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+        <a href="/">Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/pages/1_projects.html"><span class="glyphicon "></span> Life</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/pages/2_about.html"><span class="glyphicon "></span> About</a></li>
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+
+  <div id="myArticle" class="col-sm-9">
+
+    <div class="post-area post">
+      <header>
+        <h1>Elasticsearch</h1>
+        <p>Sep 21 2017</p>
+      </header>
+      <hr>
+      <article>
+        <h2 id="section">架构原理</h2>
+
+<h3 id="segment-buffer-translog">segment buffer translog</h3>
+
+<h3 id="segment-merge">segment merge</h3>
+
+<h3 id="routing-replica">routing replica</h3>
+
+<h3 id="shard">shard</h3>
+
+<hr />
+
+<h2 id="elasticsearch">安装 elasticsearch</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>useradd elasticsearch -M -s /sbin/nologin
+https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.6/elasticsearch-2.4.6.tar.gz
+tar xf elasticsearch-2.4.6.tar.gz -C /usr/local/
+chown -R elasticsearch: /usr/local/elasticsearch-2.4.6
+ln -s /usr/local/elasticsearch-2.4.6 /usr/local/elasticsearch
+</code></pre>
+</div>
+
+<h2 id="plugin">安装 plugin</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd /usr/local/elasticsearch
+./bin/plugin install mobz/elasticsearch-head
+</code></pre>
+</div>
+
+<h2 id="elasticsearch-cluster">配置 elasticsearch cluster</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mv /usr/local/elasticsearch/config/elasticsearch.yml /usr/local/elasticsearch/config/elasticsearch.yml.bak
+cat &gt;/usr/local/elasticsearch/config/elasticsearch.yml &lt;&lt;EOF
+ cluster.name: robin_test_cluster
+ node.name: xxxxYour Hostname	
+ network.host: 0.0.0.0
+ discovery.zen.minimum_master_nodes: 3
+ discovery.zen.ping_timeout: 100s
+ discovery.zen.fd.ping_timeout: 100s
+ discovery.zen.ping.multicast.enabled: false
+ discovery.zen.ping.unicast.hosts: ["192.168.1.190","192.168.1.191","192.168.1.192"]
+EOF
+</code></pre>
+</div>
+
+<h2 id="supervisor-">Supervisor 守护</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cat &gt;/etc/supervisor/conf/elasticsearch.ini &lt;&lt;EOF
+[program:Elasticsearch]
+command = /usr/local/elasticsearch/bin/elasticsearch
+autostart = true
+autorestart = true
+startsecs = 3
+startretries = 3
+stopwaitsecs = 5
+user = elasticsearch
+redirect_stderr = true
+stdout_logfile = /var/log/supervisor/elasticsearch.log
+stdout_logfile_maxbytes = 500MB
+stdout_logfile_backups = 0
+EOF
+</code></pre>
+</div>
+
+<h3 id="es">启动es服务</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>supervisorctl update
+</code></pre>
+</div>
+
+<h3 id="section-1">服务验证</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>netstat -lntup|grep 9200
+netstat -lntup|grep 9300
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl 'http://localhost:9200/?pretty'
+{
+  "name" : "Abner Little",
+  "cluster_name" : "RobinES",
+  "cluster_uuid" : "qFXwzSfgRvSVv8EhJmeSlQ",
+  "version" : {
+    "number" : "2.4.6",
+    "build_hash" : "5376dca9f70f3abef96a77f4bb22720ace8240fd",
+    "build_timestamp" : "2017-07-18T12:17:44Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.4"
+  },
+  "tagline" : "You Know, for Search"
+}
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="elasticsearch-1">Elasticsearch日常操作</h2>
+
+<h3 id="section-2">增</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog -d '{"date" : "1434966686000","user" : "chenlin7","mesg" : "first message into Elasticsearch"}'
+{"_index":"logstash-2015.06.21","_type":"testlog","_id":"AV6eVtpCdKKfa5USSXuh","_version":1,"_shards":{"total":2,"successful":2,"failed":0},"created":true}
+</code></pre>
+</div>
+
+<h3 id="section-3">查</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh?pretty
+{
+  "_index" : "logstash-2015.06.21",
+  "_type" : "testlog",
+  "_id" : "AV6eVtpCdKKfa5USSXuh",
+  "_version" : 1,
+  "found" : true,
+  "_source" : {
+    "date" : "1434966686000",
+    "user" : "chenlin7",
+    "mesg" : "first message into Elasticsearch"
+  }
+}
+
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh/_source?pretty
+{
+  "date" : "1434966686000",
+  "user" : "chenlin7",
+  "mesg" : "first message into Elasticsearch"
+}
+
+curl -XGET 'http://127.0.0.1:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh?fields=user,mesg&amp;pretty'
+</code></pre>
+</div>
+
+<h3 id="section-4">改</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh/_update -d '{"doc": {"date" : "1111111111111","user" : "someone","mesg" : "first message into Elasticsearch"}}'
+curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh -d '{"date" : "2222222222","user" : "Robin","mesg" : "first message into Elasticsearch version 2"}'
+</code></pre>
+</div>
+
+<h3 id="section-5">删</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XDELETE http://localhost:9200/logstash-2015.06.21/testlog/AV6eVtpCdKKfa5USSXuh
+curl -XDELETE http://localhost:9200/logstash-2015.06*
+</code></pre>
+</div>
+
+<hr />
+
+<p><code class="highlighter-rouge">上面都是对单条数据的操作；下面开始做全文搜索和聚合请求</code></p>
+
+<h2 id="section-6">全文搜索</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST http://localhost:9200/logstash-2015.06.21/testlog -d '{"date" : "1110","user" : "Robin","mesg" : "first message into Elasticsearch"}'
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=first
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=mesg:first
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=user:"Robin"
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=_exists_:user
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=_missing_:user
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=user:"chenlin?"
+curl -XGET http://127.0.0.1:9200/logstash-2015.06.21/testlog/_search?q=frist~
+</code></pre>
+</div>
+
+<h2 id="section-7">聚合请求</h2>
+
+<ul>
+  <li>下载测试数据</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://wangrubin.com/testfile/accounts.json
+</code></pre>
+</div>
+
+<ul>
+  <li>测试数据样例</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"account_number"</span><span class="p">:</span><span class="mi">372</span><span class="p">,</span><span class="nt">"balance"</span><span class="p">:</span><span class="mi">28566</span><span class="p">,</span><span class="nt">"firstname"</span><span class="p">:</span><span class="s2">"Alba"</span><span class="p">,</span><span class="nt">"lastname"</span><span class="p">:</span><span class="s2">"Forbes"</span><span class="p">,</span><span class="nt">"age"</span><span class="p">:</span><span class="mi">24</span><span class="p">,</span><span class="nt">"gender"</span><span class="p">:</span><span class="s2">"M"</span><span class="p">,</span><span class="nt">"address"</span><span class="p">:</span><span class="s2">"814 Meserole Avenue"</span><span class="p">,</span><span class="nt">"employer"</span><span class="p">:</span><span class="s2">"Isostream"</span><span class="p">,</span><span class="nt">"email"</span><span class="p">:</span><span class="s2">"albaforbes@isostream.com"</span><span class="p">,</span><span class="nt">"city"</span><span class="p">:</span><span class="s2">"Clarence"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:</span><span class="s2">"OR"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<ul>
+  <li>写入测试数据到es中</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary  @accounts.json
+</code></pre>
+</div>
+
+<ul>
+  <li>验证是否写入成功</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl 'localhost:9200/_cat/indices?v'
+health status index               pri rep docs.count docs.deleted store.size pri.store.size 
+green  open   logstash-2017.09.20   5   1          1            0      8.4kb          4.2kb 
+green  open   bank                  5   1       1000            0    925.2kb        456.9kb 
+</code></pre>
+</div>
+
+<ul>
+  <li>搜索全部的文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match_all": {} }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>搜索back索引下第一条数据</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match_all": {} },
+  "size": 1
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>下面的命令请求了第10-20的文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match_all": {} },
+  "from": 10,
+  "size": 10
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>指定了返回特定的字段</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match_all": {} },
+  "_source": ["account_number", "balance"]
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>返回特定的字段</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match": { "account_number": 20 } }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>查询地址为mill的信息</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match": { "address": "mill" } }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>查询地址为mill或者lane的信息</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match": { "address": "mill lane" } }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>如果我们想要返回同时包含mill和lane的，可以通过match_phrase查询</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": { "match_phrase": { "address": "mill lane" } }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>比如查询同时包含mill和lane的文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>查询包含mill或者lane的文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>排除包含mill和lane的文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>bool查询可以同时使用must, should, must_not组成一个复杂的查询</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "age": "40" } }
+      ],
+      "must_not": [
+        { "match": { "state": "ID" } }
+      ]
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>查询在2000-3000范围内的所有文档</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "query": {
+    "bool": {
+      "must": { "match_all": {} },
+      "filter": {
+        "range": {
+          "balance": {
+            "gte": 20000,
+            "lte": 30000
+          }
+        }
+      }
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>数据聚合统计</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state"
+      }
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>统计不同账户状态下的平均余额</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state"
+      },
+      "aggs": {
+        "average_balance": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>先按范围分组，在统计不同性别的账户余额</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+  "size": 0,
+  "aggs": {
+    "group_by_age": {
+      "range": {
+        "field": "age",
+        "ranges": [
+          {
+            "from": 20,
+            "to": 30
+          },
+          {
+            "from": 30,
+            "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }
+        ]
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}'
+</code></pre>
+</div>
+
+<ul>
+  <li>模拟统计生产环境的每小时日志量</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="nv">int</span><span class="o">=</span>1
+<span class="k">while</span><span class="o">((</span> <span class="nv">$int</span>&lt;<span class="o">=</span>1000 <span class="o">))</span>
+<span class="k">do
+</span><span class="nv">y</span><span class="o">=</span><span class="sb">`</span>date +%Y<span class="sb">`</span>
+<span class="nv">m</span><span class="o">=</span><span class="sb">`</span>date +%m<span class="sb">`</span>
+<span class="nv">d</span><span class="o">=</span><span class="sb">`</span>date +%d<span class="sb">`</span>
+<span class="nv">h</span><span class="o">=</span><span class="sb">`</span>date +%H<span class="sb">`</span>
+<span class="nv">M</span><span class="o">=</span><span class="sb">`</span>date +%M<span class="sb">`</span>
+<span class="nv">s</span><span class="o">=</span><span class="sb">`</span>date +%S<span class="sb">`</span>
+cat &gt;&gt;/root/elasticsearch.json<span class="sh">&lt;&lt;EOF
+{"index":{"_id":"$int"}}
+{"account_number":1,"balance":39225,"firstname":"Amber","lastname":"Duke","age":32,"gender":"M","address":"880 Holmes Lane","employer":"Pyrami","email":"amberduke@pyrami.com","city":"Brogan","state":"IL","localtime":"${d}/${m}/${y}:${h}:${M}:${s} +0800"}
+EOF
+</span>sleep 3
+<span class="nb">let </span><span class="nv">int</span><span class="o">=</span>int+1
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/wangrubin-2017-09-21/account/_bulk?pretty' --data-binary  @elasticsearch.json
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST 'localhost:9200/wangrubin*/_search?pretty' -d '
+{
+  "query": { "match_phrase": { "localtime": "21 09 2017 12" } },
+  "size": 0
+}'
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="reindex">Reindex</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XPOST http://localhost:9200/_reindex -d '
+{
+  "source": {
+    "index": "logstash-2015.06.21"
+  },
+  "dest": {
+    "index": "logstash-2017.09.20"
+  }
+}'
+</code></pre>
+</div>
+<p>经过测试这功能就像 cp src dst</p>
+
+<hr />
+
+<h2 id="section-8">性能优化</h2>
+
+
+      </article>
+      <hr>
+     </div>
+
+  </div>
+  
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+  
+     <div class="categories-list-header">
+        Content
+      </div>
+  
+      <div class="content-text"></div>
+   
+   </div>
+
+  </div>
+  
+</div>
+
+    </div>
+
+    
+    <div id="top" data-toggle="tooltip" data-placement="left" title="back to top">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:robinwangrubin@gmail.com"><span class="glyphicon glyphicon-envelope"></span> robinwangrubin@gmail.com</a>
+        <span class="point"> | </span>
+        
+          <a href="https://github.com/robinwangrubin/robinwangrubin.github.io">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+          </a>
+          
+          <span class="point"> | </span>
+          <span>Copyright© 2016 WangRuBin</span>
+          <span class="point"> | </span>
+          <span>Powered By Jekyll & Github · Theme By Gaohaoyang</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  </body>
+</html>
