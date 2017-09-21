@@ -136,6 +136,8 @@ cat &gt;/usr/local/elasticsearch/config/elasticsearch.yml &lt;&lt;EOF
  cluster.name: robin_test_cluster
  node.name: xxxxYour Hostname	
  network.host: 0.0.0.0
+ index.number_of_shards 5
+ index.number_of_replicas 2
  discovery.zen.minimum_master_nodes: 3
  discovery.zen.ping_timeout: 100s
  discovery.zen.fd.ping_timeout: 100s
@@ -634,6 +636,89 @@ EOF
 <hr />
 
 <h2 id="section-8">性能优化</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>pip install elasticsearch-curator
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 5 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-mweibo-nginx-
+curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 10 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-mweibo-client- --exclude 'logstash-mweibo-client-2015.05.11'
+curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 30 --time-unit days --timestring '%Y.%m.%d' --regex '^logstash-mweibo-\d+'
+curator --timeout 36000 --host 10.0.0.100 close indices --older-than 7 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-
+curator --timeout 36000 --host 10.0.0.100 optimize --max_num_segments 1 indices --older-than 1 --newer-than 7 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-
+</code></pre>
+</div>
+<p>logstash-mweibo-nginx-yyyy.mm.dd 索引保存最近 5 天</p>
+
+<p>logstash-mweibo-client-yyyy.mm.dd 保存最近 10 天</p>
+
+<p>logstash-mweibo-yyyy.mm.dd 索引保存最近 30 天</p>
+
+<p>所有七天前的 logstash-* 索引都暂时关闭不用</p>
+
+<p>最后对所有非当日日志做 segment 合并优化。</p>
+
+<hr />
+
+<h2 id="section-9">访问控制</h2>
+
+<ul>
+  <li>安装插件</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd /usr/local/elasticsearch
+./bin/plugin install elasticsearch/license/latest
+./bin/plugin install elasticsearch/shield/latest
+</code></pre>
+</div>
+
+<ul>
+  <li>重启es</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>supervisorctl restart Elasticsearch
+</code></pre>
+</div>
+
+<ul>
+  <li>创建用户</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/shield/esusers useradd elasticsearch -r admin
+</code></pre>
+</div>
+
+<ul>
+  <li>查看用户列表</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/shield/esusers list
+</code></pre>
+</div>
+
+<ul>
+  <li>修改用户密码</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/shield/esusers passwd root
+</code></pre>
+</div>
+
+<ul>
+  <li>删除用户</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/shield/esusers userdel root
+</code></pre>
+</div>
+
+<ul>
+  <li>查看所有可用命令</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./bin/shield/esusers -h
+</code></pre>
+</div>
 
 
       </article>

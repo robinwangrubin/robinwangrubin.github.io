@@ -5,9 +5,78 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Sep 2017 14:51:30 +0800</pubDate>
-    <lastBuildDate>Thu, 21 Sep 2017 14:51:30 +0800</lastBuildDate>
+    <pubDate>Thu, 21 Sep 2017 19:06:38 +0800</pubDate>
+    <lastBuildDate>Thu, 21 Sep 2017 19:06:38 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Kibana</title>
+        <description>&lt;h2 id=&quot;kibana&quot;&gt;安装kibana&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget https://download.elastic.co/kibana/kibana/kibana-4.6.6-linux-x86_64.tar.gz
+tar xf kibana-4.6.6-linux-x86_64.tar.gz -C /usr/local/
+ln -s /usr/local/kibana-4.6.6-linux-x86_64 /usr/local/kibana
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;kibana-1&quot;&gt;配置kibana&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv /usr/local/kibana/config/kibana.yml /usr/local/kibana/config/kibana.yml.bak
+cat &amp;gt;config/kibana.yml&amp;lt;&amp;lt;EOF
+ server.host: &quot;0.0.0.0&quot;
+ elasticsearch.url: &quot;http://192.168.1.190:9200&quot;
+ elasticsearch.username: &quot;kibana&quot;
+ elasticsearch.password: &quot;kibana@123&quot;
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;如果es添加了认证，则需要去es上为kibana添加链接用户&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/local/elasticsearch
+./bin/shield/esusers useradd kibana -r kibana4_server
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;添加supervisor守护kibana进程&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &amp;gt;/etc/supervisor/conf/kibana.ini&amp;lt;&amp;lt;EOF
+[program:Kibana]
+command = /usr/local/kibana/bin/kibana
+autostart = true
+autorestart = true
+startsecs = 3
+startretries = 3
+stopwaitsecs = 5
+user = root
+redirect_stderr = true
+stdout_logfile = /var/log/supervisor/kibana.log
+stdout_logfile_maxbytes = 500MB
+stdout_logfile_backups = 0
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;kibana-2&quot;&gt;启动kibana服务&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;supervisorctl update&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 21 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/bigdata/Kibana.html</link>
+        <guid isPermaLink="true">/bigdata/Kibana.html</guid>
+        
+        
+        <category>BigData</category>
+        
+      </item>
     
       <item>
         <title>Elasticsearch</title>
@@ -47,6 +116,8 @@ cat &amp;gt;/usr/local/elasticsearch/config/elasticsearch.yml &amp;lt;&amp;lt;EO
  cluster.name: robin_test_cluster
  node.name: xxxxYour Hostname	
  network.host: 0.0.0.0
+ index.number_of_shards 5
+ index.number_of_replicas 2
  discovery.zen.minimum_master_nodes: 3
  discovery.zen.ping_timeout: 100s
  discovery.zen.fd.ping_timeout: 100s
@@ -545,6 +616,89 @@ EOF
 &lt;hr /&gt;
 
 &lt;h2 id=&quot;section-8&quot;&gt;性能优化&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install elasticsearch-curator
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 5 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-mweibo-nginx-
+curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 10 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-mweibo-client- --exclude 'logstash-mweibo-client-2015.05.11'
+curator --timeout 36000 --host 10.0.0.100 delete indices --older-than 30 --time-unit days --timestring '%Y.%m.%d' --regex '^logstash-mweibo-\d+'
+curator --timeout 36000 --host 10.0.0.100 close indices --older-than 7 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-
+curator --timeout 36000 --host 10.0.0.100 optimize --max_num_segments 1 indices --older-than 1 --newer-than 7 --time-unit days --timestring '%Y.%m.%d' --prefix logstash-
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;logstash-mweibo-nginx-yyyy.mm.dd 索引保存最近 5 天&lt;/p&gt;
+
+&lt;p&gt;logstash-mweibo-client-yyyy.mm.dd 保存最近 10 天&lt;/p&gt;
+
+&lt;p&gt;logstash-mweibo-yyyy.mm.dd 索引保存最近 30 天&lt;/p&gt;
+
+&lt;p&gt;所有七天前的 logstash-* 索引都暂时关闭不用&lt;/p&gt;
+
+&lt;p&gt;最后对所有非当日日志做 segment 合并优化。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-9&quot;&gt;访问控制&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装插件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/local/elasticsearch
+./bin/plugin install elasticsearch/license/latest
+./bin/plugin install elasticsearch/shield/latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;重启es&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;supervisorctl restart Elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;创建用户&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/shield/esusers useradd elasticsearch -r admin
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看用户列表&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/shield/esusers list
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;修改用户密码&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/shield/esusers passwd root
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;删除用户&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/shield/esusers userdel root
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看所有可用命令&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/shield/esusers -h
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 </description>
         <pubDate>Thu, 21 Sep 2017 00:00:00 +0800</pubDate>
@@ -1447,124 +1601,6 @@ stop&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         <pubDate>Tue, 25 Jul 2017 00:00:00 +0800</pubDate>
         <link>/docker/CAdvisor.html</link>
         <guid isPermaLink="true">/docker/CAdvisor.html</guid>
-        
-        
-        <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Harbor-docker企业级仓库</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#harbor&quot; id=&quot;markdown-toc-harbor&quot;&gt;Harbor简介&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;下载安装&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;部署要求&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;harbor&quot;&gt;Harbor简介&lt;/h2&gt;
-
-&lt;p&gt;Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源Docker Distribution。&lt;/p&gt;
-
-&lt;p&gt;作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。&lt;/p&gt;
-
-&lt;p&gt;Harbor支持安装在多个Registry节点的镜像资源复制，镜像全部保存在私有Registry中， 确保数据和知识产权在公司内部网络中管控。&lt;/p&gt;
-
-&lt;p&gt;另外，Harbor也提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;基于角色的访问控制 - 用户与Docker镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。&lt;/li&gt;
-  &lt;li&gt;镜像复制 - 镜像可以在多个Registry实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。&lt;/li&gt;
-  &lt;li&gt;图形化用户界面 - 用户可以通过浏览器来浏览，检索当前Docker镜像仓库，管理项目和命名空间。&lt;/li&gt;
-  &lt;li&gt;AD/LDAP 支持 - Harbor可以集成企业内部已有的AD/LDAP，用于鉴权认证管理。&lt;/li&gt;
-  &lt;li&gt;审计管理 - 所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。&lt;/li&gt;
-  &lt;li&gt;国际化 - 已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。&lt;/li&gt;
-  &lt;li&gt;RESTful API - RESTful API 提供给管理员对于Harbor更多的操控, 使得与其它管理软件集成变得更容易。&lt;/li&gt;
-  &lt;li&gt;部署简单 - 提供在线和离线两种安装工具， 也可以安装到vSphere平台(OVA方式)虚拟设备。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;项目地址&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://github.com/vmware/harbor/tree/master/docs&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;下载安装&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://github.com/vmware/harbor/releases&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;section-1&quot;&gt;部署要求&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;python2.7或更高版本&lt;/li&gt;
-  &lt;li&gt;安装docker1.12或更高版本&lt;/li&gt;
-  &lt;li&gt;安装docker-compose&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;安装docker-compose&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -L https://get.daocloud.io/docker/compose/releases/download/1.12.0/docker-compose-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;uname -s&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;uname -m&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &amp;gt; /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;下载安装包&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;wget https://github.com/vmware/harbor/releases/download/v1.1.2/harbor-online-installer-v1.1.2.tgz
-tar xf harbor-online-installer-v1.1.2.tgz&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;配置harbor.cfg&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#必选配置&lt;/span&gt;
-
-hostname：用来访问web的地址IP或域名可加端口号；
-ui_url_protocol：仓库被访问的时候使用的协议；
-db_password：设置一个DB的强类型密码
-max_job_workers：最大job数量，默认是3，主要用来跑从库同步任务的。
-customize_crt：默认是on
-ssl_cert: ssl证书的位置；前提是设置了https的协议
-ssl_cert_key: sslkey的位置；前提设置了https的协议
-secretkey_path：用于密文同步镜像的key
-
-&lt;span class=&quot;c&quot;&gt;#可选配置：仅在第一次启动时生效；后续的启动会自动忽略这些配置；推荐后期直接在web页面上配置即可。&lt;/span&gt;
-
-Email settings:用于用户重置密码时发送邮件。
-harbor_admin_password：默认的web登录密码。
-auth_mode：认证模式：本地数据库认证或LDAP认证。
-ldap_url：ldap的配置
-project_creation_restriction：是否允许普通用户创建项目；默认任何人都可以创建，可设置adminonly，只有admin可以创建。
-verify_remote_cert： harbor同步时是否验证对端的证书。&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动Harbor&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;./install.sh&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;img src=&quot;/pic/harbor/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;end&lt;/p&gt;
-</description>
-        <pubDate>Mon, 24 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/docker/harbor.html</link>
-        <guid isPermaLink="true">/docker/harbor.html</guid>
         
         
         <category>Docker</category>
