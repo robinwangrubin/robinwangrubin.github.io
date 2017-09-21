@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Sep 2017 14:50:13 +0800</pubDate>
-    <lastBuildDate>Thu, 21 Sep 2017 14:50:13 +0800</lastBuildDate>
+    <pubDate>Thu, 21 Sep 2017 14:51:30 +0800</pubDate>
+    <lastBuildDate>Thu, 21 Sep 2017 14:51:30 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -552,7 +552,7 @@ EOF
         <guid isPermaLink="true">/bigdata/Elasticsearch.html</guid>
         
         
-        <category>Bigdata</category>
+        <category>BigData</category>
         
       </item>
     
