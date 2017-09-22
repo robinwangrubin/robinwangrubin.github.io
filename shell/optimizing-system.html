@@ -159,6 +159,7 @@ if</span> <span class="o">[</span> <span class="nv">$VERSION</span> <span class=
 /etc/init.d/iptables stop &amp;&gt; /dev/null
 wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+chmod +x /etc/rc.d/rc.local
 <span class="k">elif</span> <span class="o">[</span> <span class="nv">$VERSION</span> <span class="o">==</span> <span class="s1">'centos7'</span> <span class="o">]</span>;<span class="k">then
 </span>wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo

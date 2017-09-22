@@ -720,6 +720,191 @@ curator --timeout 36000 --host 10.0.0.100 optimize --max_num_segments 1 indices 
 </code></pre>
 </div>
 
+<hr />
+
+<h2 id="es-1">es集群监控</h2>
+
+<ul>
+  <li>集群层面监控</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu -XGET '127.0.0.1:9200/_cluster/health?pretty'
+{
+  "cluster_name" : "robin_test_cluster",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 3,
+  "number_of_data_nodes" : 3,
+  "active_primary_shards" : 1,
+  "active_shards" : 2,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
+}
+</code></pre>
+</div>
+
+<ul>
+  <li>索引层面监控</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu -XGET '127.0.0.1:9200/_cluster/health?level=indices&amp;pretty'
+{
+  "cluster_name" : "robin_test_cluster",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 3,
+  "number_of_data_nodes" : 3,
+  "active_primary_shards" : 1,
+  "active_shards" : 2,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0,
+  "indices" : {
+    ".kibana" : {
+      "status" : "green",
+      "number_of_shards" : 1,
+      "number_of_replicas" : 1,
+      "active_primary_shards" : 1,
+      "active_shards" : 2,
+      "relocating_shards" : 0,
+      "initializing_shards" : 0,
+      "unassigned_shards" : 0
+    }
+  }
+}
+</code></pre>
+</div>
+
+<ul>
+  <li>节点层面监控</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu -XGET 127.0.0.1:9200/_nodes/stats?pretty
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?interval=60s'
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?type=wait&amp;interval=60s'
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?type=block&amp;interval=60s'
+</code></pre>
+</div>
+
+<ul>
+  <li>查看集群等待任务数</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cluster/pending_tasks?pretty'
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">shell中获取状态</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>* /_cat/nodes
+* /_cat/shards
+* /_cat/shards/{index}
+* /_cat/aliases
+* /_cat/aliases/{alias}
+* /_cat/tasks
+* /_cat/master
+* /_cat/plugins
+* /_cat/fielddata
+* /_cat/fielddata/{fields}
+* /_cat/pending_tasks
+* /_cat/count
+* /_cat/count/{index}
+* /_cat/snapshots/{repository}
+* /_cat/recovery
+* /_cat/recovery/{index}
+* /_cat/segments
+* /_cat/segments/{index}
+* /_cat/thread_pool
+* /_cat/thread_pool/{thread_pools}/_cat/nodeattrs
+* /_cat/allocation
+* /_cat/repositories
+* /_cat/health
+* /_cat/indices
+* /_cat/indices/{index}
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200//_cat/nodes'
+192.168.1.191 192.168.1.191 5 37 0.01 d * hadoop-slave01 
+192.168.1.192 192.168.1.192 6 32 0.00 d m hadoop-slave02 
+192.168.1.190 192.168.1.190 5 43 0.00 d m hadoop-master
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/health'
+1506059940 13:59:00 robin_test_cluster green 3 3 12 6 0 0 0 0 - 100.0% 
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?v'
+host          ip            heap.percent ram.percent load node.role master name           
+192.168.1.191 192.168.1.191            5          37 0.00 d         *      hadoop-slave01 
+192.168.1.192 192.168.1.192            6          32 0.00 d         m      hadoop-slave02 
+192.168.1.190 192.168.1.190            5          43 0.00 d         m      hadoop-master
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?v&amp;h=ip,port,heapPercent,heapMax'
+ip            port heapPercent  heapMax 
+192.168.1.191 9300           5 1015.6mb 
+192.168.1.192 9300           6 1015.6mb 
+192.168.1.190 9300           5 1015.6mb 
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?help'
+
+id                               | id,nodeId                          | unique node id                                                                                                   
+pid                              | p                                  | process id                                                                                                       
+host                             | h                                  | host name                                                                                                        
+ip                               | i                                  | ip address                                                                                                       
+port                             | po                                 | bound transport port                                                                                             
+version                          | v                                  | es version                                                                                                       
+build                            | b                                  | es build hash         
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -XGET http://127.0.0.1:9200/_cat/nodes?v&amp;h=i,po,hp,hm
+</code></pre>
+</div>
+
+<ul>
+  <li>查看索引分片状态</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/shards?v'  
+</code></pre>
+</div>
+
+<ul>
+  <li>查看当前数据恢复状态</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/recovery?active_only&amp;v&amp;h=i,s,shost,thost,fp,bp,tr,trp,trt'
+</code></pre>
+</div>
+
+<ul>
+  <li>线程池状态</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/thread_pool?v'     
+</code></pre>
+</div>
+<hr />
+
+<p>end</p>
 
       </article>
       <hr>

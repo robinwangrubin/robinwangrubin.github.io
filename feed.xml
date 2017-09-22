@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Sep 2017 19:06:38 +0800</pubDate>
-    <lastBuildDate>Thu, 21 Sep 2017 19:06:38 +0800</lastBuildDate>
+    <pubDate>Fri, 22 Sep 2017 15:23:37 +0800</pubDate>
+    <lastBuildDate>Fri, 22 Sep 2017 15:23:37 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -700,6 +700,191 @@ curator --timeout 36000 --host 10.0.0.100 optimize --max_num_segments 1 indices 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;es-1&quot;&gt;es集群监控&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;集群层面监控&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu -XGET '127.0.0.1:9200/_cluster/health?pretty'
+{
+  &quot;cluster_name&quot; : &quot;robin_test_cluster&quot;,
+  &quot;status&quot; : &quot;green&quot;,
+  &quot;timed_out&quot; : false,
+  &quot;number_of_nodes&quot; : 3,
+  &quot;number_of_data_nodes&quot; : 3,
+  &quot;active_primary_shards&quot; : 1,
+  &quot;active_shards&quot; : 2,
+  &quot;relocating_shards&quot; : 0,
+  &quot;initializing_shards&quot; : 0,
+  &quot;unassigned_shards&quot; : 0,
+  &quot;delayed_unassigned_shards&quot; : 0,
+  &quot;number_of_pending_tasks&quot; : 0,
+  &quot;number_of_in_flight_fetch&quot; : 0,
+  &quot;task_max_waiting_in_queue_millis&quot; : 0,
+  &quot;active_shards_percent_as_number&quot; : 100.0
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;索引层面监控&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu -XGET '127.0.0.1:9200/_cluster/health?level=indices&amp;amp;pretty'
+{
+  &quot;cluster_name&quot; : &quot;robin_test_cluster&quot;,
+  &quot;status&quot; : &quot;green&quot;,
+  &quot;timed_out&quot; : false,
+  &quot;number_of_nodes&quot; : 3,
+  &quot;number_of_data_nodes&quot; : 3,
+  &quot;active_primary_shards&quot; : 1,
+  &quot;active_shards&quot; : 2,
+  &quot;relocating_shards&quot; : 0,
+  &quot;initializing_shards&quot; : 0,
+  &quot;unassigned_shards&quot; : 0,
+  &quot;delayed_unassigned_shards&quot; : 0,
+  &quot;number_of_pending_tasks&quot; : 0,
+  &quot;number_of_in_flight_fetch&quot; : 0,
+  &quot;task_max_waiting_in_queue_millis&quot; : 0,
+  &quot;active_shards_percent_as_number&quot; : 100.0,
+  &quot;indices&quot; : {
+    &quot;.kibana&quot; : {
+      &quot;status&quot; : &quot;green&quot;,
+      &quot;number_of_shards&quot; : 1,
+      &quot;number_of_replicas&quot; : 1,
+      &quot;active_primary_shards&quot; : 1,
+      &quot;active_shards&quot; : 2,
+      &quot;relocating_shards&quot; : 0,
+      &quot;initializing_shards&quot; : 0,
+      &quot;unassigned_shards&quot; : 0
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;节点层面监控&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu -XGET 127.0.0.1:9200/_nodes/stats?pretty
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?interval=60s'
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?type=wait&amp;amp;interval=60s'
+curl -u elasticsearch:xiaoaojianghu -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?type=block&amp;amp;interval=60s'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看集群等待任务数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cluster/pending_tasks?pretty'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shell中获取状态&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* /_cat/nodes
+* /_cat/shards
+* /_cat/shards/{index}
+* /_cat/aliases
+* /_cat/aliases/{alias}
+* /_cat/tasks
+* /_cat/master
+* /_cat/plugins
+* /_cat/fielddata
+* /_cat/fielddata/{fields}
+* /_cat/pending_tasks
+* /_cat/count
+* /_cat/count/{index}
+* /_cat/snapshots/{repository}
+* /_cat/recovery
+* /_cat/recovery/{index}
+* /_cat/segments
+* /_cat/segments/{index}
+* /_cat/thread_pool
+* /_cat/thread_pool/{thread_pools}/_cat/nodeattrs
+* /_cat/allocation
+* /_cat/repositories
+* /_cat/health
+* /_cat/indices
+* /_cat/indices/{index}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200//_cat/nodes'
+192.168.1.191 192.168.1.191 5 37 0.01 d * hadoop-slave01 
+192.168.1.192 192.168.1.192 6 32 0.00 d m hadoop-slave02 
+192.168.1.190 192.168.1.190 5 43 0.00 d m hadoop-master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/health'
+1506059940 13:59:00 robin_test_cluster green 3 3 12 6 0 0 0 0 - 100.0% 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?v'
+host          ip            heap.percent ram.percent load node.role master name           
+192.168.1.191 192.168.1.191            5          37 0.00 d         *      hadoop-slave01 
+192.168.1.192 192.168.1.192            6          32 0.00 d         m      hadoop-slave02 
+192.168.1.190 192.168.1.190            5          43 0.00 d         m      hadoop-master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?v&amp;amp;h=ip,port,heapPercent,heapMax'
+ip            port heapPercent  heapMax 
+192.168.1.191 9300           5 1015.6mb 
+192.168.1.192 9300           6 1015.6mb 
+192.168.1.190 9300           5 1015.6mb 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/nodes?help'
+
+id                               | id,nodeId                          | unique node id                                                                                                   
+pid                              | p                                  | process id                                                                                                       
+host                             | h                                  | host name                                                                                                        
+ip                               | i                                  | ip address                                                                                                       
+port                             | po                                 | bound transport port                                                                                             
+version                          | v                                  | es version                                                                                                       
+build                            | b                                  | es build hash         
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XGET http://127.0.0.1:9200/_cat/nodes?v&amp;amp;h=i,po,hp,hm
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看索引分片状态&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/shards?v'  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看当前数据恢复状态&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/recovery?active_only&amp;amp;v&amp;amp;h=i,s,shost,thost,fp,bp,tr,trp,trt'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;线程池状态&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -u elasticsearch:xiaoaojianghu  -XGET 'http://127.0.0.1:9200/_cat/thread_pool?v'     
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;end&lt;/p&gt;
 </description>
         <pubDate>Thu, 21 Sep 2017 00:00:00 +0800</pubDate>
         <link>/bigdata/Elasticsearch.html</link>
@@ -1181,6 +1366,7 @@ if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&q
 /etc/init.d/iptables stop &amp;amp;&amp;gt; /dev/null
 wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+chmod +x /etc/rc.d/rc.local
 &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VERSION&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'centos7'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;;&lt;span class=&quot;k&quot;&gt;then
 &lt;/span&gt;wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
