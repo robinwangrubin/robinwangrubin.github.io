@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>MyDNS</title>
-	<meta name="description" content="基础环境准备">
+	<meta name="description" content="">
 	
 	<link rel="canonical" href="/dns/Mydns.html">
 	<link rel="alternate" type="application/rss+xml" title="Robin's Personal Website" href="/feed.xml" />
@@ -100,7 +100,22 @@
       </header>
       <hr>
       <article>
-        <h2 id="section">基础环境准备</h2>
+        <hr />
+
+<h2 id="section">实验环境</h2>
+
+<ul>
+  <li>CentOS Linux release 7.2.1511 (Core)</li>
+  <li>nginx: 1.12.1</li>
+  <li>Mysql: 5.7.17</li>
+  <li>PHP: 5.3.27</li>
+  <li>mydns: 1.1.0</li>
+  <li>MyDNSConfig: 1.1.0</li>
+</ul>
+
+<hr />
+
+<h2 id="section-1">基础环境准备</h2>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre* make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel ncurses ncurses-devel cmake libaio
 </code></pre>
@@ -307,8 +322,7 @@ grep "date.timezone =" /usr/local/php/etc/php.ini
   <li>配置nginx</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir -p /usr/local/nginx/html/mydns
-mkdir -p /var/log/nginx/mydns 
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir -p /var/log/nginx/mydns 
 mkdir -p /usr/local/nginx/conf/extra
 cat &gt;/usr/local/nginx/conf/nginx.conf&lt;&lt;EOF
 user  nginx;
@@ -374,15 +388,13 @@ EOF
 tar xf mydns-1.1.0.tar.gz &amp;&amp; cd mydns-1.1.0
 ./configure --prefix=/usr/local/mydns --with-mysql-lib=/usr/lib64/mysql/ --with-zlib=/usr/lib64/
 make &amp;&amp; make install
-ln -s /usr/local/mysql/lib/libmysqlclient.so.20 /usr/lib
-ldconfig 
 make conf   
 </code></pre>
 </div>
 
 <hr />
 
-<h2 id="section-1">启动服务</h2>
+<h2 id="section-2">启动服务</h2>
 
 <ul>
   <li>启动nginx</li>

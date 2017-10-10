@@ -5,13 +5,28 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 10 Oct 2017 12:10:58 +0800</pubDate>
-    <lastBuildDate>Tue, 10 Oct 2017 12:10:58 +0800</lastBuildDate>
+    <pubDate>Tue, 10 Oct 2017 12:24:55 +0800</pubDate>
+    <lastBuildDate>Tue, 10 Oct 2017 12:24:55 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
         <title>MyDNS</title>
-        <description>&lt;h2 id=&quot;section&quot;&gt;基础环境准备&lt;/h2&gt;
+        <description>&lt;hr /&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;实验环境&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CentOS Linux release 7.2.1511 (Core)&lt;/li&gt;
+  &lt;li&gt;nginx: 1.12.1&lt;/li&gt;
+  &lt;li&gt;Mysql: 5.7.17&lt;/li&gt;
+  &lt;li&gt;PHP: 5.3.27&lt;/li&gt;
+  &lt;li&gt;mydns: 1.1.0&lt;/li&gt;
+  &lt;li&gt;MyDNSConfig: 1.1.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;基础环境准备&lt;/h2&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre* make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel ncurses ncurses-devel cmake libaio
 &lt;/code&gt;&lt;/pre&gt;
@@ -218,8 +233,7 @@ grep &quot;date.timezone =&quot; /usr/local/php/etc/php.ini
   &lt;li&gt;配置nginx&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /usr/local/nginx/html/mydns
-mkdir -p /var/log/nginx/mydns 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /var/log/nginx/mydns 
 mkdir -p /usr/local/nginx/conf/extra
 cat &amp;gt;/usr/local/nginx/conf/nginx.conf&amp;lt;&amp;lt;EOF
 user  nginx;
@@ -285,15 +299,13 @@ EOF
 tar xf mydns-1.1.0.tar.gz &amp;amp;&amp;amp; cd mydns-1.1.0
 ./configure --prefix=/usr/local/mydns --with-mysql-lib=/usr/lib64/mysql/ --with-zlib=/usr/lib64/
 make &amp;amp;&amp;amp; make install
-ln -s /usr/local/mysql/lib/libmysqlclient.so.20 /usr/lib
-ldconfig 
 make conf   
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;hr /&gt;
 
-&lt;h2 id=&quot;section-1&quot;&gt;启动服务&lt;/h2&gt;
+&lt;h2 id=&quot;section-2&quot;&gt;启动服务&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;启动nginx&lt;/li&gt;
