@@ -380,40 +380,6 @@ make conf
 </code></pre>
 </div>
 
-<ul>
-  <li>创建数据库</li>
-</ul>
-
-<pre><code class="language-`">mysql -uroot -p
-set global validate_password_policy=0;
-create database mydns;
-grant all on mydns.* to mydns@localhost identified by 'xiaoaojianghu';
-flush privileges;
-</code></pre>
-
-<ul>
-  <li>配置MyDNS</li>
-</ul>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>sed -i 's#db-host = .*#db-host = localhost#g' /etc/mydns.conf 
-sed -i 's#db-user = .*#db-user = mydns#g' /etc/mydns.conf 
-sed -i 's#db-password = .*#db-password = xiaoaojianghu#g' /etc/mydns.conf 
-sed -i 's#database = .*#database = mydns#g' /etc/mydns.conf 
-</code></pre>
-</div>
-
-<hr />
-
-<h2 id="mydnsconfig">安装MyDNSConfig</h2>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>tar xf MyDNSConfig-1.1.0.tar.gz &amp;&amp; cd MyDNSConfig-1.1.0 
-mkdir /usr/share/mydnsconfig
-cp -rf interface/* /usr/share/mydnsconfig/
-ln -s /usr/share/mydnsconfig/web/ /usr/local/nginx/html/mydnsconfig
-mysql -u mydns -p  mydns &lt; install/mydnsconfig.sql 
-</code></pre>
-</div>
-
 <hr />
 
 <h2 id="section-1">启动服务</h2>
@@ -452,7 +418,71 @@ mysql -u mydns -p  mydns &lt; install/mydnsconfig.sql
 
 <hr />
 
+<ul>
+  <li>创建数据库</li>
+</ul>
+
+<pre><code class="language-`">mysql -uroot -p
+set global validate_password_policy=0;
+create database mydns;
+grant all on mydns.* to 'mydns'@'localhost' identified by 'mydns_password';
+flush privileges;
+</code></pre>
+
+<ul>
+  <li>配置MyDNS</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sed -i 's#db-host = .*#db-host = localhost#g' /etc/mydns.conf 
+sed -i 's#db-user = .*#db-user = mydns#g' /etc/mydns.conf 
+sed -i 's#db-password = .*#db-password = mydns_password#g' /etc/mydns.conf 
+sed -i 's#database = .*#database = mydns#g' /etc/mydns.conf 
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="mydnsconfig">安装MyDNSConfig</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tar xf MyDNSConfig-1.1.0.tar.gz &amp;&amp; cd MyDNSConfig-1.1.0 
+mkdir /usr/share/mydnsconfig
+cp -rf interface/* /usr/share/mydnsconfig/
+ln -s /usr/share/mydnsconfig/web/ /usr/local/nginx/html/mydnsconfig
+mysql -u mydns -p  mydns &lt; install/mydnsconfig.sql 
+</code></pre>
+</div>
+
+<h2 id="mydnsconfig-1">配置MyDNSConfig</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>vim /usr/share/mydnsconfig/lib/config.inc.php
+*/
+
+$conf[“db_type”]        = 'mysql';
+$conf[“db_host”]        = 'localhost';    –&gt;  keep as it
+$conf[“db_database”]    = 'mydns';
+$conf[“db_user”]        = 'mydns';
+$conf[“db_password”]    = 'mydns_password';
+
+/*
+</code></pre>
+</div>
+<hr />
+
+<h2 id="web">访问web页面</h2>
+
+<blockquote>
+  <p>http://192.168.1.145/mydnsconfig/</p>
+</blockquote>
+
+<ul>
+  <li>Username: admin</li>
+  <li>Password: admin</li>
+</ul>
+
+<hr />
+
 <p>end</p>
+
 
       </article>
       <hr>

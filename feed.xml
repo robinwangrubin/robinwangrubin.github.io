@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 10 Oct 2017 11:20:21 +0800</pubDate>
-    <lastBuildDate>Tue, 10 Oct 2017 11:20:21 +0800</lastBuildDate>
+    <pubDate>Tue, 10 Oct 2017 12:10:58 +0800</pubDate>
+    <lastBuildDate>Tue, 10 Oct 2017 12:10:58 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -291,40 +291,6 @@ make conf
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;创建数据库&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-`&quot;&gt;mysql -uroot -p
-set global validate_password_policy=0;
-create database mydns;
-grant all on mydns.* to mydns@localhost identified by 'xiaoaojianghu';
-flush privileges;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;配置MyDNS&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sed -i 's#db-host = .*#db-host = localhost#g' /etc/mydns.conf 
-sed -i 's#db-user = .*#db-user = mydns#g' /etc/mydns.conf 
-sed -i 's#db-password = .*#db-password = xiaoaojianghu#g' /etc/mydns.conf 
-sed -i 's#database = .*#database = mydns#g' /etc/mydns.conf 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;mydnsconfig&quot;&gt;安装MyDNSConfig&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tar xf MyDNSConfig-1.1.0.tar.gz &amp;amp;&amp;amp; cd MyDNSConfig-1.1.0 
-mkdir /usr/share/mydnsconfig
-cp -rf interface/* /usr/share/mydnsconfig/
-ln -s /usr/share/mydnsconfig/web/ /usr/local/nginx/html/mydnsconfig
-mysql -u mydns -p  mydns &amp;lt; install/mydnsconfig.sql 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
 &lt;hr /&gt;
 
 &lt;h2 id=&quot;section-1&quot;&gt;启动服务&lt;/h2&gt;
@@ -363,7 +329,71 @@ mysql -u mydns -p  mydns &amp;lt; install/mydnsconfig.sql
 
 &lt;hr /&gt;
 
+&lt;ul&gt;
+  &lt;li&gt;创建数据库&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-`&quot;&gt;mysql -uroot -p
+set global validate_password_policy=0;
+create database mydns;
+grant all on mydns.* to 'mydns'@'localhost' identified by 'mydns_password';
+flush privileges;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置MyDNS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sed -i 's#db-host = .*#db-host = localhost#g' /etc/mydns.conf 
+sed -i 's#db-user = .*#db-user = mydns#g' /etc/mydns.conf 
+sed -i 's#db-password = .*#db-password = mydns_password#g' /etc/mydns.conf 
+sed -i 's#database = .*#database = mydns#g' /etc/mydns.conf 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;mydnsconfig&quot;&gt;安装MyDNSConfig&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tar xf MyDNSConfig-1.1.0.tar.gz &amp;amp;&amp;amp; cd MyDNSConfig-1.1.0 
+mkdir /usr/share/mydnsconfig
+cp -rf interface/* /usr/share/mydnsconfig/
+ln -s /usr/share/mydnsconfig/web/ /usr/local/nginx/html/mydnsconfig
+mysql -u mydns -p  mydns &amp;lt; install/mydnsconfig.sql 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;mydnsconfig-1&quot;&gt;配置MyDNSConfig&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /usr/share/mydnsconfig/lib/config.inc.php
+*/
+
+$conf[“db_type”]        = 'mysql';
+$conf[“db_host”]        = 'localhost';    –&amp;gt;  keep as it
+$conf[“db_database”]    = 'mydns';
+$conf[“db_user”]        = 'mydns';
+$conf[“db_password”]    = 'mydns_password';
+
+/*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;web&quot;&gt;访问web页面&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http://192.168.1.145/mydnsconfig/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Username: admin&lt;/li&gt;
+  &lt;li&gt;Password: admin&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
 &lt;p&gt;end&lt;/p&gt;
+
 </description>
         <pubDate>Thu, 28 Sep 2017 00:00:00 +0800</pubDate>
         <link>/dns/Mydns.html</link>
