@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 10 Oct 2017 12:24:55 +0800</pubDate>
-    <lastBuildDate>Tue, 10 Oct 2017 12:24:55 +0800</lastBuildDate>
+    <pubDate>Tue, 10 Oct 2017 13:22:47 +0800</pubDate>
+    <lastBuildDate>Tue, 10 Oct 2017 13:22:47 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -303,44 +303,6 @@ make conf
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;启动服务&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动nginx&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/etc/init.d/nginx start&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动mysql&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/etc/init.d/mysqld start&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动PHP&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/usr/local/php/sbin/php-fpm&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动MyDNS&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/usr/local/mydns/sbin/mydns -b&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
 &lt;ul&gt;
   &lt;li&gt;创建数据库&lt;/li&gt;
 &lt;/ul&gt;
@@ -389,6 +351,42 @@ $conf[“db_password”]    = 'mydns_password';
 /*
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;启动服务&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动nginx&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/etc/init.d/nginx start&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动mysql&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/etc/init.d/mysqld start&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动PHP&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/local/php/sbin/php-fpm&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动MyDNS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/local/mydns/sbin/mydns -b&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;hr /&gt;
 
 &lt;h2 id=&quot;web&quot;&gt;访问web页面&lt;/h2&gt;
