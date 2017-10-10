@@ -5,15 +5,15 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 28 Sep 2017 19:31:41 +0800</pubDate>
-    <lastBuildDate>Thu, 28 Sep 2017 19:31:41 +0800</lastBuildDate>
+    <pubDate>Tue, 10 Oct 2017 11:20:21 +0800</pubDate>
+    <lastBuildDate>Tue, 10 Oct 2017 11:20:21 +0800</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
         <title>MyDNS</title>
         <description>&lt;h2 id=&quot;section&quot;&gt;基础环境准备&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre* make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel ncurses ncurses-devel cmake
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum -y install gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre* make gd-devel libjpeg-devel libpng-devel libxml2-devel bzip2-devel libcurl-devel freetype-devel ncurses ncurses-devel cmake libaio
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
