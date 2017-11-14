@@ -195,9 +195,9 @@ EOF
 <p><code class="highlighter-rouge">三台master节点部署zookeeper</code></p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">mkdir -p /application/tools/ <span class="o">&amp;&amp;</span> <span class="nb">cd</span> /application/tools/
-wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
-tar xf zookeeper-3.4.6.tar.gz -C /application/
-ln -s /application/zookeeper-3.4.6/ /application/zookeeper
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz
+tar xf zookeeper-3.4.11.tar.gz -C /application/
+ln -s /application/zookeeper-3.4.11 /application/zookeeper
 mv /application/zookeeper/conf/zoo_sample.cfg /application/zookeeper/conf/zoo.cfg</code></pre></figure>
 
 <h3 id="zk-1">配置zk</h3>
